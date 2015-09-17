@@ -3,7 +3,7 @@ package com.github.fluent.hibernate;
 import java.util.List;
 
 /**
- * Пространство имён для работы с Hibernate.
+ * Hibernate fluent API entry point.
  *
  * @author DoubleF1re
  * @author V.Ladynev
@@ -50,6 +50,6 @@ public final class H {
         HibernateObjectQuery.delete(getById(clazz, id));
     }
 
-    // TODO добавить выполненние IRequest
+    // TODO add invoking IRequest
 
 }

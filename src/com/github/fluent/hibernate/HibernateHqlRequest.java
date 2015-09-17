@@ -6,11 +6,9 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import com.github.fluent.hibernate.util.InternalUtils;
-
 /**
  * @param <T>
- *            тип возвращаемого значения.
+ *            type of return value.
  *
  * @author DoubleF1re
  * @author V.Ladynev
@@ -30,12 +28,12 @@ public final class HibernateHqlRequest<T> {
     }
 
     /**
-     * Добавляет параметр запроса.
+     * Add a named query parameter.
      *
      * @param name
-     *            имя параметра
+     *            name of parameter
      * @param val
-     *            значение
+     *            parameter value
      */
     public HibernateHqlRequest<T> p(String name, Object val) {
         params.add(name, val);
@@ -52,7 +50,7 @@ public final class HibernateHqlRequest<T> {
         return this;
     }
 
-    // TODO трансформер не работает для pid и вложенных полей
+    // TODO transformer not works for pid a nested fields
     public HibernateHqlRequest<T> transform(Class<?> clazz) {
         transformToClass = clazz;
         return this;
@@ -84,7 +82,7 @@ public final class HibernateHqlRequest<T> {
         return hibernateQuery;
     }
 
-    // TODO возможно здесь возвращать long?
+    // TODO may be return long?
     public int count() {
         Number result = HibernateSessionFactory.doInTransaction(new IRequest<Number>() {
             @Override

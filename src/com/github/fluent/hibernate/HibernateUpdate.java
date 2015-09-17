@@ -26,20 +26,20 @@ public final class HibernateUpdate {
     }
 
     /**
-     * Добавляет параметр запроса.
+     * Add a request parameter.
      *
      * @param name
-     *            имя параметра
-     * @param val
-     *            значение
+     *            parameter name
+     * @param value
+     *            value
      */
-    public HibernateUpdate p(String name, Object val) {
-        params.add(name, val);
+    public HibernateUpdate p(String name, Object value) {
+        params.add(name, value);
         return this;
     }
 
-    public HibernateUpdate p(String name, Object... vals) {
-        params.add(name, Arrays.asList(vals));
+    public HibernateUpdate p(String name, Object... valsues) {
+        params.add(name, Arrays.asList(valsues));
         return this;
     }
 

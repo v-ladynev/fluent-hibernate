@@ -1,38 +1,34 @@
 package com.github.fluent.hibernate;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.Query;
 
 /**
- * Именованные параметры запроса.
+ * Named query parameters.
  *
  * @author DoubleF1re
  * @author V.Ladynev
  */
 public class HibernateQueryParameters {
 
-    private final List<Parameter> parameters;
+    private final List<Parameter> parameters = InternalUtils.CollectionUtils.newArrayList();
 
-    /**
-     * Создание пустых параметров запроса.
-     */
     public HibernateQueryParameters() {
-        parameters = new ArrayList<Parameter>(4);
+
     }
 
     /**
-     * Создание параметров запроса с одним параметром.
+     * Constructor. Add one named query parameter.
      *
      * @param name
-     *            имя параметра
+     *            name of parameter
+     *
      * @param val
-     *            значение
+     *            parameter value
      */
     public HibernateQueryParameters(String name, Object val) {
-        parameters = new ArrayList<Parameter>(1);
         add(name, val);
     }
 
@@ -41,12 +37,12 @@ public class HibernateQueryParameters {
     }
 
     /**
-     * Добавляет параметр запроса.
+     * Add a named query parameter.
      *
      * @param name
-     *            имя параметра
+     *            name of parameter
      * @param val
-     *            значение
+     *            parameter value
      */
     public HibernateQueryParameters add(String name, Object val) {
         parameters.add(new Parameter(name, val));
@@ -59,9 +55,6 @@ public class HibernateQueryParameters {
         }
     }
 
-    /**
-     * Объект параметров.
-     */
     private static final class Parameter {
         private final String name;
 

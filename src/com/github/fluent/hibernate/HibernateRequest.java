@@ -16,11 +16,9 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.ResultTransformer;
 
-import com.github.fluent.hibernate.util.InternalUtils;
-
 /**
  * @param <T>
- *            тип возвращаемого значения.
+ *            type of return value.
  *
  * @author DoubleF1re
  * @author V.Ladynev
@@ -40,9 +38,6 @@ public final class HibernateRequest<T> {
     private boolean distinct;
 
     private ResultTransformer transformer;
-
-    // TODO delete
-    // private CriteriaImpl criteria;
 
     private final Class<?> persistentClass;
 
@@ -237,16 +232,17 @@ public final class HibernateRequest<T> {
         return InternalUtils.CollectionUtils.<T> first(list());
     }
 
+    @SuppressWarnings("unchecked")
     public List<T> list() {
         return HibernateSessionFactory.doInTransaction(new IRequest<List<T>>() {
             @Override
             public List<T> doInTransaction(Session session) {
-                return list(createCriteria(session));
+                return tuneCriteriaForList(createCriteria(session)).list();
             }
         });
     }
 
-    // TODO возможно здесь возвращать long?
+    // TODO may be return long?
     public int count() {
         Number result = HibernateSessionFactory.doInTransaction(new IRequest<Number>() {
             @Override
@@ -258,32 +254,25 @@ public final class HibernateRequest<T> {
     }
 
     private Criteria createCriteria(Session session) {
-        return session.createCriteria(persistentClass);
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<T> list(Criteria criteria) {
-        return tuneCriteriaForList(criteria).list();
-    }
-
-    private Criteria tuneCriteriaForList(Criteria criteria) {
-
-        // TODO move to create criteria
+        Criteria result = session.createCriteria(persistentClass);
+        aliases.addToCriteria(result);
 
         for (Criterion restriction : restrictions) {
-            criteria.add(restriction);
-        }
-
-        aliases.addToCriteria(criteria);
-
-        if (projections.getLength() > 0) {
-            criteria.setProjection(distinct ? Projections.distinct(projections) : projections);
+            result.add(restriction);
         }
 
         if (fetchJoinPaths != null) {
             for (String associationPath : fetchJoinPaths) {
-                criteria.setFetchMode(associationPath, FetchMode.JOIN);
+                result.setFetchMode(associationPath, FetchMode.JOIN);
             }
+        }
+
+        return result;
+    }
+
+    private Criteria tuneCriteriaForList(Criteria criteria) {
+        if (projections.getLength() > 0) {
+            criteria.setProjection(distinct ? Projections.distinct(projections) : projections);
         }
 
         if (transformer != null) {
@@ -307,8 +296,8 @@ public final class HibernateRequest<T> {
     }
 
     private Object count(Criteria criteria) {
-        // TODO для запросов, в которых осуществляется join таблиц, будет работать некорректно
-        // select count(*) from (select distinct pid1, pid2 from ...) попробовать
+        // TODO for requests with tables joins will be work incorrect
+        // select count(*) from (select distinct pid1, pid2 from ...) check this
         criteria.setProjection(Projections.rowCount());
         return criteria.uniqueResult();
     }

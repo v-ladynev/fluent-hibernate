@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate.util;
+package com.github.fluent.hibernate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,11 +10,15 @@ import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 
 /**
- * Utils for this library. For internal use only. Please don't use it outside this library.
+ * Utils for this library. For internal use only.
  *
  * @author V.Ladynev
  */
-public class InternalUtils {
+/*package*/final class InternalUtils {
+
+    private InternalUtils() {
+
+    }
 
     public static int hashCode(Object... objects) {
         return Arrays.hashCode(objects);
