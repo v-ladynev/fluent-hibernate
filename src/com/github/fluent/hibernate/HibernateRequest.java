@@ -14,8 +14,6 @@ import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.engine.spi.SessionImplementor;
-import org.hibernate.internal.CriteriaImpl;
 import org.hibernate.transform.ResultTransformer;
 
 import com.github.fluent.hibernate.util.InternalUtils;
@@ -35,6 +33,10 @@ public final class HibernateRequest<T> {
 
     private final Aliases aliases = Aliases.aliasList();
 
+    private final List<Order> orders = InternalUtils.CollectionUtils.newArrayList();
+
+    private String[] fetchJoinPaths;
+
     private boolean distinct;
 
     private ResultTransformer transformer;
@@ -43,6 +45,10 @@ public final class HibernateRequest<T> {
     // private CriteriaImpl criteria;
 
     private final Class<?> persistentClass;
+
+    private Pagination pagination;
+
+    private Integer maxResults;
 
     private HibernateRequest(Class<?> persistentClass) {
         this.persistentClass = persistentClass;
@@ -103,10 +109,14 @@ public final class HibernateRequest<T> {
         return this;
     }
 
-    // TODO может ли это привести к ошибкам?
-    // TODO доработать если один элемент и он массив, чтобы работало правильно
+    // TODO It works incorrectly for an only element array
     public HibernateRequest<T> in(String propertyName, Object... values) {
         restrictions.add(Restrictions.in(propertyName, values));
+        return this;
+    }
+
+    public HibernateRequest<T> crit(Criterion criterion) {
+        restrictions.add(criterion);
         return this;
     }
 
@@ -120,7 +130,7 @@ public final class HibernateRequest<T> {
         return this;
     }
 
-    // TODO возможно, pidProperty можно определеить автоматически
+    // TODO pidProperty automatic detection name (may be impossible)
     public HibernateRequest<T> projId(String pidProperty) {
         projections.add(Projections.id().as(pidProperty));
         return this;
@@ -162,7 +172,7 @@ public final class HibernateRequest<T> {
     }
 
     public HibernateRequest<T> leftJoin(String associationPath, String alias, Criterion withClause) {
-        criteria.createAlias(associationPath, alias, JoinType.LEFT.ordinal(), withClause);
+        aliases.add(associationPath, alias, JoinType.LEFT, withClause);
         return this;
     }
 
@@ -172,60 +182,49 @@ public final class HibernateRequest<T> {
     }
 
     public HibernateRequest<T> rightJoin(String associationPath, String alias) {
-        criteria.createAlias(associationPath, alias, JoinType.RIGHT.ordinal());
+        aliases.add(associationPath, alias, JoinType.RIGHT);
         return this;
     }
 
     public HibernateRequest<T> rightJoin(String associationPath, String alias, Criterion withClause) {
-        criteria.createAlias(associationPath, alias, JoinType.RIGHT.ordinal(), withClause);
+        aliases.add(associationPath, alias, JoinType.RIGHT, withClause);
         return this;
     }
 
     public HibernateRequest<T> transform(Class<?> clazz) {
-        /* Напрямую трансформер устанавливать нельзя, он теряется при вызове criteria.setProjection.
-         * так нельзя - criteria.setResultTransformer(new IgnoreCaseAliasToBeanResultTransformer(clazz))
-         */
         transformer = new IgnoreCaseAliasToBeanResultTransformer(clazz);
         return this;
     }
 
-    public HibernateRequest<T> crit(Criterion criterion) {
-        criteria.add(criterion);
-        return this;
-    }
-
     public HibernateRequest<T> pagination(Pagination pagination) {
-        pagination.addToCriteria(criteria);
+        this.pagination = pagination;
         return this;
     }
 
     public HibernateRequest<T> maxResults(int maxResults) {
-        criteria.setMaxResults(maxResults);
+        this.maxResults = maxResults;
         return this;
     }
 
     /**
-     * Сортировка от меньшего к большему.
+     * Sort from smallest to largest.
      */
     public HibernateRequest<T> orderAsc(String propertyName) {
-        criteria.addOrder(Order.asc(propertyName));
+        orders.add(Order.asc(propertyName));
         return this;
     }
 
     /**
-     * Сортировка от большего к меньшему.
+     * Sort from largest to smallest.
      */
     public HibernateRequest<T> orderDesc(String propertyName) {
-        criteria.addOrder(Order.desc(propertyName));
+        orders.add(Order.desc(propertyName));
         return this;
     }
 
-    // TODO возможно имя метода fetchJoin?
-    // TODO доработать если один элемент и он массив, чтобы работало правильно
-    public HibernateRequest<T> fetch(String... associationPaths) {
-        for (String associationPath : associationPaths) {
-            criteria.setFetchMode(associationPath, FetchMode.JOIN);
-        }
+    // TODO It works incorrectly for an only element array
+    public HibernateRequest<T> fetchJoin(String... associationPaths) {
+        fetchJoinPaths = associationPaths;
         return this;
     }
 
@@ -242,9 +241,7 @@ public final class HibernateRequest<T> {
         return HibernateSessionFactory.doInTransaction(new IRequest<List<T>>() {
             @Override
             public List<T> doInTransaction(Session session) {
-                session.createCriteria(persistentClass)
-
-                return list(attachSession(session));
+                return list(createCriteria(session));
             }
         });
     }
@@ -254,43 +251,70 @@ public final class HibernateRequest<T> {
         Number result = HibernateSessionFactory.doInTransaction(new IRequest<Number>() {
             @Override
             public Number doInTransaction(Session session) {
-                return (Number) count(attachSession(session));
+                return (Number) count(createCriteria(session));
             }
         });
         return result == null ? 0 : result.intValue();
     }
 
-    private CriteriaImpl attachSession(Session session) {
-        criteria.setSession((SessionImplementor) session);
-        return criteria;
+    private Criteria createCriteria(Session session) {
+        return session.createCriteria(persistentClass);
     }
 
     @SuppressWarnings("unchecked")
-    private List<T> list(CriteriaImpl crit) {
-        if (projections.getLength() > 0) {
-            crit.setProjection(distinct ? Projections.distinct(projections) : projections);
-        }
-        if (transformer != null) {
-            crit.setResultTransformer(transformer);
-        }
-        List<T> result = crit.list();
-
-        return result;
+    private List<T> list(Criteria criteria) {
+        return tuneCriteriaForList(criteria).list();
     }
 
-    private Object count(Criteria crit) {
+    private Criteria tuneCriteriaForList(Criteria criteria) {
+
+        // TODO move to create criteria
+
+        for (Criterion restriction : restrictions) {
+            criteria.add(restriction);
+        }
+
+        aliases.addToCriteria(criteria);
+
+        if (projections.getLength() > 0) {
+            criteria.setProjection(distinct ? Projections.distinct(projections) : projections);
+        }
+
+        if (fetchJoinPaths != null) {
+            for (String associationPath : fetchJoinPaths) {
+                criteria.setFetchMode(associationPath, FetchMode.JOIN);
+            }
+        }
+
+        if (transformer != null) {
+            criteria.setResultTransformer(transformer);
+        }
+
+        for (Order order : orders) {
+            criteria.addOrder(order);
+        }
+
+        if (maxResults != null) {
+            criteria.setMaxResults(maxResults);
+        }
+
+        // can replace maxResults
+        if (pagination != null) {
+            pagination.addToCriteria(criteria);
+        }
+
+        return criteria;
+    }
+
+    private Object count(Criteria criteria) {
         // TODO для запросов, в которых осуществляется join таблиц, будет работать некорректно
         // select count(*) from (select distinct pid1, pid2 from ...) попробовать
-        crit.setProjection(Projections.rowCount());
-        return crit.uniqueResult();
+        criteria.setProjection(Projections.rowCount());
+        return criteria.uniqueResult();
     }
 
     public static <T> HibernateRequest<T> create(Class<?> clazz) {
         return new HibernateRequest<T>(clazz);
-    }
-
-    public static <T> HibernateRequest<T> create(CriteriaImpl criteria) {
-        return new HibernateRequest<T>(criteria);
     }
 
 }

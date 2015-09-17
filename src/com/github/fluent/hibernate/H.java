@@ -2,8 +2,6 @@ package com.github.fluent.hibernate;
 
 import java.util.List;
 
-import org.hibernate.internal.CriteriaImpl;
-
 /**
  * Пространство имён для работы с Hibernate.
  *
@@ -18,10 +16,6 @@ public final class H {
 
     public static <T> HibernateRequest<T> request(Class<?> clazz) {
         return HibernateRequest.<T> create(clazz);
-    }
-
-    public static <T> HibernateRequest<T> request(CriteriaImpl criteria) {
-        return HibernateRequest.<T> create(criteria);
     }
 
     public static <T> HibernateHqlRequest<T> request(String query) {
