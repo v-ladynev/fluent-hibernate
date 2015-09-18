@@ -116,18 +116,28 @@ public final class HibernateRequest<T> {
     }
 
     public HibernateRequest<T> proj(String propertyName) {
-        projections.add(Projections.property(propertyName).as(propertyName));
+        proj(Projections.property(propertyName).as(propertyName));
         return this;
     }
 
     public HibernateRequest<T> proj(String propertyName, String alias) {
-        projections.add(Projections.property(propertyName).as(alias));
+        proj(Projections.property(propertyName).as(alias));
         return this;
     }
 
     // TODO pidProperty automatic detection name (may be impossible)
     public HibernateRequest<T> projId(String pidProperty) {
-        projections.add(Projections.id().as(pidProperty));
+        proj(Projections.id().as(pidProperty));
+        return this;
+    }
+
+    public HibernateRequest<T> projMin(String minProperty) {
+        proj(Projections.min(minProperty));
+        return this;
+    }
+
+    public HibernateRequest<T> projMax(String maxProperty) {
+        proj(Projections.max(maxProperty));
         return this;
     }
 
