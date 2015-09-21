@@ -44,6 +44,13 @@ public class HibernateSessionFactory {
         sessionFactory = ac.buildSessionFactory(serviceRegistry);
     }
 
+    public synchronized static void closeSessionFactory() {
+        if (sessionFactory != null) {
+            sessionFactory.close();
+            sessionFactory = null;
+        }
+    }
+
     public static <T> T doInTransaction(IRequest<T> request) {
         Transaction txn = null;
         Session session = openSession();

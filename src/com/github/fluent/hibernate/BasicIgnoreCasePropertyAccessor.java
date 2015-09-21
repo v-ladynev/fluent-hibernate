@@ -14,9 +14,8 @@ import org.hibernate.PropertyNotFoundException;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.internal.util.ReflectHelper;
-import org.hibernate.property.Getter;
-import org.hibernate.property.PropertyAccessor;
-import org.hibernate.property.Setter;
+import org.hibernate.property.access.spi.Getter;
+import org.hibernate.property.access.spi.Setter;
 
 /**
  * Accesses property values via a get/set pair, which may be nonpublic. The default (and recommended
@@ -25,9 +24,8 @@ import org.hibernate.property.Setter;
  * @author DoubleF1re
  * @author V.Ladynev
  */
-public class BasicIgnoreCasePropertyAccessor implements PropertyAccessor {
+public class BasicIgnoreCasePropertyAccessor {
 
-    @Override
     @SuppressWarnings("rawtypes")
     public Setter getSetter(Class theClass, String propertyName) {
         return createSetter(theClass, propertyName);
@@ -115,7 +113,6 @@ public class BasicIgnoreCasePropertyAccessor implements PropertyAccessor {
         return potentialSetter;
     }
 
-    @Override
     @SuppressWarnings("rawtypes")
     public Getter getGetter(Class theClass, String propertyName) {
         return createGetter(theClass, propertyName);

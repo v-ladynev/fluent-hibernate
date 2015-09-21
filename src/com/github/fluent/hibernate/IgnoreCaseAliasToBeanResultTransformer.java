@@ -3,8 +3,7 @@ package com.github.fluent.hibernate;
 import java.util.List;
 
 import org.hibernate.HibernateException;
-import org.hibernate.property.PropertyAccessor;
-import org.hibernate.property.Setter;
+import org.hibernate.property.access.spi.Setter;
 import org.hibernate.transform.ResultTransformer;
 
 /**
@@ -22,7 +21,7 @@ public class IgnoreCaseAliasToBeanResultTransformer implements ResultTransformer
 
     private Setter[] setters;
 
-    private final PropertyAccessor propertyAccessor;
+    private final BasicIgnoreCasePropertyAccessor propertyAccessor;
 
     private final String[] instAliases;
 

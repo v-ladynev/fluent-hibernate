@@ -6,3 +6,4 @@ Library developmen: [V.Ladynev](https://plus.google.com/102177768964957793539/po
 
 ## TODO
 - Refactor custom transformer, add builder.
+- In testing environment https://discuss.gradle.org/t/how-to-get-multiple-versions-of-the-same-library/7400/2
