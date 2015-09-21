@@ -19,7 +19,7 @@ import org.hibernate.transform.ResultTransformer;
 /**
  * @param <T>
  *            type of return value.
- *
+ * 
  * @author DoubleF1re
  * @author V.Ladynev
  */
@@ -198,6 +198,11 @@ public final class HibernateRequest<T> {
 
     public HibernateRequest<T> transform(Class<?> clazz) {
         transformer = new IgnoreCaseAliasToBeanResultTransformer(clazz);
+        return this;
+    }
+
+    public HibernateRequest<T> distinctToRootEntity() {
+        this.transformer = Criteria.DISTINCT_ROOT_ENTITY;
         return this;
     }
 
