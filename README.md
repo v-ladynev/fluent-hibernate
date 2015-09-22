@@ -1,8 +1,12 @@
 # fluent-hibernate
-Library to work with Hibernate by fluent API.
+A library to work with Hibernate by fluent API. The library requires Java 1.6 and above.
 
 The download link:
+<<<<<<< HEAD
 [fluent-hibernate-0.1.0.jar](https://github.com/v-ladynev/fluent-hibernate/releases/download/v0.1.0/fluent-hibernate-0.1.0.jar) (requires Java 1.6 and above).
+=======
+[fluent-hibernate-0.1.0.jar](https://github.com/v-ladynev/fluent-hibernate/releases/download/v0.1.0/fluent-hibernate-0.1.0.jar)
+>>>>>>> Update readme with examples and link to jar download.
 
 ## Examples
 Get all users.
