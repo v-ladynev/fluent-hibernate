@@ -3,8 +3,9 @@ package com.github.fluent.hibernate;
 import java.util.List;
 
 import org.hibernate.HibernateException;
-import org.hibernate.property.access.spi.Setter;
 import org.hibernate.transform.ResultTransformer;
+
+import com.github.fluent.hibernate.BasicIgnoreCasePropertyAccessor.BasicSetter;
 
 /**
  * @author DoubleF1re
@@ -19,7 +20,7 @@ public class IgnoreCaseAliasToBeanResultTransformer implements ResultTransformer
     @SuppressWarnings("rawtypes")
     private final Class resultClass;
 
-    private Setter[] setters;
+    private BasicSetter[] setters;
 
     private final BasicIgnoreCasePropertyAccessor propertyAccessor;
 
@@ -61,7 +62,7 @@ public class IgnoreCaseAliasToBeanResultTransformer implements ResultTransformer
 
         try {
             if (setters == null) {
-                setters = new Setter[aliases.length];
+                setters = new BasicSetter[aliases.length];
                 for (int i = 0; i < aliases.length; i++) {
                     String alias = aliases[i];
                     if (alias != null) {

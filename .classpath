@@ -8,7 +8,7 @@
 	<classpathentry kind="lib" path="libs/dom4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="libs/geronimo-jta_1.1_spec-1.1.1.jar"/>
 	<classpathentry kind="lib" path="libs/hibernate-commons-annotations-5.0.0.Final.jar"/>
-	<classpathentry kind="lib" path="libs/hibernate-core-5.0.1.Final.jar"/>
+	<classpathentry kind="lib" path="libs/hibernate-core-5.0.1.Final.jar" sourcepath="/hibernate-orm/hibernate-core/src/main/java"/>
 	<classpathentry kind="lib" path="libs/hibernate-jpa-2.1-api-1.0.0.Final.jar"/>
 	<classpathentry kind="lib" path="libs/jandex-1.2.2.Final.jar"/>
 	<classpathentry kind="lib" path="libs/javassist-3.18.1-GA.jar"/>

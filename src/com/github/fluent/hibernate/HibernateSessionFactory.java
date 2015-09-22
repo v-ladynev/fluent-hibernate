@@ -1,5 +1,7 @@
 package com.github.fluent.hibernate;
 
+import java.io.File;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
@@ -34,14 +36,31 @@ public class HibernateSessionFactory {
     }
 
     public synchronized static void createSessionFactory(String hibernateCfgXml) {
+        createSessionFactory(hibernateCfgXml, null);
+    }
+
+    public synchronized static void createSessionFactory(String hibernateCfgXml, File propertiesPath) {
         if (sessionFactory != null) {
             return;
         }
 
-        Configuration ac = new Configuration().configure(hibernateCfgXml);
-        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
-                ac.getProperties()).build();
-        sessionFactory = ac.buildSessionFactory(serviceRegistry);
+        StandardServiceRegistryBuilder serviceRegistryBuilder = new StandardServiceRegistryBuilder()
+        .configure(hibernateCfgXml);
+
+        if (propertiesPath != null) {
+            serviceRegistryBuilder.loadProperties(propertiesPath);
+        }
+
+        sessionFactory = createSessionFactory(serviceRegistryBuilder.build());
+    }
+
+    private static SessionFactory createSessionFactory(ServiceRegistry serviceRegistry) {
+        try {
+            return new Configuration().buildSessionFactory(serviceRegistry);
+        } catch (Throwable th) {
+            StandardServiceRegistryBuilder.destroy(serviceRegistry);
+            throw new RuntimeException(th);
+        }
     }
 
     public synchronized static void closeSessionFactory() {

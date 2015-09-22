@@ -14,8 +14,6 @@ import org.hibernate.PropertyNotFoundException;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.internal.util.ReflectHelper;
-import org.hibernate.property.access.spi.Getter;
-import org.hibernate.property.access.spi.Setter;
 
 /**
  * Accesses property values via a get/set pair, which may be nonpublic. The default (and recommended
@@ -27,12 +25,12 @@ import org.hibernate.property.access.spi.Setter;
 public class BasicIgnoreCasePropertyAccessor {
 
     @SuppressWarnings("rawtypes")
-    public Setter getSetter(Class theClass, String propertyName) {
+    public BasicSetter getSetter(Class theClass, String propertyName) {
         return createSetter(theClass, propertyName);
     }
 
     @SuppressWarnings("rawtypes")
-    private static Setter createSetter(Class theClass, String propertyName) {
+    private static BasicSetter createSetter(Class theClass, String propertyName) {
         BasicSetter result = getSetterOrNull(theClass, propertyName);
         if (result == null) {
             throw new PropertyNotFoundException(String.format(
@@ -114,12 +112,12 @@ public class BasicIgnoreCasePropertyAccessor {
     }
 
     @SuppressWarnings("rawtypes")
-    public Getter getGetter(Class theClass, String propertyName) {
+    public BasicGetter getGetter(Class theClass, String propertyName) {
         return createGetter(theClass, propertyName);
     }
 
     @SuppressWarnings("rawtypes")
-    public static Getter createGetter(Class theClass, String propertyName) {
+    public static BasicGetter createGetter(Class theClass, String propertyName) {
         BasicGetter result = getGetterOrNull(theClass, propertyName);
         if (result == null) {
             throw new PropertyNotFoundException(String.format(
@@ -181,7 +179,7 @@ public class BasicIgnoreCasePropertyAccessor {
     }
 
     /** Basic setter. */
-    public static final class BasicSetter implements Setter {
+    public static final class BasicSetter {
         private static final long serialVersionUID = -3092319284832094425L;
         @SuppressWarnings("rawtypes")
         private final Class clazz;
@@ -200,7 +198,6 @@ public class BasicIgnoreCasePropertyAccessor {
             this.setMethods = setMethods;
         }
 
-        @Override
         @SuppressWarnings("rawtypes")
         public void set(Object target, Object value, SessionFactoryImplementor factory)
                 throws HibernateException {
@@ -243,23 +240,21 @@ public class BasicIgnoreCasePropertyAccessor {
                 }
                 String errorMessage = String.format("Expected type: %s, actual value: %s", method
                         .getParameterTypes()[0].getName(), value == null ? null : value.getClass()
-                        .getName());
+                                .getName());
                 throw new PropertyAccessException(iae, errorMessage, true, clazz, propertyName);
             } catch (Exception e) {
                 String errorMessage = String.format(
                         "Setter information: expected type: %s, actual type: %s", method
-                        .getParameterTypes()[0].getName(), value == null ? null : value
+                                .getParameterTypes()[0].getName(), value == null ? null : value
                                 .getClass().getName());
                 throw new PropertyAccessException(e, errorMessage, true, clazz, propertyName);
             }
         }
 
-        @Override
         public Method getMethod() {
             return method;
         }
 
-        @Override
         public String getMethodName() {
             return method.getName();
         }
@@ -275,7 +270,7 @@ public class BasicIgnoreCasePropertyAccessor {
     }
 
     /** Basic getter. */
-    public static final class BasicGetter implements Getter {
+    public static final class BasicGetter {
         private static final long serialVersionUID = 2828591409798958202L;
         @SuppressWarnings("rawtypes")
         private final Class clazz;
@@ -289,7 +284,6 @@ public class BasicIgnoreCasePropertyAccessor {
             this.propertyName = propertyName;
         }
 
-        @Override
         public Object get(Object target) throws HibernateException {
             try {
                 return method.invoke(target, (Object[]) null);
@@ -305,29 +299,24 @@ public class BasicIgnoreCasePropertyAccessor {
             }
         }
 
-        @Override
         @SuppressWarnings("rawtypes")
         public Object getForInsert(Object target, Map mergeMap, SessionImplementor session) {
             return get(target);
         }
 
-        @Override
         @SuppressWarnings("rawtypes")
         public Class getReturnType() {
             return method.getReturnType();
         }
 
-        @Override
         public Method getMethod() {
             return method;
         }
 
-        @Override
         public String getMethodName() {
             return method.getName();
         }
 
-        @Override
         public Member getMember() {
             return method;
         }
