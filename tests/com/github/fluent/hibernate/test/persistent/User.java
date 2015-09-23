@@ -15,6 +15,8 @@ import javax.persistence.Table;
 @Table(name = "users")
 public class User {
 
+    public static final String LOGIN = "login";
+
     private Long pid;
 
     private String login;
