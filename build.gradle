@@ -12,7 +12,7 @@ subprojects {
   }
 }
 
-project(':fluent-hibernate') {
+project(':fluent-hibernate-core') {
 	group="com.github.fluent"
 	description="Library to work with Hibernate by fluent API"
 	
@@ -23,15 +23,15 @@ project(':fluent-hibernate') {
     }
 }
 
-project(':fluent-example') {
+project(':fluent-hibernate-examples') {
 	apply plugin: 'application'
 	
 	group="com.github.fluent"
-	description="An example using 'fluent-hibernate' library with MySQL"
+	description="An example using 'fluent-hibernate-core' library with MySQL"
 	mainClassName="com.github.fluent.hibernate.example.mysql.MySqlExample"
 	
     dependencies {
-        compile project(':fluent-hibernate')
+        compile project(':fluent-hibernate-core')
     }
 }
 

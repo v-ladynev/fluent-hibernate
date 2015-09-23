@@ -1,2 +1,2 @@
-include 'fluent-hibernate'
-include 'fluent-example'
+include 'fluent-hibernate-core'
+include 'fluent-hibernate-examples'
