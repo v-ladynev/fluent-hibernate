@@ -67,3 +67,11 @@ local.properties
 # TeXlipse plugin
 .texlipse
 /.checkstyle
+
+# IDE Support
+# IntelliJ specific files/directories
+.idea/
+*.ipr
+*.iws
+*.iml
+atlassian-ide-plugin.xml
