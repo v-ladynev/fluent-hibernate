@@ -26,51 +26,6 @@ public final class HibernateSessionFactory {
     }
 
     /**
-     * Open a {@link Session}.
-     *
-     * @return the created session
-     */
-    public static Session openSession() {
-        assertSessionFactory();
-        return sessionFactory.openSession();
-    }
-
-    /**
-     * Open a new stateless session.
-     *
-     * @return the created stateless session
-     */
-    private static StatelessSession openStatelessSession() {
-        assertSessionFactory();
-        return sessionFactory.openStatelessSession();
-    }
-
-    private static void assertSessionFactory() {
-        if (sessionFactory == null) {
-            throw new IllegalStateException(
-                    "Firstly create a session factory with HibernateSessionFactory.Builder");
-        }
-    }
-
-    private static synchronized void createSessionFactory(ServiceRegistry serviceRegistry) {
-        if (sessionFactory != null) {
-            return;
-        }
-
-        try {
-            sessionFactory = new Configuration().buildSessionFactory(serviceRegistry);
-        } catch (Throwable th) {
-            StandardServiceRegistryBuilder.destroy(serviceRegistry);
-            throw new RuntimeException(th);
-        }
-    }
-
-    private static synchronized void setExistingSessionFactory(SessionFactory sessionFactory) {
-        closeSessionFactory();
-        HibernateSessionFactory.sessionFactory = sessionFactory;
-    }
-
-    /**
      * Destroy {@link SessionFactory} and release all resources (caches, connection pools, etc).
      */
     public static synchronized void closeSessionFactory() {
@@ -123,6 +78,51 @@ public final class HibernateSessionFactory {
         }
 
         return result;
+    }
+
+    /**
+     * Open a {@link Session}.
+     *
+     * @return the created session
+     */
+    private static Session openSession() {
+        assertSessionFactory();
+        return sessionFactory.openSession();
+    }
+
+    /**
+     * Open a new stateless session.
+     *
+     * @return the created stateless session
+     */
+    private static StatelessSession openStatelessSession() {
+        assertSessionFactory();
+        return sessionFactory.openStatelessSession();
+    }
+
+    private static void assertSessionFactory() {
+        if (sessionFactory == null) {
+            throw new IllegalStateException(
+                    "Firstly create a session factory with HibernateSessionFactory.Builder");
+        }
+    }
+
+    private static synchronized void createSessionFactory(ServiceRegistry serviceRegistry) {
+        if (sessionFactory != null) {
+            return;
+        }
+
+        try {
+            sessionFactory = new Configuration().buildSessionFactory(serviceRegistry);
+        } catch (Throwable th) {
+            StandardServiceRegistryBuilder.destroy(serviceRegistry);
+            throw new RuntimeException(th);
+        }
+    }
+
+    private static synchronized void setExistingSessionFactory(SessionFactory sessionFactory) {
+        closeSessionFactory();
+        HibernateSessionFactory.sessionFactory = sessionFactory;
     }
 
     /**
