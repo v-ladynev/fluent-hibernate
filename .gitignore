@@ -66,3 +66,4 @@ local.properties
 
 # TeXlipse plugin
 .texlipse
+/.checkstyle
