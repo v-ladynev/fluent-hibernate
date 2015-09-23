@@ -43,7 +43,7 @@ public final class HibernateUpdate {
         return this;
     }
 
-    public int update() {
+    public int execute() {
         return HibernateSessionFactory.doInTransaction(new IRequest<Integer>() {
             @Override
             public Integer doInTransaction(Session session) {

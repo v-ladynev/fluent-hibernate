@@ -11,19 +11,35 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
 /**
+ * This class holds a Hibernate session factory. Use {@link HibernateSessionFactory.Builder} to
+ * create a session factory.
  *
  * @author V.Ladynev
  */
-public class HibernateSessionFactory {
+public final class HibernateSessionFactory {
 
     /** Session factory. */
     private static volatile SessionFactory sessionFactory;
 
+    private HibernateSessionFactory() {
+
+    }
+
+    /**
+     * Open a {@link Session}.
+     *
+     * @return the created session
+     */
     public static Session openSession() {
         assertSessionFactory();
         return sessionFactory.openSession();
     }
 
+    /**
+     * Open a new stateless session.
+     *
+     * @return the created stateless session
+     */
     private static StatelessSession openStatelessSession() {
         assertSessionFactory();
         return sessionFactory.openStatelessSession();
@@ -31,39 +47,33 @@ public class HibernateSessionFactory {
 
     private static void assertSessionFactory() {
         if (sessionFactory == null) {
-            throw new IllegalStateException("Create session factory first");
+            throw new IllegalStateException(
+                    "Firstly create a session factory with HibernateSessionFactory.Builder");
         }
     }
 
-    public synchronized static void createSessionFactory(String hibernateCfgXml) {
-        createSessionFactory(hibernateCfgXml, null);
-    }
-
-    public synchronized static void createSessionFactory(String hibernateCfgXml, File propertiesPath) {
+    private static synchronized void createSessionFactory(ServiceRegistry serviceRegistry) {
         if (sessionFactory != null) {
             return;
         }
 
-        StandardServiceRegistryBuilder serviceRegistryBuilder = new StandardServiceRegistryBuilder()
-        .configure(hibernateCfgXml);
-
-        if (propertiesPath != null) {
-            serviceRegistryBuilder.loadProperties(propertiesPath);
-        }
-
-        sessionFactory = createSessionFactory(serviceRegistryBuilder.build());
-    }
-
-    private static SessionFactory createSessionFactory(ServiceRegistry serviceRegistry) {
         try {
-            return new Configuration().buildSessionFactory(serviceRegistry);
+            sessionFactory = new Configuration().buildSessionFactory(serviceRegistry);
         } catch (Throwable th) {
             StandardServiceRegistryBuilder.destroy(serviceRegistry);
             throw new RuntimeException(th);
         }
     }
 
-    public synchronized static void closeSessionFactory() {
+    private static synchronized void setExistingSessionFactory(SessionFactory sessionFactory) {
+        closeSessionFactory();
+        HibernateSessionFactory.sessionFactory = sessionFactory;
+    }
+
+    /**
+     * Destroy {@link SessionFactory} and release all resources (caches, connection pools, etc).
+     */
+    public static synchronized void closeSessionFactory() {
         if (sessionFactory != null) {
             sessionFactory.close();
             sessionFactory = null;
@@ -113,6 +123,52 @@ public class HibernateSessionFactory {
         }
 
         return result;
+    }
+
+    /**
+     * Fluent API for session factory configuration and build. The simplest way to create a session
+     * factory:
+     *
+     * <code>
+     * HibernateSessionFactory.Builder.configureFromDefaultHibernateCfgXml().createSessionFactory();
+     * </code>
+     *
+     * @author V.Ladynev
+     */
+    public static final class Builder {
+
+        private final StandardServiceRegistryBuilder registryBuilder;
+
+        private Builder(StandardServiceRegistryBuilder registryBuilder) {
+            this.registryBuilder = registryBuilder;
+        }
+
+        public static Builder configureFromDefaultHibernateCfgXml() {
+            return new Builder(new StandardServiceRegistryBuilder().configure());
+        }
+
+        public static Builder configureFromHibernateCfgXml(String hibernateCfgXml) {
+            return new Builder(new StandardServiceRegistryBuilder().configure(hibernateCfgXml));
+        }
+
+        public static void configureFromExistingSessionFactory(SessionFactory sessionFactory) {
+            HibernateSessionFactory.setExistingSessionFactory(sessionFactory);
+        }
+
+        public Builder loadHibernatePropertiesFromFile(File pathToPropertiesFile) {
+            registryBuilder.loadProperties(pathToPropertiesFile);
+            return this;
+        }
+
+        public Builder loadHibernatePropertiesFromClassPathResource(String classPathResourceName) {
+            registryBuilder.loadProperties(classPathResourceName);
+            return this;
+        }
+
+        public void createSessionFactory() {
+            HibernateSessionFactory.createSessionFactory(registryBuilder.build());
+        }
+
     }
 
 }
