@@ -2,7 +2,7 @@
 A library to work with Hibernate by fluent API.
 
 The download link:
-[fluent-hibernate-0.1.0.jar](https://github.com/v-ladynev/fluent-hibernate/releases/download/v0.1.0/fluent-hibernate-0.1.0.jar)
+[fluent-hibernate-0.1.1.jar](https://github.com/v-ladynev/fluent-hibernate/releases/download/v.0.1.1/fluent-hibernate-0.1.1.jar)
 
 This library hasn't dependences except Hibernate dependences. It requires Java 1.6 and above.
 

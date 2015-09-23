@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project basedir="." default="build" name="fluent-hibernate">
 
-    <property name="jarDest" value="bin/fluent-hibernate-0.1.0.jar"/>
+    <property name="jarDest" value="bin/fluent-hibernate-0.1.1.jar"/>
     <property name="target" value="1.6"/>
     <property name="source" value="1.6"/>
     <property name="debuglevel" value="source,lines,vars"/>
 
     <path id="fluent-hibernate.classpath">
         <pathelement location="bin"/>
-        <pathelement location="libs/hibernate-commons-annotations-4.0.4.Final.jar"/>
-        <pathelement location="libs/hibernate-core-4.3.5.Final.jar"/>
-        <pathelement location="libs/hibernate-jpa-2.1-api-1.0.0.Final.jar"/>
+        <pathelement location="libs/*"/>
     </path>
 
     <target name ="build" depends="compile">
-      <jar jarfile="${jarDest}" includes="**/*.class" basedir="bin"  />
+        <jar jarfile="${jarDest}" basedir="bin"
+          includes="**/*.class"
+          excludes="**/test/**" />
     </target>
 
    <target name="compile" depends="init">
@@ -32,5 +32,6 @@
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
+        <delete file="${jarDest}" quiet="true" />
     </target>
 </project>
