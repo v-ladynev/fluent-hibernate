@@ -25,7 +25,10 @@ and in the subproject [fluent-hibernate-examples](https://github.com/v-ladynev/f
 
 ## Contributors
 
-[V.Ladynev](https://plus.google.com/102177768964957793539/posts) and [DoubleF1re](https://github.com/DoubleF1re)
+[V.Ladynev](https://plus.google.com/102177768964957793539/posts),
+[DoubleF1re](https://github.com/DoubleF1re),
+[Serg samsonych](https://github.com/samsonych),
+[Lucas Levvy](https://github.com/Levvy055)
 
 ## TODO
 - [ ] Refactor custom transformer, add builder
