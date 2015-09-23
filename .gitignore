@@ -1,0 +1,50 @@
+# General Ignores
+*~
+.classpath
+.DS_Store
+.project
+build/
+libs/
+bin/
+log/
+test-output/
+
+# IDE Support
+# IntelliJ specific files/directories
+.idea/
+*.ipr
+*.iws
+*.iml
+atlassian-ide-plugin.xml
+
+# Exclude all Eclipse related project files
+.factorypath
+.settings/
+.externalToolBuilders/
+.pmd
+.checkstyle
+.springBeans
+.project
+.classpath
+
+# NetBeans
+.nbattrs 
+
+# Gradle
+.gradle/
+
+# Exclude all files from target directory
+target/
+
+# Exclude all idea related project files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Exclude other generated items
+test-output/
+.DS_Store
+.checkstyle
+.pmd
+.pmdruleset.xml

@@ -1,0 +1,13 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.hibernate:hibernate-core:5.0.1.Final"
+    compile "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final"
+    testCompile "junit:junit:4.12"
+    testCompile "com.h2database:h2:1.4.189"    
+}
