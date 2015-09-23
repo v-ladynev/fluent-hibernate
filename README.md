@@ -20,7 +20,8 @@ final String loginToFind = "my_login";
 User user = H.<User> request(User.class).eq("login", loginToFind).first();
 ```
 
-You can find other examples in [fluent-hibernate-mysql project](https://github.com/v-ladynev/fluent-hibernate-mysql)
+You can find other examples in the [fluent-hibernate-mysql project](https://github.com/v-ladynev/fluent-hibernate-mysql)
+and in the [test package](https://github.com/v-ladynev/fluent-hibernate/tree/master/tests/com/github/fluent/hibernate)
 
 ## Contributors
 
