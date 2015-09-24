@@ -39,6 +39,7 @@ tmp/
 local.properties
 .settings/
 .loadpath
+.checkstyle
 
 # Eclipse Core
 .project
@@ -66,7 +67,6 @@ local.properties
 
 # TeXlipse plugin
 .texlipse
-/.checkstyle
 
 # IDE Support
 # IntelliJ specific files/directories
