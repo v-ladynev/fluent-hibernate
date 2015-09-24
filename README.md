@@ -1,10 +1,10 @@
 # fluent-hibernate
 A library to work with Hibernate by fluent API.
 
-The download link:
-[fluent-hibernate-0.1.1.jar](https://github.com/v-ladynev/fluent-hibernate/releases/download/v.0.1.1/fluent-hibernate-0.1.1.jar)
+###Current Project state: [![Build Status](https://travis-ci.org/v-ladynev/fluent-hibernate.svg?branch=master)](https://travis-ci.org/v-ladynev/fluent-hibernate)
 
-This library hasn't dependences except Hibernate dependences. It requires Java 1.6 and above.
+## Download
+[![Release v0.1.1](https://img.shields.io/badge/release-v0.1.1-blue.svg)](https://github.com/v-ladynev/fluent-hibernate/releases/download/v.0.1.1/fluent-hibernate-0.1.1.jar)
 
 ## Examples
 Get all users.
@@ -30,7 +30,20 @@ and in the subproject [fluent-hibernate-examples](https://github.com/v-ladynev/f
 - [samsonych](https://github.com/samsonych);
 - [Lucas Levvy](https://github.com/Levvy055).
 
-## TODO
+
+##Dependencies
+[![Dependency Status](https://www.versioneye.com/user/projects/56041a64f5f2eb00170007d4/badge.svg?style=flat)](https://www.versioneye.com/user/projects/56041a64f5f2eb00170007d4)
+
+This library hasn't dependencies except Hibernate dependencies. 
+It requires Java 1.6 and above.
+
+## Progress
+[![Throughput Graph](https://graphs.waffle.io/v-ladynev/fluent-hibernate/throughput.svg)](https://waffle.io/v-ladynev/fluent-hibernate/metrics)
+
+###TODO:
+[![Stories in Ready](https://badge.waffle.io/v-ladynev/fluent-hibernate.svg?label=ready&title=Ready)](http://waffle.io/v-ladynev/fluent-hibernate)
+[![In Progress](https://badge.waffle.io/v-ladynev/fluent-hibernate.svg?label=in%20progress&title=In%20Progress)](http://waffle.io/v-ladynev/fluent-hibernate)
+
 - [ ] Refactor custom transformer, add builder
 - [x] Add gradle building system
 - [ ] Implement nested H-requests using SessionFactory.getCurrentSession()
