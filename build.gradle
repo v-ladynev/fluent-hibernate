@@ -23,7 +23,7 @@ project(':fluent-hibernate-core') {
   description="Library to work with Hibernate by fluent API"
 
   dependencies {
-    compile group: 'mysql',name: 'mysql-connector-java', version: '5.1.35'
+    compile group: 'mysql',name: 'mysql-connector-java', version: '5.1.36'
     compile group: 'org.hibernate', name: 'hibernate-core', version: '5.0.1.Final'
     testCompile "com.h2database:h2:1.4.189"
   }
