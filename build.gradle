@@ -1,7 +1,12 @@
 apply plugin: 'eclipse'
 
-subprojects {
+allprojects {
   apply plugin: 'java'
+  sourceCompatibility = JavaVersion.VERSION_1_6
+  targetCompatibility = JavaVersion.VERSION_1_6
+}
+
+subprojects {
 
   repositories {
     mavenCentral()
@@ -37,5 +42,5 @@ project(':fluent-hibernate-examples') {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.7'
+  gradleVersion = '2.7'
 }
