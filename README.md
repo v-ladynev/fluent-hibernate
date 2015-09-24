@@ -43,10 +43,3 @@ It requires Java 1.6 and above.
 ###TODO:
 [![Stories in Ready](https://badge.waffle.io/v-ladynev/fluent-hibernate.svg?label=ready&title=Ready)](http://waffle.io/v-ladynev/fluent-hibernate)
 [![In Progress](https://badge.waffle.io/v-ladynev/fluent-hibernate.svg?label=in%20progress&title=In%20Progress)](http://waffle.io/v-ladynev/fluent-hibernate)
-
-- [ ] Refactor custom transformer, add builder
-- [x] Add gradle building system
-- [ ] Implement nested H-requests using SessionFactory.getCurrentSession()
-- [ ] Add Spring support (LocalSessionFactoryBean)
-- [ ] Consider changing API for H.update("delete from User").execute();
-- [ ] In testing environment https://discuss.gradle.org/t/how-to-get-multiple-versions-of-the-same-library/7400/2
