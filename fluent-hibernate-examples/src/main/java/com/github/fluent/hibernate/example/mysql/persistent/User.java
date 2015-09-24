@@ -13,7 +13,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Cloneable {
+
+    public static final String LOGIN = "login";
 
     private Long pid;
 
@@ -59,6 +61,19 @@ public class User {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    public User cloneUser() {
+        try {
+            return (User) clone();
+        } catch (CloneNotSupportedException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override

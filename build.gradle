@@ -14,26 +14,26 @@ subprojects {
 }
 
 project(':fluent-hibernate-core') {
-	group="com.github.fluent"
-	description="Library to work with Hibernate by fluent API"
-	
-    dependencies {
-		compile group: 'mysql',name: 'mysql-connector-java', version: '5.1.35'
-		compile group: 'org.hibernate', name: 'hibernate-core', version: '5.0.1.Final'
-		testCompile "com.h2database:h2:1.4.189"  
-    }
+  group="com.github.fluent"
+  description="Library to work with Hibernate by fluent API"
+
+  dependencies {
+    compile group: 'mysql',name: 'mysql-connector-java', version: '5.1.35'
+    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.0.1.Final'
+    testCompile "com.h2database:h2:1.4.189"
+  }
 }
 
 project(':fluent-hibernate-examples') {
-	apply plugin: 'application'
-	
-	group="com.github.fluent"
-	description="An example using 'fluent-hibernate-core' library with MySQL"
-	mainClassName="com.github.fluent.hibernate.example.mysql.MySqlExample"
-	
-    dependencies {
-        compile project(':fluent-hibernate-core')
-    }
+  apply plugin: 'application'
+
+  group="com.github.fluent"
+  description="An example using 'fluent-hibernate-core' library with MySQL"
+  mainClassName="com.github.fluent.hibernate.example.mysql.MySqlExample"
+
+  dependencies {
+    compile project(':fluent-hibernate-core')
+  }
 }
 
 task wrapper(type: Wrapper) {

@@ -21,7 +21,7 @@ public class MySqlExample {
     public static void main(String[] args) {
         try {
             HibernateSessionFactory.Builder.configureFromDefaultHibernateCfgXml()
-                    .createSessionFactory();
+            .createSessionFactory();
             new MySqlExample().doSomeDatabaseStuff();
         } catch (Throwable th) {
             th.printStackTrace();
@@ -39,7 +39,7 @@ public class MySqlExample {
     }
 
     private User findUser(String login) {
-        return H.<User> request(User.class).eq("login", login).first();
+        return H.<User> request(User.class).eq(User.LOGIN, login).first();
     }
 
     private void deleteAllUsers() {
@@ -47,13 +47,21 @@ public class MySqlExample {
     }
 
     private void insertUsers() {
-        H.saveOrUpdate(USER_A);
-        H.saveOrUpdate(USER_B);
+        H.save(userA());
+        H.save(userB());
     }
 
     private void countUsers() {
         int count = H.<Long> request(User.class).count();
         LOG.info("Users count: " + count);
+    }
+
+    public static User userA() {
+        return USER_A.cloneUser();
+    }
+
+    public static User userB() {
+        return USER_B.cloneUser();
     }
 
     private static User createUser(String login, String name, int age) {
