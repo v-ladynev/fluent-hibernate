@@ -11,11 +11,21 @@ import org.hibernate.Session;
 class HibernateObjectQuery<T> {
 
     @SuppressWarnings("unchecked")
-    public static <T> T saveOrUpdate(final T entity) {
+    public static <T> T save(final T entity) {
         return HibernateSessionFactory.doInTransaction(new IRequest<T>() {
             @Override
             public T doInTransaction(Session session) {
-                return (T) session.merge(entity);
+                return (T) session.save(entity);
+            }
+        });
+    }
+
+    public static <T> void saveOrUpdate(final T entity) {
+        HibernateSessionFactory.doInTransaction(new IRequest<Void>() {
+            @Override
+            public Void doInTransaction(Session session) {
+                session.saveOrUpdate(entity);
+                return null;
             }
         });
     }

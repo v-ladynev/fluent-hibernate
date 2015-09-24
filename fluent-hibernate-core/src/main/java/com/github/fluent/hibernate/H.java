@@ -30,8 +30,12 @@ public final class H {
         return H.<T> request(clazz).idEq(id).first();
     }
 
-    public static <T> T saveOrUpdate(T entity) {
-        return HibernateObjectQuery.saveOrUpdate(entity);
+    public static <T> T save(T entity) {
+        return HibernateObjectQuery.save(entity);
+    }
+
+    public static <T> void saveOrUpdate(T entity) {
+        HibernateObjectQuery.saveOrUpdate(entity);
     }
 
     public static <T> void saveOrUpdateAll(List<T> entities) {

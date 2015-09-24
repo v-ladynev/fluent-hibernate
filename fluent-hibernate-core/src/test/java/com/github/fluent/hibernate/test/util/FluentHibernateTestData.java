@@ -13,18 +13,28 @@ import com.github.fluent.hibernate.test.persistent.User;
  */
 public final class FluentHibernateTestData {
 
-    public static final User USER_A = createUser("loginA", "A user", 20);
+    private static final User USER_A = createUser("loginA", "A user", 20);
 
-    public static final User USER_B = createUser("loginB", "B user", 30);
-
-    public static final List<User> USERS_AB = Arrays.asList(USER_A, USER_B);
+    private static final User USER_B = createUser("loginB", "B user", 30);
 
     private FluentHibernateTestData() {
 
     }
 
+    public static User userA() {
+        return USER_A.cloneUser();
+    }
+
+    public static User userB() {
+        return USER_B.cloneUser();
+    }
+
+    public static List<User> usersAB() {
+        return Arrays.asList(userA(), userB());
+    }
+
     public static HibernateRequest<User> createRequestForUserA() {
-        return createUserRequest().eq(User.LOGIN, USER_A.getLogin());
+        return createUserRequest().eq(User.LOGIN, userA().getLogin());
     }
 
     public static HibernateRequest<User> createUserRequest() {

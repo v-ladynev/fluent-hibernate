@@ -1,7 +1,7 @@
 package com.github.fluent.hibernate;
 
-import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.USER_A;
-import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.USER_B;
+import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.userA;
+import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.userB;
 
 import java.util.List;
 
@@ -26,8 +26,8 @@ public class HibernateRequestTest extends FluentHibernateBaseTest {
 
     @Test
     public void list() {
-        H.saveOrUpdate(USER_A);
-        H.saveOrUpdate(USER_B);
+        H.saveOrUpdate(userA());
+        H.saveOrUpdate(userB());
         List<User> users = FluentHibernateTestData.createUserRequest().list();
         Assert.assertNotNull(users);
         Assert.assertEquals(2, users.size());
@@ -35,17 +35,17 @@ public class HibernateRequestTest extends FluentHibernateBaseTest {
 
     @Test
     public void first() {
-        H.saveOrUpdate(USER_A);
-        H.saveOrUpdate(USER_B);
+        H.saveOrUpdate(userA());
+        H.saveOrUpdate(userB());
         User user = FluentHibernateTestData.createRequestForUserA().first();
         Assert.assertNotNull(user);
-        Assert.assertEquals(USER_A.getLogin(), user.getLogin());
+        Assert.assertEquals(userA().getLogin(), user.getLogin());
     }
 
     @Test
     public void count() {
-        H.saveOrUpdate(USER_A);
-        H.saveOrUpdate(USER_B);
+        H.saveOrUpdate(userA());
+        H.saveOrUpdate(userB());
         int count = H.request(User.class).count();
         Assert.assertEquals(2, count);
     }
