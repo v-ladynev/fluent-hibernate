@@ -63,6 +63,10 @@ public class User {
         this.age = age;
     }
 
+    public User cloneUser() throws CloneNotSupportedException {
+        return (User) clone();
+    }
+
     @Override
     public String toString() {
         return String.format("login = '%s', name = '%s', age = '%d'", login, name, age);

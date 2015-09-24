@@ -32,6 +32,8 @@ and in the subproject [fluent-hibernate-examples](https://github.com/v-ladynev/f
 
 ## TODO
 - [ ] Refactor custom transformer, add builder
-- [ ] Add gradle building system
+- [x] Add gradle building system
+- [ ] Implement nested H-requests using SessionFactory.getCurrentSession()
+- [ ] Add Spring support (LocalSessionFactoryBean)
 - [ ] Consider changing API for H.update("delete from User").execute();
 - [ ] In testing environment https://discuss.gradle.org/t/how-to-get-multiple-versions-of-the-same-library/7400/2

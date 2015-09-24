@@ -28,7 +28,7 @@ public class HibernateRequestTest extends FluentHibernateBaseTest {
     public void list() {
         H.saveOrUpdate(USER_A);
         H.saveOrUpdate(USER_B);
-        List<User> users = H.<User> request(User.class).list();
+        List<User> users = FluentHibernateTestData.createUserRequest().list();
         Assert.assertNotNull(users);
         Assert.assertEquals(2, users.size());
     }
@@ -37,7 +37,7 @@ public class HibernateRequestTest extends FluentHibernateBaseTest {
     public void first() {
         H.saveOrUpdate(USER_A);
         H.saveOrUpdate(USER_B);
-        User user = FluentHibernateTestData.cerateRequestForUserA().first();
+        User user = FluentHibernateTestData.createRequestForUserA().first();
         Assert.assertNotNull(user);
         Assert.assertEquals(USER_A.getLogin(), user.getLogin());
     }

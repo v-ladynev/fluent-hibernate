@@ -1,5 +1,8 @@
 package com.github.fluent.hibernate.test.util;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.github.fluent.hibernate.H;
 import com.github.fluent.hibernate.HibernateRequest;
 import com.github.fluent.hibernate.test.persistent.User;
@@ -14,12 +17,18 @@ public final class FluentHibernateTestData {
 
     public static final User USER_B = createUser("loginB", "B user", 30);
 
+    public static final List<User> USERS_AB = Arrays.asList(USER_A, USER_B);
+
     private FluentHibernateTestData() {
 
     }
 
-    public static HibernateRequest<User> cerateRequestForUserA() {
-        return H.<User> request(User.class).eq(User.LOGIN, USER_A.getLogin());
+    public static HibernateRequest<User> createRequestForUserA() {
+        return createUserRequest().eq(User.LOGIN, USER_A.getLogin());
+    }
+
+    public static HibernateRequest<User> createUserRequest() {
+        return H.<User> request(User.class);
     }
 
     private static User createUser(String login, String name, int age) {
