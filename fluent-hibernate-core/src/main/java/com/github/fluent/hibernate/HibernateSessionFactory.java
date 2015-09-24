@@ -10,6 +10,8 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
+import com.github.fluent.hibernate.util.InternalUtils;
+
 /**
  * This class holds a Hibernate session factory. Use {@link HibernateSessionFactory.Builder} to
  * create a session factory.

@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate;
+package com.github.fluent.hibernate.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +14,7 @@ import org.hibernate.Transaction;
  *
  * @author V.Ladynev
  */
-/*package*/final class InternalUtils {
+public final class InternalUtils {
 
     private InternalUtils() {
 

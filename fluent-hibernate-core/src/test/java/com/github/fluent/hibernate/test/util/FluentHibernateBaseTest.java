@@ -14,8 +14,8 @@ public class FluentHibernateBaseTest {
 
     @BeforeClass
     public static void initSessionFactory() {
-        HibernateSessionFactory.Builder.configureFromDefaultHibernateCfgXml()
-        .createSessionFactory();
+        HibernateSessionFactory.Builder.configureFromHibernateCfgXml("hibernate-common.cfg.xml")
+                .createSessionFactory();
     }
 
     @AfterClass

@@ -6,6 +6,8 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 
+import com.github.fluent.hibernate.util.InternalUtils;
+
 /**
  * Field alias for SQL request.
  *

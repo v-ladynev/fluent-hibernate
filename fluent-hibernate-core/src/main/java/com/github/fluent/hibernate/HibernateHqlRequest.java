@@ -6,6 +6,8 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import com.github.fluent.hibernate.util.InternalUtils;
+
 /**
  * @param <T>
  *            type of return value.

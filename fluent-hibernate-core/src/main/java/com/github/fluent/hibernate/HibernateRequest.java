@@ -16,6 +16,8 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.ResultTransformer;
 
+import com.github.fluent.hibernate.util.InternalUtils;
+
 /**
  * @param <T>
  *            type of return value.
