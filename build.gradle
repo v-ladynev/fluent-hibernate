@@ -1,13 +1,9 @@
-apply plugin: 'eclipse'
-
-allprojects {
-  apply plugin: 'java'
+subprojects {
+	apply plugin: 'java'
+	apply plugin: 'eclipse'
   sourceCompatibility = JavaVersion.VERSION_1_6
   targetCompatibility = JavaVersion.VERSION_1_6
-}
-
-subprojects {
-
+  
   repositories {
     mavenCentral()
     mavenLocal()
