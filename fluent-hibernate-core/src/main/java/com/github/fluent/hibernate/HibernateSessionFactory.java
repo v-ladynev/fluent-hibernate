@@ -173,6 +173,10 @@ public final class HibernateSessionFactory {
             return new Builder(new StandardServiceRegistryBuilder().configure(hibernateCfgXml));
         }
 
+        public static Builder configureWithoutHibernateCfgXml() {
+            return new Builder(new StandardServiceRegistryBuilder());
+        }
+
         public static void configureFromExistingSessionFactory(SessionFactory sessionFactory) {
             HibernateSessionFactory.setExistingSessionFactory(sessionFactory);
         }
@@ -202,7 +206,7 @@ public final class HibernateSessionFactory {
             return this;
         }
 
-        public Builder addAnnotatedClasses(Class<?>... annotatedClasses) {
+        public Builder annotatedClasses(Class<?>... annotatedClasses) {
             this.annotatedClasses = annotatedClasses;
             return this;
         }
