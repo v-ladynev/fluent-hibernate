@@ -20,7 +20,7 @@ public class MySqlExample {
 
     public static void main(String[] args) {
         try {
-            HibernateSessionFactory.Builder.configureFromDefaultHibernateCfgXml()
+            HibernateSessionFactory.Builder.configureFromHibernateCfgXml("/com/github/fluent/hibernate/example/mysql/hibernate.cfg.xml")
             .createSessionFactory();
             new MySqlExample().doSomeDatabaseStuff();
         } catch (Throwable th) {

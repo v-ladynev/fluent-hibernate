@@ -11,7 +11,7 @@ import com.github.fluent.hibernate.BasicIgnoreCasePropertyAccessor.BasicSetter;
  * @author DoubleF1re
  * @author V.Ladynev
  */
-public class IgnoreCaseAliasToBeanResultTransformer implements ResultTransformer {
+public class FluentHibernateResultTransformer implements ResultTransformer {
 
     private static final long serialVersionUID = 6825154815776629666L;
 
@@ -27,7 +27,7 @@ public class IgnoreCaseAliasToBeanResultTransformer implements ResultTransformer
     private final String[] instAliases;
 
     @SuppressWarnings("rawtypes")
-    public IgnoreCaseAliasToBeanResultTransformer(Class resultClass) {
+    public FluentHibernateResultTransformer(Class resultClass) {
         this(resultClass, null);
     }
 
@@ -39,7 +39,7 @@ public class IgnoreCaseAliasToBeanResultTransformer implements ResultTransformer
      *            : allows to override default aliases.
      */
     @SuppressWarnings("rawtypes")
-    public IgnoreCaseAliasToBeanResultTransformer(Class resultClass, String[] aliases) {
+    public FluentHibernateResultTransformer(Class resultClass, String[] aliases) {
         if (resultClass == null) {
             throw new IllegalArgumentException("resultClass cannot be null");
         }

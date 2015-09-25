@@ -199,7 +199,7 @@ public final class HibernateRequest<T> {
     }
 
     public HibernateRequest<T> transform(Class<?> clazz) {
-        transformer = new IgnoreCaseAliasToBeanResultTransformer(clazz);
+        transformer = new FluentHibernateResultTransformer(clazz);
         return this;
     }
 

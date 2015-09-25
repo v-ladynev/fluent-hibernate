@@ -77,7 +77,7 @@ public final class HibernateHqlRequest<T> {
         }
 
         if (transformToClass != null) {
-            hibernateQuery.setResultTransformer(new IgnoreCaseAliasToBeanResultTransformer(
+            hibernateQuery.setResultTransformer(new FluentHibernateResultTransformer(
                     transformToClass));
         }
 
