@@ -12,16 +12,14 @@ import com.github.fluent.hibernate.example.mysql.persistent.User;
  */
 public class MySqlExample {
 
-    private static final User USER_A = createUser("loginA", "A user", 20);
-
-    private static final User USER_B = createUser("loginB", "B user", 30);
+    private static final String USER_LOGIN_A = "loginA";
 
     private static final Logger LOG = Logger.getLogger(MySqlExample.class);
 
     public static void main(String[] args) {
         try {
-            HibernateSessionFactory.Builder.configureFromHibernateCfgXml("/com/github/fluent/hibernate/example/mysql/hibernate.cfg.xml")
-            .createSessionFactory();
+            HibernateSessionFactory.Builder.configureFromDefaultHibernateCfgXml()
+                    .createSessionFactory();
             new MySqlExample().doSomeDatabaseStuff();
         } catch (Throwable th) {
             th.printStackTrace();
@@ -34,8 +32,8 @@ public class MySqlExample {
         deleteAllUsers();
         insertUsers();
         countUsers();
-        User user = findUser(USER_A.getLogin());
-        LOG.info("User: " + user);
+        User user = findUser(USER_LOGIN_A);
+        LOG.info("User A: " + user);
     }
 
     private User findUser(String login) {
@@ -57,19 +55,11 @@ public class MySqlExample {
     }
 
     public static User userA() {
-        return USER_A.cloneUser();
+        return User.create(USER_LOGIN_A, "A user", 20);
     }
 
     public static User userB() {
-        return USER_B.cloneUser();
-    }
-
-    private static User createUser(String login, String name, int age) {
-        User result = new User();
-        result.setLogin(login);
-        result.setName(name);
-        result.setAge(age);
-        return result;
+        return User.create("loginB", "B user", 30);
     }
 
 }

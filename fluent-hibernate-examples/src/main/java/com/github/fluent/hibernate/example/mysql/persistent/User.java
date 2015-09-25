@@ -13,7 +13,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "users")
-public class User implements Cloneable {
+public class User {
 
     public static final String LOGIN = "login";
 
@@ -64,21 +64,16 @@ public class User implements Cloneable {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-
-    public User cloneUser() {
-        try {
-            return (User) clone();
-        } catch (CloneNotSupportedException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    @Override
     public String toString() {
         return String.format("login = '%s', name = '%s', age = '%d'", login, name, age);
+    }
+
+    public static User create(String login, String name, int age) {
+        User result = new User();
+        result.setLogin(login);
+        result.setName(name);
+        result.setAge(age);
+        return result;
     }
 
 }
