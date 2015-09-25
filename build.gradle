@@ -20,6 +20,7 @@ subprojects {
 
 project(':fluent-hibernate-core') {
   group="com.github.fluent"
+  version="0.1.2"
   description="Library to work with Hibernate by fluent API"
 
   dependencies {
