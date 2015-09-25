@@ -3,6 +3,7 @@ package com.github.fluent.hibernate.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -44,6 +45,10 @@ public final class InternalUtils {
 
         public static <E> ArrayList<E> newArrayList() {
             return new ArrayList<E>();
+        }
+
+        public static <K, V> HashMap<K, V> newHashMap() {
+            return new HashMap<K, V>();
         }
 
     }
