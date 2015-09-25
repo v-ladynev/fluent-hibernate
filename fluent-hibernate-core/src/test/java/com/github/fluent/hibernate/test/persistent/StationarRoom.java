@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate.test.persistent.transformer;
+package com.github.fluent.hibernate.test.persistent;
 
 import java.util.List;
 

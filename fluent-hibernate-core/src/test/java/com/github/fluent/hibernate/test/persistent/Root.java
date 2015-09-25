@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate.test.persistent.transformer;
+package com.github.fluent.hibernate.test.persistent;
 
 import java.util.List;
 
@@ -28,6 +28,8 @@ import com.github.fluent.hibernate.util.InternalUtils;
 @Table(name = "roots")
 public class Root extends Persistent<Long> {
 
+    public static final String ROOT_NAME = "rootName";
+
     private static final long serialVersionUID = -9173676908924647155L;
 
     private String rootName;
@@ -53,10 +55,10 @@ public class Root extends Persistent<Long> {
     @AttributeOverrides({ @AttributeOverride(name = "comment", column = @Column(
             name = "f_stationar_from_comment", length = 1023)) })
     @AssociationOverrides({
-            @AssociationOverride(name = "stationar", joinColumns = @JoinColumn(
-                name = "fk_stationar_from")),
-            @AssociationOverride(name = "department", joinColumns = @JoinColumn(
-                        name = "fk_stationar_from_department")) })
+        @AssociationOverride(name = "stationar", joinColumns = @JoinColumn(
+                    name = "fk_stationar_from")),
+                @AssociationOverride(name = "department", joinColumns = @JoinColumn(
+                    name = "fk_stationar_from_department")) })
     public RootStationar getStationarFrom() {
         return stationarFrom;
     }
@@ -65,10 +67,10 @@ public class Root extends Persistent<Long> {
     @AttributeOverrides({ @AttributeOverride(name = "comment", column = @Column(
             name = "f_stationar_to_comment", length = 1023)) })
     @AssociationOverrides({
-            @AssociationOverride(name = "stationar", joinColumns = @JoinColumn(
-                name = "fk_stationar_to")),
-            @AssociationOverride(name = "department", joinColumns = @JoinColumn(
-                        name = "fk_stationar_to_department")) })
+        @AssociationOverride(name = "stationar", joinColumns = @JoinColumn(
+                    name = "fk_stationar_to")),
+                @AssociationOverride(name = "department", joinColumns = @JoinColumn(
+                    name = "fk_stationar_to_department")) })
     public RootStationar getStationarTo() {
         return stationarTo;
     }

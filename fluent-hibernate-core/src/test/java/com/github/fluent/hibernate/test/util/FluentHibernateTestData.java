@@ -1,11 +1,10 @@
 package com.github.fluent.hibernate.test.util;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.github.fluent.hibernate.H;
 import com.github.fluent.hibernate.HibernateRequest;
-import com.github.fluent.hibernate.test.persistent.User;
+import com.github.fluent.hibernate.test.persistent.Root;
+import com.github.fluent.hibernate.test.persistent.RootStationar;
+import com.github.fluent.hibernate.test.persistent.Stationar;
 
 /**
  *
@@ -13,40 +12,66 @@ import com.github.fluent.hibernate.test.persistent.User;
  */
 public final class FluentHibernateTestData {
 
-    private static final User USER_A = createUser("loginA", "A user", 20);
+    public static final String ROOT_NAME_A = "A rootName";
 
-    private static final User USER_B = createUser("loginB", "B user", 30);
+    public static final String STATIONAR_NAME_A = "A stationarName";
+
+    public static final String ROOT_NAME_B = "B rootName";
+
+    public static final String STATIONAR_NAME_B = "B stationarName";
 
     private FluentHibernateTestData() {
 
     }
 
-    public static User userA() {
-        return USER_A.cloneUser();
+    public static HibernateRequest<Root> createRequestForRootA() {
+        return createRootRequest().eq(Root.ROOT_NAME, ROOT_NAME_A);
     }
 
-    public static User userB() {
-        return USER_B.cloneUser();
+    public static HibernateRequest<Root> createRootRequest() {
+        return H.<Root> request(Root.class);
     }
 
-    public static List<User> usersAB() {
-        return Arrays.asList(userA(), userB());
+    public static Root rootA() {
+        return new RootBuilder("A").build();
     }
 
-    public static HibernateRequest<User> createRequestForUserA() {
-        return createUserRequest().eq(User.LOGIN, userA().getLogin());
+    public static Root rootB() {
+        return new RootBuilder("B").build();
     }
 
-    public static HibernateRequest<User> createUserRequest() {
-        return H.<User> request(User.class);
-    }
+    private static final class RootBuilder {
 
-    private static User createUser(String login, String name, int age) {
-        User result = new User();
-        result.setLogin(login);
-        result.setName(name);
-        result.setAge(age);
-        return result;
+        private final String prefix;
+
+        private RootBuilder(String prefix) {
+            this.prefix = prefix;
+        }
+
+        public Root build() {
+            Root result = new Root();
+            result.setRootName(p("rootName"));
+            result.setStationarFrom(createRootStationar());
+            return result;
+        }
+
+        private RootStationar createRootStationar() {
+            RootStationar result = new RootStationar();
+            result.setComment(p("rootStationarComment"));
+            result.setStationar(createStationar());
+            return result;
+        }
+
+        private Stationar createStationar() {
+            Stationar result = new Stationar();
+            result.setName(p("stationarName"));
+            return result;
+        }
+
+        private String p(String name) {
+            return prefix + " " + name;
+        }
+
     }
 
 }

@@ -1,17 +1,16 @@
 package com.github.fluent.hibernate;
 
-import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.userA;
-import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.userB;
+import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.ROOT_NAME_A;
+import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.createRequestForRootA;
+import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.createRootRequest;
 
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
-import com.github.fluent.hibernate.test.persistent.User;
+import com.github.fluent.hibernate.test.persistent.Root;
 import com.github.fluent.hibernate.test.util.FluentHibernateBaseTest;
-import com.github.fluent.hibernate.test.util.FluentHibernateTestData;
 
 /**
  *
@@ -19,34 +18,26 @@ import com.github.fluent.hibernate.test.util.FluentHibernateTestData;
  */
 public class HibernateRequestTest extends FluentHibernateBaseTest {
 
-    @Before
-    public void init() {
-        clearUsers();
-    }
-
     @Test
     public void list() {
-        H.saveOrUpdate(userA());
-        H.saveOrUpdate(userB());
-        List<User> users = FluentHibernateTestData.createUserRequest().list();
-        Assert.assertNotNull(users);
-        Assert.assertEquals(2, users.size());
+        H.saveOrUpdateAll(rootsAB());
+        List<Root> roots = createRootRequest().list();
+        Assert.assertNotNull(roots);
+        Assert.assertEquals(2, roots.size());
     }
 
     @Test
     public void first() {
-        H.saveOrUpdate(userA());
-        H.saveOrUpdate(userB());
-        User user = FluentHibernateTestData.createRequestForUserA().first();
-        Assert.assertNotNull(user);
-        Assert.assertEquals(userA().getLogin(), user.getLogin());
+        H.saveOrUpdateAll(rootsAB());
+        Root root = createRequestForRootA().first();
+        Assert.assertNotNull(root);
+        Assert.assertEquals(ROOT_NAME_A, root.getRootName());
     }
 
     @Test
     public void count() {
-        H.saveOrUpdate(userA());
-        H.saveOrUpdate(userB());
-        int count = H.request(User.class).count();
+        H.saveOrUpdateAll(rootsAB());
+        int count = H.request(Root.class).count();
         Assert.assertEquals(2, count);
     }
 
