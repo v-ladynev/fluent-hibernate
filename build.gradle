@@ -2,35 +2,106 @@ subprojects {
 	apply plugin: 'java'
 	apply plugin: 'eclipse'
 	apply plugin: 'maven'
-  sourceCompatibility = JavaVersion.VERSION_1_6
-  targetCompatibility = JavaVersion.VERSION_1_6
+	apply plugin: 'signing'
+	
+	sourceCompatibility = JavaVersion.VERSION_1_6
+	targetCompatibility = JavaVersion.VERSION_1_6
   
-  repositories {
-    mavenCentral()
-    mavenLocal()
-  }
+	repositories {
+		mavenCentral()
+		mavenLocal()
+	}
 
-  dependencies {
-    testCompile 'junit:junit:4.12'
-  }
+	dependencies {
+		testCompile 'junit:junit:4.12'
+	}
+  
+	task javadocJar(type: Jar) {
+		classifier = 'javadoc'
+		from javadoc
+	}
+
+	task sourcesJar(type: Jar) {
+		classifier = 'sources'
+		from sourceSets.main.allSource
+	}
+	
+	artifacts {
+		archives javadocJar, sourcesJar
+	}
+	
+	signing {
+		sign configurations.archives
+	}
 }
 
 project(':fluent-hibernate-core') {
-  group="com.github.fluent"
+  group="com.github.v-ladynev"
   version="0.1.2"
   description="Library to work with Hibernate by fluent API"
+  archivesBaseName = "fluent-hibernate-core"
 
   dependencies {
     compile group: 'mysql',name: 'mysql-connector-java', version: '5.1.36'
     compile group: 'org.hibernate', name: 'hibernate-core', version: '5.0.1.Final'
     testCompile "com.h2database:h2:1.4.189"
   }
+  
+	uploadArchives {
+		repositories {
+			mavenDeployer {
+				beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+				repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+					authentication(userName: ossrhUsername, password: ossrhPassword)
+				}
+
+				snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+					authentication(userName: ossrhUsername, password: ossrhPassword)
+				}
+
+				pom.project {
+					name 'Fluent Hibernate Core'
+					packaging 'jar'
+					// optionally artifactId can be defined here 
+					description "A library to work with Hibernate by fluent API. This library hasn't dependencies except Hibernate dependencies. It requires Java 1.6 and above."
+					url 'https://github.com/v-ladynev/fluent-hibernate'
+
+					scm {
+						connection 'scm:git:https://github.com/v-ladynev/fluent-hibernate.git'
+						developerConnection 'scm:git:https://github.com/v-ladynev/fluent-hibernate.git'
+						url 'https://github.com/v-ladynev/fluent-hibernate'
+					}
+
+					licenses {
+						license {
+							name 'The Apache License, Version 2.0'
+							url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+						}
+					}
+
+					developers {
+						developer {
+							id 'v-ladynev'
+							name 'ladynew'
+							email 'priv@sonatype.com'
+						}
+						developer {
+							id 'levvy'
+							name 'Lucas Levvy'
+							email 'levvy@sonatype.com'
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 project(':fluent-hibernate-examples') {
   apply plugin: 'application'
 
-  group="com.github.fluent"
+  group="com.github.v-ladynev"
   description="An example using 'fluent-hibernate-core' library with MySQL"
   mainClassName="com.github.fluent.hibernate.example.mysql.MySqlExample"
 
