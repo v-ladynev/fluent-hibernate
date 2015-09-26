@@ -4,10 +4,9 @@ jdk:
 
 before_install:
  - chmod +x gradlew
- - ./gradlew check
  
 
 install: ./gradlew check -S
 script: 
- - ./gradlew build -x test -S
- - ./gradlew installDist -S
+ - ./gradlew build -x signArchives check -S
+ - ./gradlew installDist -x signArchives -S
