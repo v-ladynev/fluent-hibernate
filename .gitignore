@@ -75,3 +75,5 @@ local.properties
 *.iws
 *.iml
 atlassian-ide-plugin.xml
+
+gradle.properties
