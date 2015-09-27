@@ -83,7 +83,7 @@ project(':fluent-hibernate-core') {
 					developers {
 						developer {
 							id 'v-ladynev'
-							name 'ladynew'
+							name 'Vladimir Ladynev'
 							email 'priv@sonatype.com'
 						}
 						developer {
