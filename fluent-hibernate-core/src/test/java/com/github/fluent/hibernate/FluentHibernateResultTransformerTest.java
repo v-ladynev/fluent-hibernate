@@ -13,14 +13,15 @@ import org.junit.Test;
 import com.github.fluent.hibernate.test.persistent.Root;
 import com.github.fluent.hibernate.test.persistent.RootStationar;
 import com.github.fluent.hibernate.test.persistent.Stationar;
-import com.github.fluent.hibernate.test.util.FluentHibernateBaseTest;
+import com.github.fluent.hibernate.test.util.RootEnvironmentBaseTest;
 import com.github.fluent.hibernate.util.InternalUtils;
 
 /**
  *
  * @author V.Ladynev
  */
-public class FluentHibernateResultTransformerTest extends FluentHibernateBaseTest {
+public class FluentHibernateResultTransformerTest extends RootEnvironmentBaseTest
+{
 
     @Test
     public void transformStationar() {

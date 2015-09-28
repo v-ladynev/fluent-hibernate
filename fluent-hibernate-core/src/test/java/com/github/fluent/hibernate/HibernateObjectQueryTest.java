@@ -7,13 +7,14 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.github.fluent.hibernate.test.persistent.Root;
-import com.github.fluent.hibernate.test.util.FluentHibernateBaseTest;
+import com.github.fluent.hibernate.test.util.RootEnvironmentBaseTest;
 
 /**
  *
  * @author V.Ladynev
  */
-public class HibernateObjectQueryTest extends FluentHibernateBaseTest {
+public class HibernateObjectQueryTest extends RootEnvironmentBaseTest
+{
 
     @Test
     public void save() {
