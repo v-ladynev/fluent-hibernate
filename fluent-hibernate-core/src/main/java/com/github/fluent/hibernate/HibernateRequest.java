@@ -1,27 +1,20 @@
 package com.github.fluent.hibernate;
 
-import java.util.Collection;
-import java.util.List;
-
-import javax.persistence.criteria.JoinType;
-
+import com.github.fluent.hibernate.util.InternalUtils;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projection;
-import org.hibernate.criterion.ProjectionList;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 import org.hibernate.transform.ResultTransformer;
 
-import com.github.fluent.hibernate.util.InternalUtils;
+import javax.persistence.criteria.JoinType;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @param <T>
  *            type of return value.
- * 
+ *
  * @author DoubleF1re
  * @author V.Ladynev
  */
@@ -102,7 +95,23 @@ public final class HibernateRequest<T> {
     }
 
     public HibernateRequest<T> in(String propertyName, Collection<?> values) {
-        restrictions.add(Restrictions.in(propertyName, values));
+        if (InternalUtils.CollectionUtils.isNotEmpty(values)) {
+            restrictions.add(Restrictions.in(propertyName, values));
+        }
+        return this;
+    }
+
+    public HibernateRequest<T> inNothingForEmptyCollection(String propertyName, Collection<?> values) {
+        if (InternalUtils.CollectionUtils.isEmpty(values)) {
+            addFalse();
+        } else {
+            in(propertyName, values);
+        }
+        return this;
+    }
+
+    public HibernateRequest<T> addFalse() {
+        restrictions.add(Restrictions.sqlRestriction("1<>1"));
         return this;
     }
 

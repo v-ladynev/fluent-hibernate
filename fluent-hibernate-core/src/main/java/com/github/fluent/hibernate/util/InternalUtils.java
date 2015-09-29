@@ -43,6 +43,10 @@ public final class InternalUtils {
             return collection == null || collection.isEmpty();
         }
 
+        public static boolean isNotEmpty(final Collection<?> collection) {
+            return !isEmpty(collection);
+        }
+
         public static <E> ArrayList<E> newArrayList() {
             return new ArrayList<E>();
         }

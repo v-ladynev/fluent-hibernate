@@ -9,5 +9,6 @@
         <mapping class="com.github.fluent.hibernate.test.persistent.Stationar" />
         <mapping class="com.github.fluent.hibernate.test.persistent.StationarRoom" />
         <mapping class="com.github.fluent.hibernate.test.persistent.StationarDepartment" />
+        <mapping class="com.github.fluent.hibernate.test.persistent.SimplyPersistent" />
     </session-factory>
 </hibernate-configuration>
