@@ -1,5 +1,7 @@
-package com.github.fluent.hibernate;
+package com.github.fluent.hibernate.test.request;
 
+import com.github.fluent.hibernate.H;
+import com.github.fluent.hibernate.HibernateRequest;
 import com.github.fluent.hibernate.test.persistent.SimplyPersistent;
 import com.github.fluent.hibernate.test.util.FluentHibernateBaseTest;
 import org.junit.Before;
@@ -15,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author alexey.pchelnikov
  */
-public class RequestINoperationTest extends FluentHibernateBaseTest {
+public class InOperationTest extends FluentHibernateBaseTest {
 
     public static final Comparator<SimplyPersistent> SIMPLY_PERSISTENT_COMPARATOR = new Comparator<SimplyPersistent>() {
         @Override
