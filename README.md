@@ -24,11 +24,11 @@ and in the subproject [fluent-hibernate-examples](https://github.com/v-ladynev/f
 
 ## Contributors
 
-- [V.Ladynev](https://plus.google.com/102177768964957793539/posts);
-- [DoubleF1re](https://github.com/DoubleF1re);
-- [samsonych](https://github.com/samsonych);
-- [Lucas Levvy](https://github.com/Levvy055).
-
+- [Vladimir Ladynev](https://plus.google.com/102177768964957793539/posts)
+- [DoubleF1re](https://github.com/DoubleF1re)
+- [samsonych](https://github.com/samsonych)
+- [Lucas Levvy](https://github.com/Levvy055)
+- [Aleksey Pchelnikov](https://github.com/aleksey-pchelnikov)
 
 ## Dependency Status
 [![Dependency Status](https://www.versioneye.com/user/projects/56041a64f5f2eb00170007d4/badge.svg?style=flat)](https://www.versioneye.com/user/projects/56041a64f5f2eb00170007d4)
