@@ -1,12 +1,13 @@
 # fluent-hibernate
 A library to work with Hibernate by fluent API. This library hasn't dependencies except Hibernate
 dependencies. It requires Java 1.6 and above.
+
 [![Build Status](https://travis-ci.org/v-ladynev/fluent-hibernate.svg?branch=master)](https://travis-ci.org/v-ladynev/fluent-hibernate)
 
 ## Download
-### Direct link [![Release 0.1.2](https://img.shields.io/badge/release-0.1.2-blue.svg)](https://github.com/v-ladynev/fluent-hibernate/releases/download/0.1.2/fluent-hibernate-0.1.2.jar)
+#### Direct link [![Release 0.1.2](https://img.shields.io/badge/release-0.1.2-blue.svg)](https://github.com/v-ladynev/fluent-hibernate/releases/download/0.1.2/fluent-hibernate-0.1.2.jar)
 
-### Maven
+#### Maven
 Add this in your pom.xml
 ```XML
 <dependency>
@@ -16,7 +17,7 @@ Add this in your pom.xml
 </dependency>
 ```
 
-### Gradle
+#### Gradle
 Add this in your build.gradle
 ```Gradle
 'com.github.v-ladynev:fluent-hibernate-core:0.1.2'
