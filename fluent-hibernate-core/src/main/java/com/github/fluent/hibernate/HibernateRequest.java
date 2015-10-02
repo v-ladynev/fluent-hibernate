@@ -8,47 +8,41 @@ import javax.persistence.criteria.JoinType;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projection;
-import org.hibernate.criterion.ProjectionList;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 import org.hibernate.transform.ResultTransformer;
 
-import com.github.fluent.hibernate.util.InternalUtils;
+import com.github.fluent.hibernate.util.InternalUtils.CollectionUtils;
 
 /**
  * @param <T>
  *            type of return value.
- * 
+ *
  * @author DoubleF1re
  * @author V.Ladynev
  */
 public final class HibernateRequest<T> {
 
-    private final List<Criterion> restrictions = InternalUtils.CollectionUtils.newArrayList();
+    private final List<Criterion> restrictions = CollectionUtils.newArrayList();
 
     private final ProjectionList projections = Projections.projectionList();
 
     private final Aliases aliases = Aliases.aliasList();
 
-    private final List<Order> orders = InternalUtils.CollectionUtils.newArrayList();
-
-    private String[] fetchJoinPaths;
-
-    private boolean distinct;
-
-    private ResultTransformer transformer;
-
+    private final List<Order> orders = CollectionUtils.newArrayList();
     private final Class<?> persistentClass;
-
+    private String[] fetchJoinPaths;
+    private boolean distinct;
+    private ResultTransformer transformer;
     private Pagination pagination;
 
     private Integer maxResults;
 
     private HibernateRequest(Class<?> persistentClass) {
         this.persistentClass = persistentClass;
+    }
+
+    public static <T> HibernateRequest<T> create(Class<?> clazz) {
+        return new HibernateRequest<T>(clazz);
     }
 
     public HibernateRequest<T> idEq(Object value) {
@@ -102,8 +96,23 @@ public final class HibernateRequest<T> {
     }
 
     public HibernateRequest<T> in(String propertyName, Collection<?> values) {
-        restrictions.add(Restrictions.in(propertyName, values));
+        if (CollectionUtils.isNotEmpty(values)) {
+            restrictions.add(Restrictions.in(propertyName, values));
+        }
         return this;
+    }
+
+    public HibernateRequest<T> inNothingForEmptyCollection(String propertyName, Collection<?> values) {
+        if (CollectionUtils.isEmpty(values)) {
+            restrictions.add(getFalseRestriction());
+        } else {
+            in(propertyName, values);
+        }
+        return this;
+    }
+
+    private Criterion getFalseRestriction() {
+        return Restrictions.sqlRestriction("1<>1");
     }
 
     // TODO It works incorrectly for an only element array
@@ -246,7 +255,7 @@ public final class HibernateRequest<T> {
     }
 
     public T first() {
-        return InternalUtils.CollectionUtils.<T> first(list());
+        return CollectionUtils.first(list());
     }
 
     @SuppressWarnings("unchecked")
@@ -317,10 +326,6 @@ public final class HibernateRequest<T> {
         // select count(*) from (select distinct pid1, pid2 from ...) check this
         criteria.setProjection(Projections.rowCount());
         return criteria.uniqueResult();
-    }
-
-    public static <T> HibernateRequest<T> create(Class<?> clazz) {
-        return new HibernateRequest<T>(clazz);
     }
 
 }

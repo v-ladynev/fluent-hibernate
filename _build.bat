@@ -1,1 +1,1 @@
-cmd.exe /k "gradlew.bat build -x check & pause"
+cmd.exe /k "gradlew.bat build -x signArchives check & pause"
