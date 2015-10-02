@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * A user.
+ * An user.
  *
  * @author V.Ladynev
  */
