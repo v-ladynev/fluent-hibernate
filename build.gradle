@@ -2,6 +2,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'eclipse'
     apply plugin: 'maven'
+	apply plugin: 'maven-publish'
     apply plugin: 'signing'
 
     sourceCompatibility = JavaVersion.VERSION_1_6
@@ -37,7 +38,7 @@ subprojects {
 
 project(':fluent-hibernate-core') {
     group = "com.github.v-ladynev"
-    version = "0.1.2"
+    version = "0.1.3"
     description = "Library to work with Hibernate by fluent API"
     archivesBaseName = "fluent-hibernate-core"
 
@@ -64,7 +65,6 @@ project(':fluent-hibernate-core') {
                 pom.project {
                     name 'Fluent Hibernate Core'
                     packaging 'jar'
-                    // optionally artifactId can be defined here
                     description "A library to work with Hibernate by fluent API. This library hasn't dependencies except Hibernate dependencies. It requires Java 1.6 and above."
                     url 'https://github.com/v-ladynev/fluent-hibernate'
 
@@ -85,7 +85,7 @@ project(':fluent-hibernate-core') {
                         developer {
                             id 'v-ladynev'
                             name 'Vladimir Ladynev'
-                            email 'priv@sonatype.com'
+                            email 'v-ladynev@sonatype.com'
                         }
                         developer {
                             id 'levvy'
@@ -93,7 +93,7 @@ project(':fluent-hibernate-core') {
                             email 'levvy@sonatype.com'
                         }
                     }
-                }
+                }.writeTo("build/libs/"+archivesBaseName+"-"+version+".pom")
             }
         }
     }
