@@ -5,23 +5,23 @@ dependencies. It requires Java 1.6 and above.
 [![Build Status](https://travis-ci.org/v-ladynev/fluent-hibernate.svg?branch=master)](https://travis-ci.org/v-ladynev/fluent-hibernate)
 
 ## Download
-#### Direct link
-[![Release 0.1.2](https://img.shields.io/badge/release-0.1.2-blue.svg)](https://github.com/v-ladynev/fluent-hibernate/releases/download/0.1.2/fluent-hibernate-0.1.2.jar)
+##### Direct link
+[![Release 0.1.2](https://img.shields.io/badge/release-0.1.3-blue.svg)](https://github.com/v-ladynev/fluent-hibernate/releases/download/0.1.3/fluent-hibernate-core-0.1.3.jar)
 
-#### Maven
+##### Maven
 Add this in your pom.xml
 ```XML
 <dependency>
-  <groupId>com.github.v-ladynev</groupId>
-  <artifactId>fluent-hibernate-core</artifactId>
-  <version>0.1.2</version>
+    <groupId>com.github.v-ladynev</groupId>
+    <artifactId>fluent-hibernate-core</artifactId>
+    <version>0.1.3</version>
 </dependency>
 ```
 
-#### Gradle
+##### Gradle
 Add this in your build.gradle
 ```Gradle
-'com.github.v-ladynev:fluent-hibernate-core:0.1.2'
+'com.github.v-ladynev:fluent-hibernate-core:0.1.3'
 ```
 
 ## Examples
