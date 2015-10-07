@@ -5,12 +5,16 @@ import org.jboss.logging.Logger;
 import com.github.fluent.hibernate.H;
 import com.github.fluent.hibernate.HibernateSessionFactory;
 import com.github.fluent.hibernate.example.mysql.persistent.User;
+import com.github.fluent.hibernate.example.mysql.persistent.UserAddress;
+import com.github.fluent.hibernate.example.mysql.persistent.UserFriend;
 
 /**
  *
  * @author V.Ladynev
  */
 public class MySqlExample {
+
+    private static final String USER_A_STREET = "street A";
 
     private static final String USER_LOGIN_A = "loginA";
 
@@ -19,7 +23,7 @@ public class MySqlExample {
     public static void main(String[] args) {
         try {
             HibernateSessionFactory.Builder.configureFromDefaultHibernateCfgXml()
-            .createSessionFactory();
+                    .createSessionFactory();
             new MySqlExample().doSomeDatabaseStuff();
         } finally {
             HibernateSessionFactory.closeSessionFactory();
@@ -30,11 +34,44 @@ public class MySqlExample {
         deleteAllUsers();
         insertUsers();
         countUsers();
-        User user = findUser(USER_LOGIN_A);
-        LOG.info("User A: " + user);
+        findUserA();
+        doSomeUserAddressStuff();
+        doSomeFriendsStuff();
     }
 
-    private User findUser(String login) {
+    private void doSomeFriendsStuff() {
+        User user = H.<User> request(User.class).eq(User.LOGIN, USER_LOGIN_A).fetchJoin("friends")
+                .first();
+        user.addFriend(UserFriend.createByName("friend_A_1"));
+        user.addFriend(UserFriend.createByName("friend_A_2"));
+        H.saveOrUpdate(user);
+    }
+
+    private void doSomeUserAddressStuff() {
+        getUserByStreet();
+        getStreetByUser();
+    }
+
+    private void getUserByStreet() {
+        User user = H.<User> request(User.class).innerJoin("address")
+                .eq("address.street", USER_A_STREET).first();
+
+        LOG.info(String.format("User %s address: %s", user, user.getAddress()));
+    }
+
+    private void getStreetByUser() {
+        final String userLogin = USER_LOGIN_A;
+        UserAddress address = H.<UserAddress> request(UserAddress.class).innerJoin("user")
+                .eq("user.login", userLogin).first();
+        LOG.info(String.format("UserAddress: %s", address));
+    }
+
+    private void findUserA() {
+        User user = findUserByLogin(USER_LOGIN_A);
+        LOG.info("User: " + user);
+    }
+
+    private User findUserByLogin(String login) {
         return H.<User> request(User.class).eq(User.LOGIN, login).first();
     }
 
@@ -43,8 +80,8 @@ public class MySqlExample {
     }
 
     private void insertUsers() {
-        H.save(userA());
-        H.save(userB());
+        H.saveOrUpdate(userA());
+        H.saveOrUpdate(userB());
     }
 
     private void countUsers() {
@@ -53,11 +90,15 @@ public class MySqlExample {
     }
 
     public static User userA() {
-        return User.create(USER_LOGIN_A, "A user", 20);
+        return addAddress(User.create(USER_LOGIN_A, "A user", 20), USER_A_STREET);
     }
 
     public static User userB() {
-        return User.create("loginB", "B user", 30);
+        return addAddress(User.create("loginB", "B user", 30), "street B");
     }
 
+    public static User addAddress(User toUser, String street) {
+        toUser.setAddress(UserAddress.create(street, toUser));
+        return toUser;
+    }
 }
