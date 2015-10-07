@@ -24,28 +24,10 @@ public class FluentHibernateResultTransformer implements ResultTransformer {
 
     private final BasicIgnoreCasePropertyAccessor propertyAccessor;
 
-    private final String[] instAliases;
-
     @SuppressWarnings("rawtypes")
     public FluentHibernateResultTransformer(Class resultClass) {
-        this(resultClass, null);
-    }
-
-    /**
-     *
-     * @param resultClass
-     *            : lCreated bean target class.
-     * @param aliases
-     *            : allows to override default aliases.
-     */
-    @SuppressWarnings("rawtypes")
-    public FluentHibernateResultTransformer(Class resultClass, String[] aliases) {
-        if (resultClass == null) {
-            throw new IllegalArgumentException("resultClass cannot be null");
-        }
-        this.resultClass = resultClass;
-        propertyAccessor = new BasicIgnoreCasePropertyAccessor();
-        instAliases = aliases;
+    	this.resultClass = resultClass;
+    	propertyAccessor = new BasicIgnoreCasePropertyAccessor();
     }
 
     /**
@@ -55,10 +37,6 @@ public class FluentHibernateResultTransformer implements ResultTransformer {
     @Override
     public Object transformTuple(Object[] tuple, String[] aliases) {
         Object result;
-
-        if (instAliases != null) {
-            aliases = instAliases;
-        }
 
         try {
             if (setters == null) {
