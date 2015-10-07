@@ -18,9 +18,8 @@ public class MySqlExample {
 
     public static void main(String[] args) {
         try {
-
             HibernateSessionFactory.Builder.configureFromDefaultHibernateCfgXml()
-                    .createSessionFactory();
+            .createSessionFactory();
             new MySqlExample().doSomeDatabaseStuff();
         } finally {
             HibernateSessionFactory.closeSessionFactory();
