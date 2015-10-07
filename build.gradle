@@ -1,6 +1,5 @@
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'eclipse'
     apply plugin: 'maven'
 	apply plugin: 'maven-publish'
     apply plugin: 'signing'
@@ -37,6 +36,8 @@ subprojects {
 }
 
 project(':fluent-hibernate-core') {
+	apply plugin: 'eclipse'
+
     group = "com.github.v-ladynev"
     version = "0.1.3"
     description = "Library to work with Hibernate by fluent API"
@@ -99,16 +100,19 @@ project(':fluent-hibernate-core') {
     }
 }
 
-project(':fluent-hibernate-examples') {
+project(':fluent-hibernate-examples').subprojects {
+	dependencies {
+        compile project(':fluent-hibernate-core')
+    }
+}
+
+project(':fluent-hibernate-examples:mySQL') {
     apply plugin: 'application'
+	apply plugin: 'eclipse'
 
     group = "com.github.v-ladynev"
     description = "An example using 'fluent-hibernate-core' library with MySQL"
     mainClassName = "com.github.fluent.hibernate.example.mysql.MySqlExample"
-
-    dependencies {
-        compile project(':fluent-hibernate-core')
-    }
 }
 
 task wrapper(type: Wrapper) {
