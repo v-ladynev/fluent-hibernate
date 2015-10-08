@@ -1,10 +1,3 @@
-/**
- * $HeadURL: http://svn.isida.by:3690/svn/dev2/trunk/systems/dev2.settings/eclipse_settings/Code%20Templates.xml $
- * $Revision$
- * $Date::                             $
- *
- * Copyright (c) Isida-Informatica, Ltd. All Rights Reserved.
- */
 package com.github.fluent.hibernate.internal.transformer;
 
 import java.lang.reflect.InvocationTargetException;
