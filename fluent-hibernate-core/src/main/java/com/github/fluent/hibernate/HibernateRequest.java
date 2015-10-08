@@ -109,8 +109,10 @@ public final class HibernateRequest<T> {
         return this;
     }
 
-    public HibernateRequest<T> add(IFluentBuilder builder) {
-        builder.build(this);
+    public HibernateRequest<T> add(IFluentBuilder... builders) {
+        for (IFluentBuilder builder : builders) {
+            builder.build(this);
+        }
         return this;
     }
 

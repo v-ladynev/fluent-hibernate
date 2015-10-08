@@ -93,7 +93,6 @@ public class InOperationTest extends FluentHibernateBaseTest {
         List<String> inRestriction =  new ArrayList<String>();
 
         List<SimplyPersistent> foundList = getRequest()
-                // TODO or .add(in().nothingIfEmpty("name", inRestriction))
                 .add(
                         in("name", inRestriction).nothingIfEmpty()
                 )
