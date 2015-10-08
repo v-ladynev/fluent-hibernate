@@ -10,11 +10,11 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.github.fluent.hibernate.internal.util.InternalUtils;
 import com.github.fluent.hibernate.test.persistent.Root;
 import com.github.fluent.hibernate.test.persistent.RootStationar;
 import com.github.fluent.hibernate.test.persistent.Stationar;
 import com.github.fluent.hibernate.test.util.RootEnvironmentBaseTest;
-import com.github.fluent.hibernate.util.InternalUtils;
 
 /**
  *

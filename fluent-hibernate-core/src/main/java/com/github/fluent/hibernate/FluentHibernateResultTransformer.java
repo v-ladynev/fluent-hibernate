@@ -3,7 +3,7 @@ package com.github.fluent.hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.transform.BasicTransformerAdapter;
 
-import com.github.fluent.hibernate.PropertyAccessor.BasicSetter;
+import com.github.fluent.hibernate.internal.transformer.Setter;
 
 /**
  * @author DoubleF1re
@@ -15,7 +15,7 @@ public class FluentHibernateResultTransformer extends BasicTransformerAdapter {
 
     private final Class<?> resultClass;
 
-    private BasicSetter[] setters;
+    private Setter[] setters;
 
     private final PropertyAccessor propertyAccessor = new PropertyAccessor();
 
@@ -26,7 +26,7 @@ public class FluentHibernateResultTransformer extends BasicTransformerAdapter {
     @Override
     public Object transformTuple(Object[] tuple, String[] aliases) {
         if (setters == null) {
-            setters = new BasicSetter[aliases.length];
+            setters = new Setter[aliases.length];
             for (int i = 0; i < aliases.length; i++) {
                 String alias = aliases[i];
                 setters[i] = propertyAccessor.getSetter(resultClass, alias);

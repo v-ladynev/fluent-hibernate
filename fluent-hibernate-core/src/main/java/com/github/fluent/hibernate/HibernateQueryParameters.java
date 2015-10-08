@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.hibernate.Query;
 
-import com.github.fluent.hibernate.util.InternalUtils;
+import com.github.fluent.hibernate.internal.util.InternalUtils;
 
 /**
  * Named query parameters.

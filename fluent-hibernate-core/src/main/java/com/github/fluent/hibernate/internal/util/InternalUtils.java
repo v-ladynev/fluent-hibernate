@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate.util;
+package com.github.fluent.hibernate.internal.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;

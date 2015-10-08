@@ -12,7 +12,7 @@ import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
-import com.github.fluent.hibernate.util.InternalUtils;
+import com.github.fluent.hibernate.internal.util.InternalUtils;
 
 /**
  * This class holds a Hibernate session factory. Use {@link HibernateSessionFactory.Builder} to
