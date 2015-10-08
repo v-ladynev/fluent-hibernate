@@ -12,7 +12,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.*;
 import org.hibernate.transform.ResultTransformer;
 
-import com.github.fluent.hibernate.util.InternalUtils.CollectionUtils;
+import com.github.fluent.hibernate.internal.util.InternalUtils.CollectionUtils;
 
 /**
  * @param <T>

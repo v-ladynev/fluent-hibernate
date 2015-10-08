@@ -9,7 +9,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.github.fluent.hibernate.util.InternalUtils;
+import com.github.fluent.hibernate.internal.util.InternalUtils;
 
 /**
  *

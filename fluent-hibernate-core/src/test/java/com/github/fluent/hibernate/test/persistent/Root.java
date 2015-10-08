@@ -17,7 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.github.fluent.hibernate.util.InternalUtils;
+import com.github.fluent.hibernate.internal.util.InternalUtils;
 
 /**
  * Root object.
