@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.criteria.JoinType;
 
+import com.github.fluent.hibernate.builder.IFluentBuilder;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
@@ -102,22 +103,14 @@ public final class HibernateRequest<T> {
         return this;
     }
 
-    public HibernateRequest<T> inNothingForEmptyCollection(String propertyName, Collection<?> values) {
-        if (CollectionUtils.isEmpty(values)) {
-            restrictions.add(getFalseRestriction());
-        } else {
-            in(propertyName, values);
-        }
-        return this;
-    }
-
-    private Criterion getFalseRestriction() {
-        return Restrictions.sqlRestriction("1<>1");
-    }
-
     // TODO It works incorrectly for an only element array
     public HibernateRequest<T> in(String propertyName, Object... values) {
         restrictions.add(Restrictions.in(propertyName, values));
+        return this;
+    }
+
+    public HibernateRequest<T> add(IFluentBuilder builder) {
+        builder.build(this);
         return this;
     }
 

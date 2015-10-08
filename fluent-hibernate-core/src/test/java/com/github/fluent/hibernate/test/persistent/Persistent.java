@@ -2,7 +2,6 @@ package com.github.fluent.hibernate.test.persistent;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
-
 import org.hibernate.Hibernate;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
