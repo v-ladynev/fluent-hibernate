@@ -1,17 +1,19 @@
 package com.github.fluent.hibernate.test.request;
 
-import com.github.fluent.hibernate.H;
-import com.github.fluent.hibernate.HibernateRequest;
-import com.github.fluent.hibernate.test.persistent.SimplyPersistent;
-import com.github.fluent.hibernate.test.util.FluentHibernateBaseTest;
-import org.junit.Before;
-import org.junit.Test;
+import static com.github.fluent.hibernate.builder.FluentBuilders.in;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.github.fluent.hibernate.H;
+import com.github.fluent.hibernate.HibernateRequest;
+import com.github.fluent.hibernate.test.persistent.SimplyPersistent;
+import com.github.fluent.hibernate.test.util.FluentHibernateBaseTest;
 
 /**
  *
@@ -88,10 +90,12 @@ public class InOperationTest extends FluentHibernateBaseTest {
 
     @Test
     public void restrictionNothingForEmptyCollectionTest() {
-        List<String> inRestriction = new ArrayList<String>();
+        List<String> inRestriction =  new ArrayList<String>();
 
         List<SimplyPersistent> foundList = getRequest()
-                .inNothingForEmptyCollection("name", inRestriction)
+                .add(
+                        in("name", inRestriction).nothingIfEmpty()
+                )
                 .list();
 
         assertThat(foundList)
@@ -105,7 +109,7 @@ public class InOperationTest extends FluentHibernateBaseTest {
         List<String> inRestriction = getNameRestriction(expectedResult);
 
         List<SimplyPersistent> foundList = getRequest()
-                .inNothingForEmptyCollection("name", inRestriction)
+                .add(in("name", inRestriction).nothingIfEmpty())
                 .list();
 
         assertThat(foundList)
