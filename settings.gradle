@@ -1,2 +1,2 @@
 include 'fluent-hibernate-core'
-include 'fluent-hibernate-examples'
+include 'fluent-hibernate-examples:mySQL'

@@ -1,9 +1,16 @@
 package com.github.fluent.hibernate.example.mysql.persistent;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -24,6 +31,10 @@ public class User {
     private String name;
 
     private Integer age;
+
+    private UserAddress address;
+
+    private List<UserFriend> friends = new ArrayList<UserFriend>();
 
     @Id
     @GeneratedValue
@@ -47,6 +58,22 @@ public class User {
         return age;
     }
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "f_user_address_pid")
+    public UserAddress getAddress() {
+        return address;
+    }
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    public List<UserFriend> getFriends() {
+        return friends;
+    }
+
+    public void addFriend(UserFriend friend) {
+        friend.setUser(this);
+        friends.add(friend);
+    }
+
     public void setPid(Long pid) {
         this.pid = pid;
     }
@@ -61,6 +88,14 @@ public class User {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public void setAddress(UserAddress address) {
+        this.address = address;
+    }
+
+    public void setFriends(List<UserFriend> friends) {
+        this.friends = friends;
     }
 
     @Override
