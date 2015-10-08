@@ -3,7 +3,7 @@ package com.github.fluent.hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.transform.BasicTransformerAdapter;
 
-import com.github.fluent.hibernate.BasicIgnoreCasePropertyAccessor.BasicSetter;
+import com.github.fluent.hibernate.PropertyAccessor.BasicSetter;
 
 /**
  * @author DoubleF1re
@@ -17,7 +17,7 @@ public class FluentHibernateResultTransformer extends BasicTransformerAdapter {
 
     private BasicSetter[] setters;
 
-    private final BasicIgnoreCasePropertyAccessor propertyAccessor = new BasicIgnoreCasePropertyAccessor();
+    private final PropertyAccessor propertyAccessor = new PropertyAccessor();
 
     public FluentHibernateResultTransformer(Class<?> resultClass) {
         this.resultClass = resultClass;

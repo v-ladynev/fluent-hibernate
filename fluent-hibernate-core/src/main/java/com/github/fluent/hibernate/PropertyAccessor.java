@@ -22,7 +22,7 @@ import org.hibernate.internal.util.ReflectHelper;
  * @author DoubleF1re
  * @author V.Ladynev
  */
-public class BasicIgnoreCasePropertyAccessor {
+public class PropertyAccessor {
 
     @SuppressWarnings("rawtypes")
     public BasicSetter getSetter(Class theClass, String propertyName) {
@@ -180,7 +180,6 @@ public class BasicIgnoreCasePropertyAccessor {
 
     /** Basic setter. */
     public static final class BasicSetter {
-        private static final long serialVersionUID = -3092319284832094425L;
         @SuppressWarnings("rawtypes")
         private final Class clazz;
         private final transient Method[] getMethods;
@@ -271,7 +270,6 @@ public class BasicIgnoreCasePropertyAccessor {
 
     /** Basic getter. */
     public static final class BasicGetter {
-        private static final long serialVersionUID = 2828591409798958202L;
         @SuppressWarnings("rawtypes")
         private final Class clazz;
         private final transient Method method;
