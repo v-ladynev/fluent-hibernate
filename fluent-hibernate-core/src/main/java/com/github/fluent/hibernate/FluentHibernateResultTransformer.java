@@ -29,17 +29,13 @@ public class FluentHibernateResultTransformer extends BasicTransformerAdapter {
             setters = new BasicSetter[aliases.length];
             for (int i = 0; i < aliases.length; i++) {
                 String alias = aliases[i];
-                if (alias != null) {
-                    setters[i] = propertyAccessor.getSetter(resultClass, alias);
-                }
+                setters[i] = propertyAccessor.getSetter(resultClass, alias);
             }
         }
         Object result = createResult();
 
         for (int i = 0; i < aliases.length; i++) {
-            if (setters[i] != null) {
-                setters[i].set(result, tuple[i], null);
-            }
+            setters[i].set(result, tuple[i], null);
         }
 
         return result;
@@ -49,8 +45,9 @@ public class FluentHibernateResultTransformer extends BasicTransformerAdapter {
         try {
             return resultClass.newInstance();
         } catch (Exception ex) {
-            throw new HibernateException(String.format("Could not instantiate result class: %s",
-                    resultClass.getName()), ex);
+            throw new HibernateException(
+                    String.format("Could not instantiate result class: %s", resultClass.getName()),
+                    ex);
         }
     }
 
