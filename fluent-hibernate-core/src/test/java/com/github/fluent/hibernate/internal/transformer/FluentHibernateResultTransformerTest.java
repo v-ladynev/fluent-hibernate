@@ -4,10 +4,10 @@ import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.ROOT
 import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.ROOT_NAME_B;
 import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.STATIONAR_NAME_A;
 import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.STATIONAR_NAME_B;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.github.fluent.hibernate.H;
@@ -21,8 +21,7 @@ import com.github.fluent.hibernate.test.util.RootEnvironmentBaseTest;
  *
  * @author V.Ladynev
  */
-public class FluentHibernateResultTransformerTest extends RootEnvironmentBaseTest
-{
+public class FluentHibernateResultTransformerTest extends RootEnvironmentBaseTest {
 
     @Test
     public void transformStationar() {
@@ -39,15 +38,16 @@ public class FluentHibernateResultTransformerTest extends RootEnvironmentBaseTes
                 .eq(Root.ROOT_NAME, rootName).transform(Root.class).list();
 
         Root root = InternalUtils.CollectionUtils.first(roots);
-        Assert.assertNotNull(root);
-        Assert.assertEquals(rootName, root.getRootName());
+
+        assertThat(root).isNotNull();
+        assertThat(root.getRootName()).isEqualTo(rootName);
 
         RootStationar stationarFrom = root.getStationarFrom();
-        Assert.assertNotNull(stationarFrom);
+        assertThat(stationarFrom).isNotNull();
 
         Stationar stationar = stationarFrom.getStationar();
-        Assert.assertNotNull(stationar);
-        Assert.assertEquals(stationarName, stationar.getName());
+        assertThat(stationar).isNotNull();
+        assertThat(stationar.getName()).isEqualTo(stationarName);
     }
 
 }

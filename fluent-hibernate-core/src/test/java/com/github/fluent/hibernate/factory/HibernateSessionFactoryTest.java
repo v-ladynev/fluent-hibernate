@@ -1,13 +1,13 @@
 package com.github.fluent.hibernate.factory;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.hibernate.Session;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.github.fluent.hibernate.H;
 import com.github.fluent.hibernate.IRequest;
-import com.github.fluent.hibernate.factory.HibernateSessionFactory;
 import com.github.fluent.hibernate.test.persistent.SimplyPersistent;
 
 /**
@@ -24,7 +24,7 @@ public class HibernateSessionFactoryTest {
     // @Test
     public void configureFromDefaultHibernateCfgXml() {
         HibernateSessionFactory.Builder.configureFromDefaultHibernateCfgXml()
-                .createSessionFactory();
+        .createSessionFactory();
         assertSession();
     }
 
@@ -32,7 +32,7 @@ public class HibernateSessionFactoryTest {
         HibernateSessionFactory.doInTransaction(new IRequest<Void>() {
             @Override
             public Void doInTransaction(Session session) {
-                Assert.assertTrue(session.isOpen());
+                assertThat(session.isOpen()).isTrue();
                 return null;
             }
         });
@@ -49,8 +49,8 @@ public class HibernateSessionFactoryTest {
         H.<SimplyPersistent> save(SimplyPersistent.createWithDefaultName());
         SimplyPersistent simplyPersistnet = H.<SimplyPersistent> request(SimplyPersistent.class)
                 .first();
-        Assert.assertNotNull(simplyPersistnet);
-        Assert.assertEquals(SimplyPersistent.DEFAULT_NAME, simplyPersistnet.getName());
+        assertThat(simplyPersistnet).isNotNull();
+        assertThat(simplyPersistnet.getName()).isEqualTo(SimplyPersistent.DEFAULT_NAME);
     }
 
 }

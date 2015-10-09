@@ -50,7 +50,6 @@ public class InOperationTest extends FluentHibernateBaseTest {
     public void simpleTest() {
         List<SimplyPersistent> list = getRequest().list();
         assertThat(list).isNotNull().hasSize(3);
-
     }
 
     @Test
@@ -61,7 +60,7 @@ public class InOperationTest extends FluentHibernateBaseTest {
         List<SimplyPersistent> foundList = getRequest().in("name", inRestriction).list();
 
         assertThat(foundList).isNotNull().hasSize(2)
-                .usingElementComparator(SIMPLY_PERSISTENT_COMPARATOR).containsOnly(expectedResult);
+        .usingElementComparator(SIMPLY_PERSISTENT_COMPARATOR).containsOnly(expectedResult);
     }
 
     @Test
@@ -92,7 +91,7 @@ public class InOperationTest extends FluentHibernateBaseTest {
                 in("name", inRestriction).nothingIfEmpty()).list();
 
         assertThat(foundList).isNotNull().hasSize(2)
-                .usingElementComparator(SIMPLY_PERSISTENT_COMPARATOR).containsOnly(expectedResult);
+        .usingElementComparator(SIMPLY_PERSISTENT_COMPARATOR).containsOnly(expectedResult);
     }
 
     private List<String> getNameRestriction(SimplyPersistent[] expectedResult) {
