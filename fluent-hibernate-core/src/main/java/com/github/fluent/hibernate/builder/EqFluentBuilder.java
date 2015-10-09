@@ -1,6 +1,7 @@
 package com.github.fluent.hibernate.builder;
 
-import org.hibernate.criterion.*;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 
 import com.github.fluent.hibernate.HibernateRequest;
 
@@ -12,7 +13,7 @@ public class EqFluentBuilder implements IFluentBuilder {
 	private final String propertyName;
 	private final Object value;
 
-	// TODO there was smth but javadoc doesn't support this coding
+	// TODO mutually exclusive
 	private boolean ifNotNull;
 	private boolean orIsNull;
 
@@ -24,10 +25,6 @@ public class EqFluentBuilder implements IFluentBuilder {
 	public IFluentBuilder ifNotNull() {
 		ifNotNull = true;
 		return this;
-	}
-
-	private Criterion getFalseRestriction() {
-		return Restrictions.sqlRestriction("1<>1");
 	}
 
 	@Override
