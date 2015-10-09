@@ -1,7 +1,5 @@
 package com.github.fluent.hibernate;
 
-import java.util.List;
-
 import com.github.fluent.hibernate.request.HibernateHqlRequest;
 import com.github.fluent.hibernate.request.HibernateObjectQuery;
 import com.github.fluent.hibernate.request.HibernateRequest;
@@ -43,11 +41,11 @@ public final class H {
         HibernateObjectQuery.saveOrUpdate(entity);
     }
 
-    public static <T> void saveOrUpdateAll(List<T> entities) {
+    public static <T> void saveOrUpdateAll(Iterable<T> entities) {
         HibernateObjectQuery.saveOrUpdateAll(entities);
     }
 
-    public static <T> void saveAll(List<T> entities) {
+    public static <T> void saveAll(Iterable<T> entities) {
         HibernateObjectQuery.saveAll(entities);
     }
 

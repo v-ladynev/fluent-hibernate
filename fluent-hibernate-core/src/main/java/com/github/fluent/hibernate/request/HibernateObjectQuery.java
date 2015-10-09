@@ -1,7 +1,5 @@
 package com.github.fluent.hibernate.request;
 
-import java.util.List;
-
 import org.hibernate.Session;
 
 import com.github.fluent.hibernate.IRequest;
@@ -33,7 +31,7 @@ public class HibernateObjectQuery<T> {
         });
     }
 
-    public static <T> void saveAll(final List<T> entities) {
+    public static <T> void saveAll(final Iterable<T> entities) {
         HibernateSessionFactory.doInTransaction(new IRequest<Void>() {
             @Override
             public Void doInTransaction(Session session) {
@@ -45,7 +43,7 @@ public class HibernateObjectQuery<T> {
         });
     }
 
-    public static <T> void saveOrUpdateAll(final List<T> entities) {
+    public static <T> void saveOrUpdateAll(final Iterable<T> entities) {
         HibernateSessionFactory.doInTransaction(new IRequest<Void>() {
             @Override
             public Void doInTransaction(Session session) {

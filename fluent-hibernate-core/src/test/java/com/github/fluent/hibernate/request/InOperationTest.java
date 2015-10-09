@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.github.fluent.hibernate.H;
-import com.github.fluent.hibernate.request.HibernateRequest;
 import com.github.fluent.hibernate.test.persistent.SimplyPersistent;
 import com.github.fluent.hibernate.test.util.FluentHibernateBaseTest;
 
@@ -28,7 +27,7 @@ public class InOperationTest extends FluentHibernateBaseTest {
         }
     };
 
-    private List<SimplyPersistent> models = new ArrayList<SimplyPersistent>();
+    private final List<SimplyPersistent> models = new ArrayList<SimplyPersistent>();
 
     @Before
     public void beforeEachTest() {
@@ -44,18 +43,13 @@ public class InOperationTest extends FluentHibernateBaseTest {
     }
 
     private void dropAll() {
-        //TODO add method delete(Iterable<? extends T> entities)
-        for (SimplyPersistent model : getRequest().list()) {
-            H.delete(model);
-        }
+        H.update("delete from SimplyPersistent").execute();
     }
 
     @Test
     public void simpleTest() {
         List<SimplyPersistent> list = getRequest().list();
-        assertThat(list)
-                .isNotNull()
-                .hasSize(3);
+        assertThat(list).isNotNull().hasSize(3);
 
     }
 
@@ -64,43 +58,29 @@ public class InOperationTest extends FluentHibernateBaseTest {
         SimplyPersistent[] expectedResult = new SimplyPersistent[] { models.get(0), models.get(1) };
         List<String> inRestriction = getNameRestriction(expectedResult);
 
-        List<SimplyPersistent> foundList = getRequest()
-                .in("name", inRestriction)
-                .list();
+        List<SimplyPersistent> foundList = getRequest().in("name", inRestriction).list();
 
-        assertThat(foundList)
-                .isNotNull()
-                .hasSize(2)
-                .usingElementComparator(SIMPLY_PERSISTENT_COMPARATOR)
-                .containsOnly(expectedResult);
+        assertThat(foundList).isNotNull().hasSize(2)
+                .usingElementComparator(SIMPLY_PERSISTENT_COMPARATOR).containsOnly(expectedResult);
     }
 
     @Test
     public void emptyRestrictionTest() {
         List<String> inRestriction = new ArrayList<String>();
 
-        List<SimplyPersistent> foundList = getRequest()
-                .in("name", inRestriction)
-                .list();
+        List<SimplyPersistent> foundList = getRequest().in("name", inRestriction).list();
 
-        assertThat(foundList)
-                .isNotNull()
-                .hasSize(3);
+        assertThat(foundList).isNotNull().hasSize(3);
     }
 
     @Test
     public void restrictionNothingForEmptyCollectionTest() {
-        List<String> inRestriction =  new ArrayList<String>();
+        List<String> inRestriction = new ArrayList<String>();
 
-        List<SimplyPersistent> foundList = getRequest()
-                .add(
-                        in("name", inRestriction).nothingIfEmpty()
-                )
-                .list();
+        List<SimplyPersistent> foundList = getRequest().add(
+                in("name", inRestriction).nothingIfEmpty()).list();
 
-        assertThat(foundList)
-                .isNotNull()
-                .hasSize(0);
+        assertThat(foundList).isNotNull().hasSize(0);
     }
 
     @Test
@@ -108,15 +88,11 @@ public class InOperationTest extends FluentHibernateBaseTest {
         SimplyPersistent[] expectedResult = new SimplyPersistent[] { models.get(0), models.get(1) };
         List<String> inRestriction = getNameRestriction(expectedResult);
 
-        List<SimplyPersistent> foundList = getRequest()
-                .add(in("name", inRestriction).nothingIfEmpty())
-                .list();
+        List<SimplyPersistent> foundList = getRequest().add(
+                in("name", inRestriction).nothingIfEmpty()).list();
 
-        assertThat(foundList)
-                .isNotNull()
-                .hasSize(2)
-                .usingElementComparator(SIMPLY_PERSISTENT_COMPARATOR)
-                .containsOnly(expectedResult);
+        assertThat(foundList).isNotNull().hasSize(2)
+                .usingElementComparator(SIMPLY_PERSISTENT_COMPARATOR).containsOnly(expectedResult);
     }
 
     private List<String> getNameRestriction(SimplyPersistent[] expectedResult) {
