@@ -109,15 +109,15 @@ public final class HibernateRequest<T> {
         return this;
     }
 
+    public HibernateRequest<T> add(Criterion criterion) {
+        restrictions.add(criterion);
+        return this;
+    }
+
     public HibernateRequest<T> add(IFluentBuilder... builders) {
         for (IFluentBuilder builder : builders) {
             builder.build(this);
         }
-        return this;
-    }
-
-    public HibernateRequest<T> crit(Criterion criterion) {
-        restrictions.add(criterion);
         return this;
     }
 

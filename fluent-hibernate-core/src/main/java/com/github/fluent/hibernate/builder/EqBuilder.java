@@ -8,7 +8,7 @@ import com.github.fluent.hibernate.HibernateRequest;
 /**
  * Created by alexey.pchelnikov.
  */
-public class EqFluentBuilder implements IFluentBuilder {
+public class EqBuilder implements IFluentBuilder {
 
 	private final String propertyName;
 	private final Object value;
@@ -17,7 +17,7 @@ public class EqFluentBuilder implements IFluentBuilder {
 	private boolean ifNotNull;
 	private boolean orIsNull;
 
-	public EqFluentBuilder(String propertyName, Object value) {
+	public EqBuilder(String propertyName, Object value) {
 		this.propertyName = propertyName;
 		this.value = value;
 	}

@@ -11,14 +11,14 @@ import com.github.fluent.hibernate.HibernateRequest;
 /**
  * Created by alexey.pchelnikov.
  */
-public class InFluentBuilder implements IFluentBuilder {
+public class InBuilder implements IFluentBuilder {
 
     private final String propertyName;
     private final Collection<?> values;
 
     private boolean nothingIfEmpty;
 
-    public InFluentBuilder(String propertyName, Collection<?> values) {
+    public InBuilder(String propertyName, Collection<?> values) {
         this.propertyName = propertyName;
         this.values = values;
     }
@@ -35,7 +35,7 @@ public class InFluentBuilder implements IFluentBuilder {
     @Override
     public <T> void build(HibernateRequest<T> hibernateRequest) {
         if (nothingIfEmpty && InternalUtils.CollectionUtils.isEmpty(values)) {
-            hibernateRequest.crit(getFalseRestriction());
+            hibernateRequest.add(getFalseRestriction());
         } else {
             hibernateRequest.in(propertyName, values);
         }
