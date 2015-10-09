@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate;
+package com.github.fluent.hibernate.request;
 
 import java.util.Arrays;
 import java.util.List;
@@ -6,6 +6,9 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import com.github.fluent.hibernate.IRequest;
+import com.github.fluent.hibernate.factory.HibernateSessionFactory;
+import com.github.fluent.hibernate.internal.transformer.FluentHibernateResultTransformer;
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 
 /**

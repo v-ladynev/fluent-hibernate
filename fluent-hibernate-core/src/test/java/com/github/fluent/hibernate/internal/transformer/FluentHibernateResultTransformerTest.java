@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate;
+package com.github.fluent.hibernate.internal.transformer;
 
 import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.ROOT_NAME_A;
 import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.ROOT_NAME_B;
@@ -10,6 +10,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.github.fluent.hibernate.H;
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 import com.github.fluent.hibernate.test.persistent.Root;
 import com.github.fluent.hibernate.test.persistent.RootStationar;

@@ -3,7 +3,7 @@ package com.github.fluent.hibernate.builder;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
-import com.github.fluent.hibernate.HibernateRequest;
+import com.github.fluent.hibernate.request.HibernateRequest;
 
 /**
  * Created by alexey.pchelnikov.

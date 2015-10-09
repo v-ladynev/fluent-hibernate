@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 
 import com.github.fluent.hibernate.H;
-import com.github.fluent.hibernate.HibernateSessionFactory;
+import com.github.fluent.hibernate.factory.HibernateSessionFactory;
 import com.github.fluent.hibernate.test.persistent.Root;
 
 /**

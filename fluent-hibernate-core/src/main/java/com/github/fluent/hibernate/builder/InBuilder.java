@@ -3,10 +3,10 @@ package com.github.fluent.hibernate.builder;
 import java.util.Collection;
 
 import com.github.fluent.hibernate.internal.util.InternalUtils;
+import com.github.fluent.hibernate.request.HibernateRequest;
+
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
-
-import com.github.fluent.hibernate.HibernateRequest;
 
 /**
  * Created by alexey.pchelnikov.

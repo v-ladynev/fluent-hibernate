@@ -1,9 +1,12 @@
-package com.github.fluent.hibernate;
+package com.github.fluent.hibernate.request;
 
 import java.util.Arrays;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+
+import com.github.fluent.hibernate.IRequest;
+import com.github.fluent.hibernate.factory.HibernateSessionFactory;
 
 /**
  *

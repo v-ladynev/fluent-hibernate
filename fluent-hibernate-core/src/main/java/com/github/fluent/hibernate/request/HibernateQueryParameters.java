@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate;
+package com.github.fluent.hibernate.request;
 
 import java.util.Collection;
 import java.util.List;
@@ -13,7 +13,7 @@ import com.github.fluent.hibernate.internal.util.InternalUtils;
  * @author DoubleF1re
  * @author V.Ladynev
  */
-public class HibernateQueryParameters {
+/*package*/class HibernateQueryParameters {
 
     private final List<Parameter> parameters = InternalUtils.CollectionUtils.newArrayList();
 

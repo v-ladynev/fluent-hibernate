@@ -1,12 +1,14 @@
 package com.github.fluent.hibernate.example.mysql;
 
+import java.util.List;
+
 import org.jboss.logging.Logger;
 
 import com.github.fluent.hibernate.H;
-import com.github.fluent.hibernate.HibernateSessionFactory;
 import com.github.fluent.hibernate.example.mysql.persistent.User;
 import com.github.fluent.hibernate.example.mysql.persistent.UserAddress;
 import com.github.fluent.hibernate.example.mysql.persistent.UserFriend;
+import com.github.fluent.hibernate.factory.HibernateSessionFactory;
 
 /**
  *
@@ -23,7 +25,7 @@ public class MySqlExample {
     public static void main(String[] args) {
         try {
             HibernateSessionFactory.Builder.configureFromDefaultHibernateCfgXml()
-                    .createSessionFactory();
+            .createSessionFactory();
             new MySqlExample().doSomeDatabaseStuff();
         } finally {
             HibernateSessionFactory.closeSessionFactory();
@@ -33,18 +35,27 @@ public class MySqlExample {
     private void doSomeDatabaseStuff() {
         deleteAllUsers();
         insertUsers();
-        countUsers();
-        findUserA();
-        doSomeUserAddressStuff();
+        // countUsers();
+        // doSomeUserAddressStuff();
         doSomeFriendsStuff();
     }
 
     private void doSomeFriendsStuff() {
-        User user = H.<User> request(User.class).eq(User.LOGIN, USER_LOGIN_A).fetchJoin("friends")
-                .first();
-        user.addFriend(UserFriend.createByName("friend_A_1"));
-        user.addFriend(UserFriend.createByName("friend_A_2"));
+        addFrindsToUser(USER_LOGIN_A);
+        findUsersByFriendName();
+    }
+
+    private void addFrindsToUser(String userLogin) {
+        User user = getUserWithFriends(userLogin);
+        user.addFriend(UserFriend.createByName("John"));
+        user.addFriend(UserFriend.createByName("Doe"));
         H.saveOrUpdate(user);
+    }
+
+    private void findUsersByFriendName() {
+        List<User> users = H.<User> request(User.class).innerJoin("friends").proj("name")
+                .eq("friends.name", "John").transform(User.class).list();
+        LOG.info(String.format("Users with friends: %s", users));
     }
 
     private void doSomeUserAddressStuff() {
@@ -55,7 +66,6 @@ public class MySqlExample {
     private void getUserByStreet() {
         User user = H.<User> request(User.class).innerJoin("address")
                 .eq("address.street", USER_A_STREET).first();
-
         LOG.info(String.format("User %s address: %s", user, user.getAddress()));
     }
 
@@ -66,9 +76,8 @@ public class MySqlExample {
         LOG.info(String.format("UserAddress: %s", address));
     }
 
-    private void findUserA() {
-        User user = findUserByLogin(USER_LOGIN_A);
-        LOG.info("User: " + user);
+    private User getUserWithFriends(String userLogin) {
+        return H.<User> request(User.class).eq(User.LOGIN, userLogin).fetchJoin("friends").first();
     }
 
     private User findUserByLogin(String login) {

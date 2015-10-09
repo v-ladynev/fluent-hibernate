@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate;
+package com.github.fluent.hibernate.internal.transformer;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -9,16 +9,13 @@ import org.hibernate.HibernateException;
 import org.hibernate.PropertyNotFoundException;
 import org.hibernate.internal.util.ReflectHelper;
 
-import com.github.fluent.hibernate.internal.transformer.Getter;
-import com.github.fluent.hibernate.internal.transformer.Setter;
-
 /**
  * Accesses properties via get/set pair.
  *
  * @author DoubleF1re
  * @author V.Ladynev
  */
-public class PropertyAccessor {
+class PropertyAccessor {
 
     private static final String SPLITTER_REG_EX = "\\.";
 
@@ -31,9 +28,9 @@ public class PropertyAccessor {
     private static Setter createSetter(Class theClass, String propertyName) {
         Setter result = getSetterOrNull(theClass, propertyName);
         if (result == null) {
-            throw new PropertyNotFoundException(
-                    String.format("Could not find a setter for property %s in class %s",
-                            propertyName, theClass.getName()));
+            throw new PropertyNotFoundException(String.format(
+                    "Could not find a setter for property %s in class %s", propertyName,
+                    theClass.getName()));
         }
         return result;
     }
@@ -53,8 +50,8 @@ public class PropertyAccessor {
             getMethods[i] = getterMethod(tmpClass, pNames[i]);
             setMethods[i] = setterMethod(tmpClass, pNames[i]);
             if (getMethods[i] == null) {
-                throw new HibernateException(
-                        String.format("intermediate setter property not found : %s", pNames[i]));
+                throw new HibernateException(String.format(
+                        "intermediate setter property not found : %s", pNames[i]));
             }
             tmpClass = getMethods[i].getReturnType();
         }
@@ -113,9 +110,8 @@ public class PropertyAccessor {
     public static Getter createGetter(Class theClass, String propertyName) {
         Getter result = getGetterOrNull(theClass, propertyName);
         if (result == null) {
-            throw new PropertyNotFoundException(
-                    String.format("Could not find a getter for %s in class %s", propertyName,
-                            theClass.getName()));
+            throw new PropertyNotFoundException(String.format(
+                    "Could not find a getter for %s in class %s", propertyName, theClass.getName()));
         }
         return result;
 

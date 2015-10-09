@@ -1,14 +1,17 @@
-package com.github.fluent.hibernate;
+package com.github.fluent.hibernate.request;
 
 import java.util.List;
 
 import org.hibernate.Session;
 
+import com.github.fluent.hibernate.IRequest;
+import com.github.fluent.hibernate.factory.HibernateSessionFactory;
+
 /**
  * @author DoubleF1re
  * @author V.Ladynev
  */
-class HibernateObjectQuery<T> {
+public class HibernateObjectQuery<T> {
 
     @SuppressWarnings("unchecked")
     public static <T> T save(final T entity) {

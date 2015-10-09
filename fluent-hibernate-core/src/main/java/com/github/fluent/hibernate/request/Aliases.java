@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate;
+package com.github.fluent.hibernate.request;
 
 import java.util.HashSet;
 import java.util.Set;

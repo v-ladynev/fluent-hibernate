@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate;
+package com.github.fluent.hibernate.request;
 
 import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.createRequestForRootA;
 import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.createRootRequest;
@@ -6,6 +6,7 @@ import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.crea
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.github.fluent.hibernate.H;
 import com.github.fluent.hibernate.test.persistent.Root;
 import com.github.fluent.hibernate.test.util.RootEnvironmentBaseTest;
 

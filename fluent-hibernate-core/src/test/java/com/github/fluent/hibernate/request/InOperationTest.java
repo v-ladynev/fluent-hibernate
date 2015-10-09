@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate.test.request;
+package com.github.fluent.hibernate.request;
 
 import static com.github.fluent.hibernate.builder.FluentBuilders.in;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.github.fluent.hibernate.H;
-import com.github.fluent.hibernate.HibernateRequest;
+import com.github.fluent.hibernate.request.HibernateRequest;
 import com.github.fluent.hibernate.test.persistent.SimplyPersistent;
 import com.github.fluent.hibernate.test.util.FluentHibernateBaseTest;
 

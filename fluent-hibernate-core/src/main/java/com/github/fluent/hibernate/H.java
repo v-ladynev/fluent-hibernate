@@ -2,6 +2,11 @@ package com.github.fluent.hibernate;
 
 import java.util.List;
 
+import com.github.fluent.hibernate.request.HibernateHqlRequest;
+import com.github.fluent.hibernate.request.HibernateObjectQuery;
+import com.github.fluent.hibernate.request.HibernateRequest;
+import com.github.fluent.hibernate.request.HibernateUpdate;
+
 /**
  * Hibernate fluent API entry point.
  *

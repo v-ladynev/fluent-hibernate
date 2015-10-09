@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate;
+package com.github.fluent.hibernate.request;
 
 import javax.persistence.criteria.JoinType;
 
@@ -13,7 +13,7 @@ import com.github.fluent.hibernate.internal.util.InternalUtils;
  *
  * @author V.Ladynev
  */
-public final class Alias {
+/* package */final class Alias {
 
     private final String associationPath;
 

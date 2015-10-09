@@ -1,7 +1,7 @@
 package com.github.fluent.hibernate.test.util;
 
 import com.github.fluent.hibernate.H;
-import com.github.fluent.hibernate.HibernateRequest;
+import com.github.fluent.hibernate.request.HibernateRequest;
 import com.github.fluent.hibernate.test.persistent.Root;
 import com.github.fluent.hibernate.test.persistent.RootStationar;
 import com.github.fluent.hibernate.test.persistent.Stationar;

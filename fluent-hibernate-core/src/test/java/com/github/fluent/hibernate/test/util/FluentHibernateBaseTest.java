@@ -1,6 +1,7 @@
 package com.github.fluent.hibernate.test.util;
 
-import com.github.fluent.hibernate.HibernateSessionFactory;
+import com.github.fluent.hibernate.factory.HibernateSessionFactory;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 

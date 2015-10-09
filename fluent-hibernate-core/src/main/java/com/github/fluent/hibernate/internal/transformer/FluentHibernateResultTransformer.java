@@ -1,9 +1,7 @@
-package com.github.fluent.hibernate;
+package com.github.fluent.hibernate.internal.transformer;
 
 import org.hibernate.HibernateException;
 import org.hibernate.transform.BasicTransformerAdapter;
-
-import com.github.fluent.hibernate.internal.transformer.Setter;
 
 /**
  * @author DoubleF1re

@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate;
+package com.github.fluent.hibernate.factory;
 
 import java.io.File;
 import java.util.Map;
@@ -12,6 +12,8 @@ import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
+import com.github.fluent.hibernate.IRequest;
+import com.github.fluent.hibernate.IStatelessRequest;
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 
 /**

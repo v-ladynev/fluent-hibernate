@@ -1,17 +1,22 @@
-package com.github.fluent.hibernate;
+package com.github.fluent.hibernate.request;
 
 import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.criteria.JoinType;
 
+import com.github.fluent.hibernate.IRequest;
+import com.github.fluent.hibernate.Pagination;
 import com.github.fluent.hibernate.builder.IFluentBuilder;
+
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.*;
 import org.hibernate.transform.ResultTransformer;
 
+import com.github.fluent.hibernate.factory.HibernateSessionFactory;
+import com.github.fluent.hibernate.internal.transformer.FluentHibernateResultTransformer;
 import com.github.fluent.hibernate.internal.util.InternalUtils.CollectionUtils;
 
 /**
