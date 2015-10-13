@@ -12,14 +12,14 @@ import org.hibernate.engine.spi.SessionImplementor;
 /**
  * @author DoubleF1re
  */
-public final class Getter {
+/* package */ final class Getter {
     @SuppressWarnings("rawtypes")
     private final Class clazz;
     private final transient Method method;
     private final String propertyName;
 
     @SuppressWarnings("rawtypes")
-    public Getter(Class clazz, Method method, String propertyName) {
+    /* package */ Getter(Class clazz, Method method, String propertyName) {
         this.clazz = clazz;
         this.method = method;
         this.propertyName = propertyName;
@@ -66,8 +66,4 @@ public final class Getter {
     public String toString() {
         return String.format("BasicGetter(%s.%s)", clazz.getName(), propertyName);
     }
-
-    /*Object readResolve() throws PropertyNotFoundException, IntrospectionException {
-        return createGetter(clazz, propertyName);
-    }*/
 }

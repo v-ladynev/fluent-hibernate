@@ -10,7 +10,7 @@ import org.hibernate.engine.spi.SessionFactoryImplementor;
 /**
  * @author DoubleF1re
  */
-public final class Setter {
+/* package */ final class Setter {
     @SuppressWarnings("rawtypes")
     private final Class clazz;
     private final transient Method[] getMethods;
@@ -19,7 +19,7 @@ public final class Setter {
     private final String propertyName;
 
     @SuppressWarnings("rawtypes")
-    public Setter(Class clazz, Method[] getMethods, Method[] setMethods, Method method,
+    /* package */ Setter(Class clazz, Method[] getMethods, Method[] setMethods, Method method,
             String propertyName) {
         this.clazz = clazz;
         this.method = method;
@@ -88,10 +88,6 @@ public final class Setter {
     public String getMethodName() {
         return method.getName();
     }
-
-    /*Object readResolve() throws PropertyNotFoundException, IntrospectionException {
-        return createSetter(clazz, propertyName);
-    }*/
 
     @Override
     public String toString() {
