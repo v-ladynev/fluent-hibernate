@@ -28,9 +28,9 @@ class SetterAccessor {
     private static Setter createSetter(Class theClass, String propertyName) {
         Setter result = getSetterOrNull(theClass, propertyName);
         if (result == null) {
-            throw new PropertyNotFoundException(
-                    String.format("Could not find a setter for property %s in class %s",
-                            propertyName, theClass.getName()));
+            throw new PropertyNotFoundException(String.format(
+                    "Could not find a setter for property %s in class %s", propertyName,
+                    theClass.getName()));
         }
         return result;
     }
@@ -50,8 +50,8 @@ class SetterAccessor {
             getMethods[i] = getterMethod(tmpClass, pNames[i]);
             setMethods[i] = setterMethod(tmpClass, pNames[i]);
             if (getMethods[i] == null) {
-                throw new HibernateException(
-                        String.format("intermediate setter property not found : %s", pNames[i]));
+                throw new HibernateException(String.format(
+                        "intermediate setter property not found : %s", pNames[i]));
             }
             tmpClass = getMethods[i].getReturnType();
         }
@@ -114,7 +114,7 @@ class SetterAccessor {
             if (!ReflectHelper.isPublic(theClass, method)) {
                 method.setAccessible(true);
             }
-            return new Getter(theClass, method, propertyName);
+            return new Getter(method);
         }
         Getter getter = getGetterOrNull(theClass.getSuperclass(), propertyName);
         if (getter == null) {

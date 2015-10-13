@@ -5,10 +5,12 @@ import java.lang.reflect.Method;
 import org.hibernate.HibernateException;
 import org.hibernate.PropertyAccessException;
 
+import com.github.fluent.hibernate.internal.util.InternalUtils;
+
 /**
  * @author DoubleF1re
  */
-/* package */ final class Setter {
+/* package */final class Setter {
 
     private final Class<?> clazz;
     private final transient Method[] getMethods;
@@ -16,7 +18,7 @@ import org.hibernate.PropertyAccessException;
     private final transient Method method;
     private final String propertyName;
 
-    /* package */ Setter(Class<?> clazz, Method[] getMethods, Method[] setMethods, Method method,
+    public Setter(Class<?> clazz, Method[] getMethods, Method[] setMethods, Method method,
             String propertyName) {
         this.clazz = clazz;
         this.method = method;
@@ -25,15 +27,15 @@ import org.hibernate.PropertyAccessException;
         this.setMethods = setMethods;
     }
 
-    public void set(Object target, Object value) throws HibernateException {
+    public void set(Object target, Object value) {
         try {
             invokeSet(target, value);
         } catch (Exception e) {
             checkForPrimitive(value);
             String errorMessage = String.format(
-                    "Setter information: expected type: %s, actual type: %s",
-                    method.getParameterTypes()[0].getName(),
-                    value == null ? null : value.getClass().getName());
+                    "Setter information: expected type: %s, actual type: %s", method
+                    .getParameterTypes()[0].getName(), value == null ? null : value
+                            .getClass().getName());
             throw new PropertyAccessException(e, errorMessage, true, clazz, propertyName);
         }
     }
@@ -43,7 +45,7 @@ import org.hibernate.PropertyAccessException;
         for (int i = 0; i < getMethods.length; i++) {
             Object tmpTarget2 = getMethods[i].invoke(tmpTarget, new Object[] {});
             if (tmpTarget2 == null) {
-                tmpTarget2 = instantiate(getMethods[i].getReturnType());
+                tmpTarget2 = InternalUtils.newInstance(getMethods[i].getReturnType());
                 setMethods[i].invoke(tmpTarget, new Object[] { tmpTarget2 });
             }
             tmpTarget = tmpTarget2;
@@ -59,12 +61,4 @@ import org.hibernate.PropertyAccessException;
         }
     }
 
-    private Object instantiate(Class<?> clazz) throws IllegalAccessException {
-        try {
-            return clazz.newInstance();
-        } catch (InstantiationException e) {
-            throw new HibernateException(
-                    String.format("Can't instanciate intermediate bean %s", clazz.toString()));
-        }
-    }
 }

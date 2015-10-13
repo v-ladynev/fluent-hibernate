@@ -29,6 +29,15 @@ public final class InternalUtils {
         return a == b || a != null && a.equals(b);
     }
 
+    public static Object newInstance(Class<?> classToInstantiate) {
+        try {
+            return classToInstantiate.newInstance();
+        } catch (Exception ex) {
+            throw new RuntimeException(String.format("Could not instantiate result class: %s",
+                    classToInstantiate.getName()), ex);
+        }
+    }
+
     public static final class CollectionUtils {
 
         private CollectionUtils() {

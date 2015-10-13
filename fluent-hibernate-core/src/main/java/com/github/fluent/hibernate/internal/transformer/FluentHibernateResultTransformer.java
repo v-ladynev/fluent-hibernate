@@ -1,7 +1,8 @@
 package com.github.fluent.hibernate.internal.transformer;
 
-import org.hibernate.HibernateException;
 import org.hibernate.transform.BasicTransformerAdapter;
+
+import com.github.fluent.hibernate.internal.util.InternalUtils;
 
 /**
  * @author DoubleF1re
@@ -15,16 +16,17 @@ public class FluentHibernateResultTransformer extends BasicTransformerAdapter {
 
     private Setter[] setters;
 
-    private final SetterAccessor propertyAccessor = new SetterAccessor();
-
     public FluentHibernateResultTransformer(Class<?> resultClass) {
         this.resultClass = resultClass;
     }
 
     @Override
     public Object transformTuple(Object[] tuple, String[] aliases) {
-        createSettersIfNeed(aliases);
-        Object result = createResult();
+        if (setters == null) {
+            setters = createSetters(resultClass, aliases);
+        }
+
+        Object result = InternalUtils.newInstance(resultClass);
 
         for (int i = 0; i < aliases.length; i++) {
             setters[i].set(result, tuple[i]);
@@ -33,24 +35,15 @@ public class FluentHibernateResultTransformer extends BasicTransformerAdapter {
         return result;
     }
 
-    private void createSettersIfNeed(String[] aliases) {
-        if (setters == null) {
-            setters = new Setter[aliases.length];
-            for (int i = 0; i < aliases.length; i++) {
-                String alias = aliases[i];
-                setters[i] = propertyAccessor.getSetter(resultClass, alias);
-            }
+    private static Setter[] createSetters(Class<?> resultClass, String[] aliases) {
+        SetterAccessor propertyAccessor = new SetterAccessor();
+        Setter[] result = new Setter[aliases.length];
+        for (int i = 0; i < aliases.length; i++) {
+            String alias = aliases[i];
+            result[i] = propertyAccessor.getSetter(resultClass, alias);
         }
-    }
 
-    private Object createResult() {
-        try {
-            return resultClass.newInstance();
-        } catch (Exception ex) {
-            throw new HibernateException(
-                    String.format("Could not instantiate result class: %s", resultClass.getName()),
-                    ex);
-        }
+        return result;
     }
 
 }
