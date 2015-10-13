@@ -1,25 +1,19 @@
 package com.github.fluent.hibernate.internal.transformer;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.util.Map;
 
 import org.hibernate.HibernateException;
-import org.hibernate.PropertyAccessException;
-import org.hibernate.engine.spi.SessionImplementor;
 
 /**
  * @author DoubleF1re
  */
 /* package */ final class Getter {
-    @SuppressWarnings("rawtypes")
-    private final Class clazz;
+
+    private final Class<?> clazz;
     private final transient Method method;
     private final String propertyName;
 
-    @SuppressWarnings("rawtypes")
-    /* package */ Getter(Class clazz, Method method, String propertyName) {
+    /* package */ Getter(Class<?> clazz, Method method, String propertyName) {
         this.clazz = clazz;
         this.method = method;
         this.propertyName = propertyName;
@@ -28,42 +22,15 @@ import org.hibernate.engine.spi.SessionImplementor;
     public Object get(Object target) throws HibernateException {
         try {
             return method.invoke(target, (Object[]) null);
-        } catch (InvocationTargetException ite) {
-            throw new PropertyAccessException(ite, "Exception occurred inside", false, clazz,
-                    propertyName);
-        } catch (IllegalAccessException iae) {
-            throw new PropertyAccessException(iae, "IllegalAccessException occurred while calling",
-                    false, clazz, propertyName);
-        } catch (IllegalArgumentException iae) {
-            throw new PropertyAccessException(iae, "IllegalArgumentException occurred calling",
-                    false, clazz, propertyName);
+        } catch (Exception e) {
+            throw new HibernateException(
+                    String.format("Exception throwns by getter. Class[%s], propertyName[%s]", clazz,
+                            propertyName),
+                    e);
         }
     }
 
-    @SuppressWarnings("rawtypes")
-    public Object getForInsert(Object target, Map mergeMap, SessionImplementor session) {
-        return get(target);
-    }
-
-    @SuppressWarnings("rawtypes")
-    public Class getReturnType() {
+    public Class<?> getReturnType() {
         return method.getReturnType();
-    }
-
-    public Method getMethod() {
-        return method;
-    }
-
-    public String getMethodName() {
-        return method.getName();
-    }
-
-    public Member getMember() {
-        return method;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("BasicGetter(%s.%s)", clazz.getName(), propertyName);
     }
 }
