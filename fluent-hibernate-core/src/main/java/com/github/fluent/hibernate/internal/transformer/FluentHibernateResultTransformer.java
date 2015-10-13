@@ -15,7 +15,7 @@ public class FluentHibernateResultTransformer extends BasicTransformerAdapter {
 
     private Setter[] setters;
 
-    private final PropertyAccessor propertyAccessor = new PropertyAccessor();
+    private final SetterAccessor propertyAccessor = new SetterAccessor();
 
     public FluentHibernateResultTransformer(Class<?> resultClass) {
         this.resultClass = resultClass;
@@ -23,6 +23,17 @@ public class FluentHibernateResultTransformer extends BasicTransformerAdapter {
 
     @Override
     public Object transformTuple(Object[] tuple, String[] aliases) {
+        createSettersIfNeed(aliases);
+        Object result = createResult();
+
+        for (int i = 0; i < aliases.length; i++) {
+            setters[i].set(result, tuple[i]);
+        }
+
+        return result;
+    }
+
+    private void createSettersIfNeed(String[] aliases) {
         if (setters == null) {
             setters = new Setter[aliases.length];
             for (int i = 0; i < aliases.length; i++) {
@@ -30,13 +41,6 @@ public class FluentHibernateResultTransformer extends BasicTransformerAdapter {
                 setters[i] = propertyAccessor.getSetter(resultClass, alias);
             }
         }
-        Object result = createResult();
-
-        for (int i = 0; i < aliases.length; i++) {
-            setters[i].set(result, tuple[i], null);
-        }
-
-        return result;
     }
 
     private Object createResult() {

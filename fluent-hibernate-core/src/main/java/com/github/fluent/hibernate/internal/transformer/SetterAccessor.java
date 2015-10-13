@@ -10,12 +10,12 @@ import org.hibernate.PropertyNotFoundException;
 import org.hibernate.internal.util.ReflectHelper;
 
 /**
- * Accesses properties via get/set pair.
+ * Accesses setter of property by reflection magic.
  *
  * @author DoubleF1re
  * @author V.Ladynev
  */
-class PropertyAccessor {
+class SetterAccessor {
 
     private static final String SPLITTER_REG_EX = "\\.";
 
@@ -28,9 +28,9 @@ class PropertyAccessor {
     private static Setter createSetter(Class theClass, String propertyName) {
         Setter result = getSetterOrNull(theClass, propertyName);
         if (result == null) {
-            throw new PropertyNotFoundException(String.format(
-                    "Could not find a setter for property %s in class %s", propertyName,
-                    theClass.getName()));
+            throw new PropertyNotFoundException(
+                    String.format("Could not find a setter for property %s in class %s",
+                            propertyName, theClass.getName()));
         }
         return result;
     }
@@ -50,8 +50,8 @@ class PropertyAccessor {
             getMethods[i] = getterMethod(tmpClass, pNames[i]);
             setMethods[i] = setterMethod(tmpClass, pNames[i]);
             if (getMethods[i] == null) {
-                throw new HibernateException(String.format(
-                        "intermediate setter property not found : %s", pNames[i]));
+                throw new HibernateException(
+                        String.format("intermediate setter property not found : %s", pNames[i]));
             }
             tmpClass = getMethods[i].getReturnType();
         }
@@ -102,22 +102,6 @@ class PropertyAccessor {
     }
 
     @SuppressWarnings("rawtypes")
-    public Getter getGetter(Class theClass, String propertyName) {
-        return createGetter(theClass, propertyName);
-    }
-
-    @SuppressWarnings("rawtypes")
-    public static Getter createGetter(Class theClass, String propertyName) {
-        Getter result = getGetterOrNull(theClass, propertyName);
-        if (result == null) {
-            throw new PropertyNotFoundException(String.format(
-                    "Could not find a getter for %s in class %s", propertyName, theClass.getName()));
-        }
-        return result;
-
-    }
-
-    @SuppressWarnings("rawtypes")
     private static Getter getGetterOrNull(Class theClass, String propertyName) {
 
         if (theClass == Object.class || theClass == null) {
@@ -147,13 +131,13 @@ class PropertyAccessor {
         PropertyDescriptor[] descriptors = getPropertyDescriptors(theClass);
 
         for (PropertyDescriptor descriptor : descriptors) {
-            if (descriptor.getReadMethod() == null) {
+            Method readMethod = descriptor.getReadMethod();
+            if (readMethod == null) {
                 continue;
             }
-            if (descriptor.getReadMethod().getParameterTypes().length == 0) {
-                if (descriptor.getName().equalsIgnoreCase(propertyName)) {
-                    return descriptor.getReadMethod();
-                }
+            if (readMethod.getParameterTypes().length == 0
+                    && descriptor.getName().equalsIgnoreCase(propertyName)) {
+                return readMethod;
             }
         }
 

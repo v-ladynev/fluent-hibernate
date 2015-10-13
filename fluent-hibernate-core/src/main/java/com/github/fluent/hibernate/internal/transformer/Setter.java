@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 
 import org.hibernate.HibernateException;
 import org.hibernate.PropertyAccessException;
-import org.hibernate.engine.spi.SessionFactoryImplementor;
 
 /**
  * @author DoubleF1re
@@ -29,7 +28,7 @@ import org.hibernate.engine.spi.SessionFactoryImplementor;
     }
 
     @SuppressWarnings("rawtypes")
-    public void set(Object target, Object value, SessionFactoryImplementor factory)
+    public void set(Object target, Object value)
             throws HibernateException {
         try {
             Object tmpTarget = target;
