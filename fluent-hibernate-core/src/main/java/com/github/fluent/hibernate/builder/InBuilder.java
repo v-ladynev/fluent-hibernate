@@ -2,43 +2,45 @@ package com.github.fluent.hibernate.builder;
 
 import java.util.Collection;
 
-import com.github.fluent.hibernate.internal.util.InternalUtils;
-import com.github.fluent.hibernate.request.HibernateRequest;
-
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
+import com.github.fluent.hibernate.internal.util.InternalUtils.CollectionUtils;
+import com.github.fluent.hibernate.request.HibernateRequest;
+
 /**
- * Created by alexey.pchelnikov.
+ *
+ * @author alexey.pchelnikov.
  */
-public class InBuilder implements IFluentBuilder {
+public class InBuilder implements IBuilder {
 
     private final String propertyName;
+
     private final Collection<?> values;
 
-    private boolean nothingIfEmpty;
+    private boolean nothingForEmptyCollection;
 
-    public InBuilder(String propertyName, Collection<?> values) {
+    /*package*/InBuilder(String propertyName, Collection<?> values) {
         this.propertyName = propertyName;
         this.values = values;
     }
 
-    public IFluentBuilder nothingIfEmpty() {
-        nothingIfEmpty = true;
+    public IBuilder nothingForEmptyCollection() {
+        nothingForEmptyCollection = true;
         return this;
-    }
-
-    private Criterion getFalseRestriction() {
-        return Restrictions.sqlRestriction("1<>1");
     }
 
     @Override
     public <T> void build(HibernateRequest<T> hibernateRequest) {
-        if (nothingIfEmpty && InternalUtils.CollectionUtils.isEmpty(values)) {
+        if (nothingForEmptyCollection && CollectionUtils.isEmpty(values)) {
             hibernateRequest.add(getFalseRestriction());
         } else {
             hibernateRequest.in(propertyName, values);
         }
+    }
+
+    private Criterion getFalseRestriction() {
+        return Restrictions.sqlRestriction("1<>1");
     }
 
 }

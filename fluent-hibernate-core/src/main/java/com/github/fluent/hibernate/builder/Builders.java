@@ -3,9 +3,13 @@ package com.github.fluent.hibernate.builder;
 import java.util.Collection;
 
 /**
- * Created by alexey.pchelnikov.
+ * @autor alexey.pchelnikov.
  */
-public class FluentBuilders {
+public final class Builders {
+
+    private Builders() {
+
+    }
 
     public static InBuilder in(String propertyName, Collection<?> values) {
         return new InBuilder(propertyName, values);

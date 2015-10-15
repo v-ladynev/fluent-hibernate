@@ -3,9 +3,9 @@ package com.github.fluent.hibernate.builder;
 import com.github.fluent.hibernate.request.HibernateRequest;
 
 /**
- * Created by alexey.pchelnikov.
+ * @autor alexey.pchelnikov.
  */
-public interface IFluentBuilder {
+public interface IBuilder {
 
     <T> void build(HibernateRequest<T> hibernateRequest);
 }

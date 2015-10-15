@@ -7,7 +7,7 @@ import javax.persistence.criteria.JoinType;
 
 import com.github.fluent.hibernate.IRequest;
 import com.github.fluent.hibernate.Pagination;
-import com.github.fluent.hibernate.builder.IFluentBuilder;
+import com.github.fluent.hibernate.builder.IBuilder;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
@@ -119,8 +119,8 @@ public final class HibernateRequest<T> {
         return this;
     }
 
-    public HibernateRequest<T> add(IFluentBuilder... builders) {
-        for (IFluentBuilder builder : builders) {
+    public HibernateRequest<T> add(IBuilder... builders) {
+        for (IBuilder builder : builders) {
             builder.build(this);
         }
         return this;

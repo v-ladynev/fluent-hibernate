@@ -1,43 +1,41 @@
 package com.github.fluent.hibernate.builder;
 
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Restrictions;
-
 import com.github.fluent.hibernate.request.HibernateRequest;
 
 /**
- * Created by alexey.pchelnikov.
+ * @autor by alexey.pchelnikov.
  */
-public class EqBuilder implements IFluentBuilder {
+public class EqBuilder implements IBuilder {
 
-	private final String propertyName;
-	private final Object value;
+    private final String propertyName;
 
-	// TODO mutually exclusive
-	private boolean ifNotNull;
-	private boolean orIsNull;
+    private final Object value;
 
-	public EqBuilder(String propertyName, Object value) {
-		this.propertyName = propertyName;
-		this.value = value;
-	}
+    // TODO mutually exclusive
+    private boolean ifNotNull;
+    private boolean orIsNull;
 
-	public IFluentBuilder ifNotNull() {
-		ifNotNull = true;
-		return this;
-	}
+    /*package*/EqBuilder(String propertyName, Object value) {
+        this.propertyName = propertyName;
+        this.value = value;
+    }
 
-	@Override
-	public <T> void build(HibernateRequest<T> hibernateRequest) {
-		if (orIsNull) {
-			hibernateRequest.eqOrIsNull(propertyName, value);
-		} else if (!ifNotNull || value != null) {
-			hibernateRequest.eq(propertyName, value);
-		}
-	}
+    public IBuilder ifNotNull() {
+        ifNotNull = true;
+        return this;
+    }
 
-	public IFluentBuilder orIsNull() {
-		orIsNull = true;
-		return this;
-	}
+    @Override
+    public <T> void build(HibernateRequest<T> hibernateRequest) {
+        if (orIsNull) {
+            hibernateRequest.eqOrIsNull(propertyName, value);
+        } else if (!ifNotNull || value != null) {
+            hibernateRequest.eq(propertyName, value);
+        }
+    }
+
+    public IBuilder orIsNull() {
+        orIsNull = true;
+        return this;
+    }
 }
