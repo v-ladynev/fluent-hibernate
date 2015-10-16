@@ -3,7 +3,7 @@ package com.github.fluent.hibernate.builder;
 import com.github.fluent.hibernate.request.HibernateRequest;
 
 /**
- * @autor alexey.pchelnikov.
+ * @author alexey.pchelnikov.
  */
 public interface IBuilder {
 

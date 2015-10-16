@@ -3,7 +3,7 @@ package com.github.fluent.hibernate.builder;
 import com.github.fluent.hibernate.request.HibernateRequest;
 
 /**
- * @autor by alexey.pchelnikov.
+ * @@author by alexey.pchelnikov.
  */
 public class EqBuilder implements IBuilder {
 

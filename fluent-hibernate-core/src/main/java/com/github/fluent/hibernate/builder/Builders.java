@@ -3,7 +3,7 @@ package com.github.fluent.hibernate.builder;
 import java.util.Collection;
 
 /**
- * @autor alexey.pchelnikov.
+ * @author alexey.pchelnikov.
  */
 public final class Builders {
 

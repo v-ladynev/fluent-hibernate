@@ -19,7 +19,7 @@ import com.github.fluent.hibernate.test.util.FluentHibernateBaseTest;
  *
  * @author alexey.pchelnikov
  */
-public class InOperationTest extends FluentHibernateBaseTest {
+public class InOperatorTest extends FluentHibernateBaseTest {
 
     public static final Comparator<SimplyPersistent> COMPARE_BY_PID = new Comparator<SimplyPersistent>() {
         @Override
