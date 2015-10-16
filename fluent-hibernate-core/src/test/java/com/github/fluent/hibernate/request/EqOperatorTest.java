@@ -28,21 +28,21 @@ public class EqOperatorTest extends FluentHibernateBaseTest {
         generateModels();
     }
 
-    private void generateModels() {
-        persistents.add(new SimplyPersistent("p0"));
-        persistents.add(new SimplyPersistent("p1"));
-        persistents.add(new SimplyPersistent("p2"));
-        persistents.add(new SimplyPersistent(null));
-        H.saveAll(persistents);
-    }
-
     private void dropAll() {
         H.update("delete from SimplyPersistent").execute();
     }
 
+    private void generateModels() {
+        persistents.add(new SimplyPersistent("just_name"));
+        persistents.add(new SimplyPersistent("two_objects"));
+        persistents.add(new SimplyPersistent("two_objects"));
+        persistents.add(new SimplyPersistent(null));
+        H.saveAll(persistents);
+    }
+
     @Test
     public void restrictionTest() {
-        List<SimplyPersistent> list = getRequest().eq("name", "p0").list();
+        List<SimplyPersistent> list = getRequest().eq("name", "two_objects").list();
 
         Long[] expectedResult = new Long[] { persistents.get(1).getPid(),
                 persistents.get(2).getPid() };
@@ -65,7 +65,7 @@ public class EqOperatorTest extends FluentHibernateBaseTest {
 
     @Test
     public void restrictionBuilderTest() {
-        List<SimplyPersistent> list = getRequest().add(eq("name", "p0")).list();
+        List<SimplyPersistent> list = getRequest().add(eq("name", "two_objects")).list();
 
         Long[] expectedResult = new Long[] { persistents.get(1).getPid(),
                 persistents.get(2).getPid() };
