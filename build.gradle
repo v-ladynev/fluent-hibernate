@@ -122,6 +122,10 @@ project(':fluent-hibernate-examples:spring-console') {
     group = "com.github.v-ladynev"
     description = "An example console project using fluent-hibernate, Spring and MySQL"
     mainClassName = "com.github.fluent.hibernate.example.spring.console.SpringConsoleExample"
+
+    dependencies {
+        compile group: 'org.springframework', name: 'spring-context', version: '4.2.2.RELEASE'
+    }
 }
 
 task wrapper(type: Wrapper) {

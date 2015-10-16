@@ -1,5 +1,7 @@
 package com.github.fluent.hibernate.example.spring.console;
 
+import org.springframework.util.Assert;
+
 /**
  *
  * @author V.Ladynev
@@ -7,7 +9,7 @@ package com.github.fluent.hibernate.example.spring.console;
 public class SpringConsoleExample {
 
     public static void main(String[] args) {
-        System.out.println("xxx");
+        Assert.state(false, "Spring works!");
     }
 
 }
