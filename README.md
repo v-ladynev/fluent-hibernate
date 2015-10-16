@@ -39,7 +39,7 @@ User user = H.<User> request(User.class).eq("login", loginToFind).first();
 ```
 
 You can find other examples in the [fluent-hibernate-mysql project](https://github.com/v-ladynev/fluent-hibernate-mysql)
-and in the subproject [fluent-hibernate-examples](https://github.com/v-ladynev/fluent-hibernate/tree/master/fluent-hibernate-examples/src/main)
+and in the subproject [fluent-hibernate-examples](https://github.com/v-ladynev/fluent-hibernate/tree/master/fluent-hibernate-examples/)
 
 ## Contributors
 
