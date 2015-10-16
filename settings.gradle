@@ -1,2 +1,3 @@
 include 'fluent-hibernate-core'
 include 'fluent-hibernate-examples:simply-console'
+include 'fluent-hibernate-examples:spring-console'
