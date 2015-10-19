@@ -40,7 +40,6 @@ project(':fluent-hibernate-core') {
     archivesBaseName = "fluent-hibernate-core"
 
     dependencies {
-        compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.36'
         compile group: 'org.hibernate', name: 'hibernate-core', version: '5.0.1.Final'
         testCompile 'com.h2database:h2:1.4.189'
         testCompile 'org.assertj:assertj-core:1.7.1'
@@ -113,6 +112,10 @@ project(':fluent-hibernate-examples:simply-console') {
     group = "com.github.v-ladynev"
     description = "A simply example console project using fluent-hibernate library with MySQL"
     mainClassName = "com.github.fluent.hibernate.example.mysql.MySqlExample"
+
+    dependencies {
+        compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.36'
+    }
 }
 
 project(':fluent-hibernate-examples:spring-console') {
@@ -125,6 +128,8 @@ project(':fluent-hibernate-examples:spring-console') {
 
     dependencies {
         compile group: 'org.springframework', name: 'spring-context', version: '4.2.2.RELEASE'
+        compile group: 'org.springframework', name: 'spring-orm', version: '4.2.2.RELEASE'
+        compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.36'
     }
 }
 
