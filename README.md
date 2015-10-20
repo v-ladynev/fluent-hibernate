@@ -31,6 +31,12 @@ Get all users.
 List<User> users = H.<User> request(User.class).list();
 ```
 
+Get all users, but only with "login" and "id" properties filled(other properties will be null).
+
+```Java
+List<User> users = H.<User> request(User.class).proj("login").proj("id").transform(User.class).list();
+```
+
 Getting user with login "my_login".
 
 ```Java
