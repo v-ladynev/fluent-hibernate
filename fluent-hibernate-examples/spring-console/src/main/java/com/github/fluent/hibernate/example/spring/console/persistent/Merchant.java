@@ -1,39 +1,36 @@
+/**
+ * $HeadURL$
+ * $Revision$
+ * $Date$
+ *
+ * Copyright (c) Isida-Informatica, Ltd. All Rights Reserved.
+ */
 package com.github.fluent.hibernate.example.spring.console.persistent;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
  *
  * @author V.Ladynev
+ * @version $Id$
  */
 @Entity
-@Table(name = "user_friends")
-public class UserFriend {
+@Table(name = "merchants")
+public class Merchant {
 
     private Long pid;
 
     private String name;
-
-    private User user;
 
     @Id
     @GeneratedValue
     @Column(name = "f_pid")
     public Long getPid() {
         return pid;
-    }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_user")
-    public User getUser() {
-        return user;
     }
 
     @Column(name = "f_name")
@@ -45,16 +42,12 @@ public class UserFriend {
         this.pid = pid;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
 
-    public static UserFriend createByName(String name) {
-        UserFriend result = new UserFriend();
+    public static Merchant create(String name) {
+        Merchant result = new Merchant();
         result.setName(name);
         return result;
     }
