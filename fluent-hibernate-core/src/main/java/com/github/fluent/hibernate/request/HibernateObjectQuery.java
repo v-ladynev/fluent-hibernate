@@ -11,12 +11,12 @@ import com.github.fluent.hibernate.factory.HibernateSessionFactory;
  */
 public class HibernateObjectQuery<T> {
 
-    @SuppressWarnings("unchecked")
     public static <T> T save(final T entity) {
         return HibernateSessionFactory.doInTransaction(new IRequest<T>() {
             @Override
             public T doInTransaction(Session session) {
-                return (T) session.save(entity);
+                session.save(entity);
+                return entity;
             }
         });
     }
