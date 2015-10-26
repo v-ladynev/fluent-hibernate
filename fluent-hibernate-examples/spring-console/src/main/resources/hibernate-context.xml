@@ -21,4 +21,8 @@
       </list>
     </property>
   </bean>
+
+  <bean class="com.github.fluent.hibernate.factory.SpringSessionFactory" init-method="init">
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
 </beans>
