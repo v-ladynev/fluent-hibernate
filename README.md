@@ -26,24 +26,20 @@ Add this in your build.gradle
 
 ## Examples
 Get all users.
-
 ```Java
 List<User> users = H.<User> request(User.class).list();
 ```
-
-Get all users, but only with "login" and "id" properties filled(other properties will be null).
-
-```Java
-List<User> users = H.<User> request(User.class).proj("login").proj("id").transform(User.class).list();
-```
-
 Getting user with login "my_login".
-
 ```Java
 final String loginToFind = "my_login";
 User user = H.<User> request(User.class).eq("login", loginToFind).first();
 ```
-
+#### Partial objects loading
+Get all users, but only with "login" and "id" properties filled (other properties will be null).
+```Java
+List<User> users = H.<User> request(User.class).proj("login").proj("id")
+    .transform(User.class).list();
+```
 ## Example Projects
 - [A console project with a lot of query examples](https://github.com/v-ladynev/fluent-hibernate/tree/master/fluent-hibernate-examples/simply-console/)
 - [A console project using Spring to configure fluent-hibernate](https://github.com/v-ladynev/fluent-hibernate/tree/master/fluent-hibernate-examples/spring-console/)
