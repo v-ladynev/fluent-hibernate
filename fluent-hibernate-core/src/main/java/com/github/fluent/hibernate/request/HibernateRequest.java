@@ -5,16 +5,20 @@ import java.util.List;
 
 import javax.persistence.criteria.JoinType;
 
-import com.github.fluent.hibernate.IRequest;
-import com.github.fluent.hibernate.Pagination;
-import com.github.fluent.hibernate.builder.IBuilder;
-
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
-import org.hibernate.criterion.*;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projection;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.ResultTransformer;
 
+import com.github.fluent.hibernate.IRequest;
+import com.github.fluent.hibernate.Pagination;
+import com.github.fluent.hibernate.builder.IBuilder;
 import com.github.fluent.hibernate.factory.HibernateSessionFactory;
 import com.github.fluent.hibernate.internal.transformer.FluentHibernateResultTransformer;
 import com.github.fluent.hibernate.internal.util.InternalUtils.CollectionUtils;
@@ -102,15 +106,17 @@ public final class HibernateRequest<T> {
     }
 
     public HibernateRequest<T> in(String propertyName, Collection<?> values) {
-        if (CollectionUtils.isNotEmpty(values)) {
+        if (!CollectionUtils.isEmpty(values)) {
             restrictions.add(Restrictions.in(propertyName, values));
         }
         return this;
     }
 
-    // TODO It works incorrectly for an only element array
     public HibernateRequest<T> in(String propertyName, Object... values) {
-        restrictions.add(Restrictions.in(propertyName, values));
+        if (!CollectionUtils.isEmpty(values)) {
+            restrictions.add(Restrictions.in(propertyName, values));
+        }
+
         return this;
     }
 
@@ -243,7 +249,6 @@ public final class HibernateRequest<T> {
         return this;
     }
 
-    // TODO It works incorrectly for an only element array
     public HibernateRequest<T> fetchJoin(String... associationPaths) {
         fetchJoinPaths = associationPaths;
         return this;

@@ -69,6 +69,22 @@ public class InOperatorTest extends FluentHibernateBaseTest {
     }
 
     @Test
+    public void inWithEmptyArray() {
+        SimplyPersistent[] expectedResult = twoFirstPersistent();
+        Object[] names = getNames(expectedResult).toArray(new Object[0]);
+        List<SimplyPersistent> list = getRequest().in("name", names).list();
+
+        assertThat(list).isNotNull().hasSize(2).usingElementComparator(COMPARE_BY_PID)
+                .containsOnly(expectedResult);
+    }
+
+    @Test
+    public void inWithArray() {
+        List<SimplyPersistent> list = getRequest().in("name", new Object[0]).list();
+        assertThat(list).isNotNull().hasSize(3);
+    }
+
+    @Test
     public void nothingForEmptyCollectionEmpty() {
         List<SimplyPersistent> list = getRequest().add(
                 in("name", Collections.emptyList()).nothingForEmptyCollection()).list();
@@ -87,14 +103,23 @@ public class InOperatorTest extends FluentHibernateBaseTest {
                 .containsOnly(expectedResult);
     }
 
+    @Test
+    public void onlyArrayArgument() {
+        SimplyPersistent expected = persistents.get(0);
+        List<SimplyPersistent> list = getRequest().in("name", new Object[] { expected.getName() })
+                .list();
+        assertThat(list).isNotNull().hasSize(1).usingElementComparator(COMPARE_BY_PID)
+        .containsOnly(expected);
+    }
+
     private SimplyPersistent[] twoFirstPersistent() {
         return new SimplyPersistent[] { persistents.get(0), persistents.get(1) };
     }
 
-    private static List<String> getNames(SimplyPersistent[] expectedResult) {
+    private static List<String> getNames(SimplyPersistent[] fromPersistents) {
         List<String> result = new ArrayList<String>();
-        for (SimplyPersistent simplyPersistent : expectedResult) {
-            result.add(simplyPersistent.getName());
+        for (SimplyPersistent persistent : fromPersistents) {
+            result.add(persistent.getName());
         }
         return result;
     }

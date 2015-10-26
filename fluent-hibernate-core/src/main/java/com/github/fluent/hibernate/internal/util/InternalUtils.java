@@ -48,12 +48,12 @@ public final class InternalUtils {
             return isEmpty(items) ? null : items.get(0);
         }
 
-        public static boolean isEmpty(final Collection<?> collection) {
+        public static boolean isEmpty(Collection<?> collection) {
             return collection == null || collection.isEmpty();
         }
 
-        public static boolean isNotEmpty(final Collection<?> collection) {
-            return !isEmpty(collection);
+        public static boolean isEmpty(Object[] array) {
+            return array == null || array.length == 0;
         }
 
         public static <E> ArrayList<E> newArrayList() {
