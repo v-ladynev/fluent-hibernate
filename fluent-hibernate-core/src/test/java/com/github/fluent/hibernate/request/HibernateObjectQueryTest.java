@@ -4,6 +4,8 @@ import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.crea
 import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.createRootRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+
 import org.junit.Test;
 
 import com.github.fluent.hibernate.H;
@@ -56,6 +58,26 @@ public class HibernateObjectQueryTest extends RootEnvironmentBaseTest {
         assertThat(root).isNotNull();
         H.delete(root);
         int count = createRequestForRootA().count();
+        assertThat(count).isEqualTo(0);
+    }
+
+    @Test
+    public void deleteById() {
+        H.saveOrUpdate(rootA());
+        Root root = createRequestForRootA().first();
+        assertThat(root).isNotNull();
+        H.deleteById(Root.class, root.getPid());
+        int count = createRequestForRootA().count();
+        assertThat(count).isEqualTo(0);
+    }
+
+    @Test
+    public void deleteAll() {
+        H.saveAll(rootsAB());
+        List<Root> list = createRootRequest().list();
+        assertThat(list).hasSize(2);
+        H.deleteAll(list);
+        int count = createRootRequest().count();
         assertThat(count).isEqualTo(0);
     }
 

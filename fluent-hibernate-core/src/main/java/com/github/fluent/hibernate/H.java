@@ -57,6 +57,10 @@ public final class H {
         HibernateObjectQuery.delete(getById(clazz, id));
     }
 
+    public static <T> void deleteAll(Iterable<T> entities) {
+        HibernateObjectQuery.deleteAll(entities);
+    }
+
     // TODO add invoking IRequest
 
 }

@@ -66,4 +66,16 @@ public class HibernateObjectQuery<T> {
         });
     }
 
+    public static <T> void deleteAll(final Iterable<T> entities) {
+        HibernateSessionFactory.doInTransaction(new IRequest<Void>() {
+            @Override
+            public Void doInTransaction(Session session) {
+                for (T entity : entities) {
+                    session.delete(entity);
+                }
+                return null;
+            }
+        });
+    }
+
 }
