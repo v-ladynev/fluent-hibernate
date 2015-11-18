@@ -19,7 +19,7 @@ import javax.persistence.Table;
  * @version $Id$
  */
 @Entity
-@Table(name = "merchants")
+@Table
 public class Merchant {
 
     private Long pid;
@@ -28,12 +28,12 @@ public class Merchant {
 
     @Id
     @GeneratedValue
-    @Column(name = "f_pid")
+    @Column
     public Long getPid() {
         return pid;
     }
 
-    @Column(name = "f_name")
+    @Column
     public String getName() {
         return name;
     }

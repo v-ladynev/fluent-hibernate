@@ -21,7 +21,7 @@ import javax.persistence.Table;
  * @version $Id$
  */
 @Entity
-@Table(name = "transactions")
+@Table
 public class Transaction {
 
     private Long pid;
@@ -34,24 +34,24 @@ public class Transaction {
 
     @Id
     @GeneratedValue
-    @Column(name = "f_pid")
+    @Column
     public Long getPid() {
         return pid;
     }
 
-    @Column(name = "f_amount_due")
+    @Column
     public Long getAmountDue() {
         return amountDue;
     }
 
     @ManyToOne
-    @JoinColumn(name = "fk_merchant")
+    @JoinColumn
     public Merchant getMerchant() {
         return merchant;
     }
 
     @ManyToOne
-    @JoinColumn(name = "fk_customer")
+    @JoinColumn
     public Customer getCustomer() {
         return customer;
     }
