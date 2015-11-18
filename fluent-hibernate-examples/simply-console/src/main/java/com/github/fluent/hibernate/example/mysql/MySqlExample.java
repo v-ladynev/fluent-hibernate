@@ -35,8 +35,8 @@ public class MySqlExample {
     private void doSomeDatabaseStuff() {
         deleteAllUsers();
         insertUsers();
-        // countUsers();
-        // doSomeUserAddressStuff();
+        countUsers();
+        doSomeUserAddressStuff();
         doSomeFriendsStuff();
     }
 

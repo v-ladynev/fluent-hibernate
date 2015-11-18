@@ -21,7 +21,7 @@ import javax.persistence.Table;
  * @version $Id$
  */
 @Entity
-@Table(name = "customers")
+@Table
 public class Customer {
 
     private Long pid;
@@ -32,17 +32,17 @@ public class Customer {
 
     @Id
     @GeneratedValue
-    @Column(name = "f_pid")
+    @Column
     public Long getPid() {
         return pid;
     }
 
-    @Column(name = "f_date_created")
+    @Column
     public Calendar getDateCreated() {
         return dateCreated;
     }
 
-    @Column(name = "f_name")
+    @Column
     public String getName() {
         return name;
     }

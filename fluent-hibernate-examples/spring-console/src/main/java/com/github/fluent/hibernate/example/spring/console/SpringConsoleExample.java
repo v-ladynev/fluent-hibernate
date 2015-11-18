@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.util.Assert;
 
 import com.github.fluent.hibernate.H;
 import com.github.fluent.hibernate.example.spring.console.persistent.Customer;
@@ -31,6 +32,9 @@ public class SpringConsoleExample {
         createTransactions();
         loadTransactionsWithAllProperties();
         loadTransactionsWithPartProperties();
+
+        addSomeCustomers();
+        addPrimaryCustomersTo("Doe", H.<Customer> request(Customer.class).list());
     }
 
     private void loadTransactionsWithAllProperties() {
@@ -55,6 +59,19 @@ public class SpringConsoleExample {
         t2000.setAmountDue(2000L);
 
         H.saveAll(Arrays.asList(t1000, t2000));
+    }
+
+    private void addSomeCustomers() {
+        H.save(Customer.create("Mister"));
+        H.save(Customer.create("Twister"));
+    }
+
+    private void addPrimaryCustomersTo(String merchantName, List<Customer> primaryCustomers) {
+        Merchant merchant = H.<Merchant> request(Merchant.class).eq("name", merchantName).first();
+        Assert.notNull(merchant,
+                String.format("Can't find a merchant with name '%s'", merchantName));
+        merchant.setPrimaryCustomers(primaryCustomers);
+        H.saveOrUpdate(merchant);
     }
 
 }
