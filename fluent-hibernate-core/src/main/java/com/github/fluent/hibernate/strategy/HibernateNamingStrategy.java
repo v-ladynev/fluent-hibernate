@@ -10,9 +10,9 @@ import com.github.fluent.hibernate.internal.util.InternalUtils;
  */
 class HibernateNamingStrategy {
 
-    private static String COLUMN_NAME_PREFIX = "f_";
+    private static final String COLUMN_NAME_PREFIX = "f_";
 
-    private static String FOREIGN_KEY_PREFIX = "fk_";
+    private static final String FOREIGN_KEY_PREFIX = "fk_";
 
     /** Table's prefix. */
     private String tablePrefix;
@@ -76,9 +76,9 @@ class HibernateNamingStrategy {
         }
 
         return new StringBuilder(ownerEntityTable)
-        .append("_")
-        .append(associatedEntityTable != null ? associatedEntityTable : NamingStrategyUtils
-                        .unqualify(propertyName)).toString();
+                .append("_")
+                .append(associatedEntityTable != null ? associatedEntityTable : NamingStrategyUtils
+                .unqualify(propertyName)).toString();
 
     }
 
