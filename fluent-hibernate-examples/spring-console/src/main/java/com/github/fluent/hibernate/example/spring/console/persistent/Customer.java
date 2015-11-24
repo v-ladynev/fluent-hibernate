@@ -59,6 +59,11 @@ public class Customer {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     public static Customer create(String name) {
         Customer result = new Customer();
         result.setDateCreated(now());

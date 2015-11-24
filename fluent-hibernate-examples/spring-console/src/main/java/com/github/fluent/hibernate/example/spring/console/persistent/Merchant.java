@@ -12,8 +12,10 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -34,6 +36,8 @@ public class Merchant {
 
     private List<Customer> primaryCustomers = InternalUtils.CollectionUtils.newArrayList();
 
+    private List<Customer> friends = InternalUtils.CollectionUtils.newArrayList();
+
     @Id
     @GeneratedValue
     @Column
@@ -46,9 +50,14 @@ public class Merchant {
         return name;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Customer> getPrimaryCustomers() {
         return primaryCustomers;
+    }
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    public List<Customer> getFriends() {
+        return friends;
     }
 
     public void setPid(Long pid) {
@@ -61,6 +70,10 @@ public class Merchant {
 
     public void setPrimaryCustomers(List<Customer> primaryCustomers) {
         this.primaryCustomers = primaryCustomers;
+    }
+
+    public void setFriends(List<Customer> friends) {
+        this.friends = friends;
     }
 
     public static Merchant create(String name) {

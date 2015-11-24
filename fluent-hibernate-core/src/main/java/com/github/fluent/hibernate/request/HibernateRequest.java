@@ -112,7 +112,7 @@ public final class HibernateRequest<T> {
         return this;
     }
 
-    public HibernateRequest<T> in(String propertyName, Object... values) {
+    public <U> HibernateRequest<T> in(String propertyName, U... values) {
         if (!CollectionUtils.isEmpty(values)) {
             restrictions.add(Restrictions.in(propertyName, values));
         }
