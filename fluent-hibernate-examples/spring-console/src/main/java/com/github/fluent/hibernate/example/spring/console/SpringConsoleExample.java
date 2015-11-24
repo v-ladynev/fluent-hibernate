@@ -1,5 +1,6 @@
 package com.github.fluent.hibernate.example.spring.console;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,8 +34,22 @@ public class SpringConsoleExample {
         loadTransactionsWithAllProperties();
         loadTransactionsWithPartProperties();
 
-        addSomeCustomers();
-        addPrimaryCustomersTo("Doe", H.<Customer> request(Customer.class).list());
+        createCustomers("Mister", "Twister");
+
+        addPrimaryCustomersTo(getMerchantByName("Doe"), getCustomersByNames("Mister", "Twister"));
+
+        System.out.println("primary customesrs of Doe " + getPrimaryCustomersOf("Doe"));
+        /*
+                addFriendsTo(getMerchantByName("Doe"),
+                        createCustomers("Doe's friend Ann", "Doe's friend Ta"));
+        */
+        System.out.println("primary customesrs of Doe " + getPrimaryCustomersOf("Doe"));
+    }
+
+    private List<Customer> getPrimaryCustomersOf(String merchantName) {
+        Merchant result = H.<Merchant> request(Merchant.class).eq("name", merchantName)
+                .fetchJoin("primaryCustomers").first();
+        return result.getPrimaryCustomers();
     }
 
     private void loadTransactionsWithAllProperties() {
@@ -61,17 +76,33 @@ public class SpringConsoleExample {
         H.saveAll(Arrays.asList(t1000, t2000));
     }
 
-    private void addSomeCustomers() {
-        H.save(Customer.create("Mister"));
-        H.save(Customer.create("Twister"));
+    private List<Customer> createCustomers(String... names) {
+        List<Customer> result = new ArrayList<Customer>();
+        for (String name : names) {
+            result.add(H.save(Customer.create(name)));
+        }
+
+        return result;
     }
 
-    private void addPrimaryCustomersTo(String merchantName, List<Customer> primaryCustomers) {
-        Merchant merchant = H.<Merchant> request(Merchant.class).eq("name", merchantName).first();
-        Assert.notNull(merchant,
-                String.format("Can't find a merchant with name '%s'", merchantName));
+    private void addPrimaryCustomersTo(Merchant merchant, List<Customer> primaryCustomers) {
         merchant.setPrimaryCustomers(primaryCustomers);
         H.saveOrUpdate(merchant);
+    }
+
+    private void addFriendsTo(Merchant merchant, List<Customer> friends) {
+        merchant.setFriends(friends);
+        H.saveOrUpdate(merchant);
+    }
+
+    private Merchant getMerchantByName(String merchantName) {
+        Merchant result = H.<Merchant> request(Merchant.class).eq("name", merchantName).first();
+        Assert.notNull(result, String.format("Can't find a merchant with name '%s'", merchantName));
+        return result;
+    }
+
+    private List<Customer> getCustomersByNames(String... names) {
+        return H.<Customer> request(Customer.class).in("name", names).list();
     }
 
 }

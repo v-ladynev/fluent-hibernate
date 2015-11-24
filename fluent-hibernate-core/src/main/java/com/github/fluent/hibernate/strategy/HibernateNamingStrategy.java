@@ -31,12 +31,17 @@ class HibernateNamingStrategy {
 
     public String collectionTableName(String ownerEntity, String ownerEntityTable,
             String associatedEntity, String associatedEntityTable, String propertyName) {
-        return collectionTableName(ownerEntityTable, associatedEntityTable);
+        return collectionTableName(ownerEntityTable, associatedEntityTable, null);
     }
 
     public String collectionTableName(String ownerEntityTable, String associatedEntityTable) {
+        return collectionTableName(ownerEntityTable, associatedEntityTable, null);
+    }
+
+    public String collectionTableName(String ownerEntityTable, String associatedEntityTable,
+            String ownerProperty) {
         return tablePrefix(NamingStrategyUtils.collectionTableName(ownerEntityTable,
-                associatedEntityTable));
+                associatedEntityTable, ownerProperty));
     }
 
     public String joinKeyColumnName(String joinedColumn, String joinedTable) {

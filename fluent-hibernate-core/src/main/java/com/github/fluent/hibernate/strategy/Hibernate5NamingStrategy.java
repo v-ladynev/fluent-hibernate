@@ -1,5 +1,8 @@
 package com.github.fluent.hibernate.strategy;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.hibernate.boot.model.naming.EntityNaming;
 import org.hibernate.boot.model.naming.Identifier;
 import org.hibernate.boot.model.naming.ImplicitAnyDiscriminatorColumnNameSource;
@@ -24,6 +27,8 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
     private static final long serialVersionUID = 3482010804082494311L;
 
     private final HibernateNamingStrategy strategy = new HibernateNamingStrategy();
+
+    private final Set<String> joinTableNames = new HashSet<String>();
 
     public void setTablePrefix(final String tablePrefix) {
         strategy.setTablePrefix(tablePrefix);
@@ -55,8 +60,22 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
                 .getEntityName());
         String associatedEntityTable = NamingStrategyUtils.unqualify(source
                 .getNonOwningEntityNaming().getEntityName());
-        return toIdentifier(strategy.collectionTableName(ownerEntityTable, associatedEntityTable),
-                source.getBuildingContext());
+
+        String tableName = strategy.collectionTableName(ownerEntityTable, associatedEntityTable);
+        /*
+                String result = joinTableNames.contains(tableName) ? strategy.collectionTableName(
+                        ownerEntityTable, associatedEntityTable,
+                        transformAttributePath(source.getAssociationOwningAttributePath())) : tableName;
+         */
+        String result = strategy.collectionTableName(ownerEntityTable, associatedEntityTable,
+                transformAttributePath(source.getAssociationOwningAttributePath()));
+
+        joinTableNames.add(result);
+
+        System.out.println(String.format("owner table name %s association %s result %s",
+                ownerEntityTable, source.getAssociationOwningAttributePath(), result));
+
+        return toIdentifier(result, source.getBuildingContext());
     }
 
     @Override

@@ -33,9 +33,12 @@ final class NamingStrategyUtils {
         return pluralize(addUnderscores(unqualify(className)));
     }
 
-    public static String collectionTableName(String ownerEntityTable, String associatedEntityTable) {
-        return pluralize(tableName(ownerEntityTable)) + "_"
-                + pluralize(tableName(associatedEntityTable));
+    public static String collectionTableName(String ownerEntityTable, String associatedEntityTable,
+            String ownerProperty) {
+        String ownerTable = pluralize(tableName(ownerEntityTable));
+        String associatedTable = pluralize(tableName(associatedEntityTable));
+        return ownerProperty == null ? concat(ownerTable, associatedTable) : concat(
+                concat(ownerTable, propertyToColumnName(ownerProperty)), associatedTable);
     }
 
     public static String propertyToColumnName(String propertyName) {
@@ -57,6 +60,10 @@ final class NamingStrategyUtils {
     public static String unqualify(String qualifiedName) {
         int loc = qualifiedName.lastIndexOf(".");
         return loc < 0 ? qualifiedName : qualifiedName.substring(loc + 1);
+    }
+
+    public static String concat(String left, String right) {
+        return left + "_" + right;
     }
 
     /**
