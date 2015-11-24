@@ -1,21 +1,11 @@
 package com.github.fluent.hibernate.strategy;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.hibernate.boot.model.naming.EntityNaming;
 import org.hibernate.boot.model.naming.Identifier;
-import org.hibernate.boot.model.naming.ImplicitAnyDiscriminatorColumnNameSource;
-import org.hibernate.boot.model.naming.ImplicitAnyKeyColumnNameSource;
 import org.hibernate.boot.model.naming.ImplicitBasicColumnNameSource;
-import org.hibernate.boot.model.naming.ImplicitCollectionTableNameSource;
-import org.hibernate.boot.model.naming.ImplicitDiscriminatorColumnNameSource;
-import org.hibernate.boot.model.naming.ImplicitIdentifierColumnNameSource;
 import org.hibernate.boot.model.naming.ImplicitJoinColumnNameSource;
 import org.hibernate.boot.model.naming.ImplicitJoinTableNameSource;
 import org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl;
-import org.hibernate.boot.model.naming.ImplicitPrimaryKeyJoinColumnNameSource;
-import org.hibernate.boot.model.naming.ImplicitTenantIdColumnNameSource;
 
 /**
  * A naming strategy for Hibernate 5.
@@ -28,7 +18,7 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
 
     private final HibernateNamingStrategy strategy = new HibernateNamingStrategy();
 
-    private final Set<String> joinTableNames = new HashSet<String>();
+    // private final Set<String> joinTableNames = new HashSet<String>();
 
     public void setTablePrefix(final String tablePrefix) {
         strategy.setTablePrefix(tablePrefix);
@@ -61,7 +51,7 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
         String associatedEntityTable = NamingStrategyUtils.unqualify(source
                 .getNonOwningEntityNaming().getEntityName());
 
-        String tableName = strategy.collectionTableName(ownerEntityTable, associatedEntityTable);
+        // String tableName = strategy.collectionTableName(ownerEntityTable, associatedEntityTable);
         /*
                 String result = joinTableNames.contains(tableName) ? strategy.collectionTableName(
                         ownerEntityTable, associatedEntityTable,
@@ -70,13 +60,15 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
         String result = strategy.collectionTableName(ownerEntityTable, associatedEntityTable,
                 transformAttributePath(source.getAssociationOwningAttributePath()));
 
-        joinTableNames.add(result);
-
-        System.out.println(String.format("owner table name %s association %s result %s",
-                ownerEntityTable, source.getAssociationOwningAttributePath(), result));
-
+        // joinTableNames.add(result);
+        /*
+                System.out.println(String.format("owner table name %s association %s result %s",
+                        ownerEntityTable, source.getAssociationOwningAttributePath(), result));
+         */
         return toIdentifier(result, source.getBuildingContext());
     }
+
+    /*
 
     @Override
     public Identifier determineCollectionTableName(ImplicitCollectionTableNameSource source) {
@@ -121,6 +113,7 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
         System.out.println("determineAnyKeyColumnName");
         return super.determineAnyKeyColumnName(source);
     }
+     */
 
     private static String getText(Identifier identifier) {
         return identifier == null ? null : identifier.getText();

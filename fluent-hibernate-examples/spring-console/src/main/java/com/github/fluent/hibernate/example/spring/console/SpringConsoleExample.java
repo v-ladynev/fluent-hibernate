@@ -22,7 +22,7 @@ public class SpringConsoleExample {
     public static void main(String[] args) {
         try {
             new ClassPathXmlApplicationContext("classpath:hibernate-context.xml")
-                    .registerShutdownHook();
+            .registerShutdownHook();
             new SpringConsoleExample().doSomeDatabaseStuff();
         } finally {
             HibernateSessionFactory.closeSessionFactory();
@@ -39,17 +39,24 @@ public class SpringConsoleExample {
         addPrimaryCustomersTo(getMerchantByName("Doe"), getCustomersByNames("Mister", "Twister"));
 
         System.out.println("primary customesrs of Doe " + getPrimaryCustomersOf("Doe"));
-        /*
-                addFriendsTo(getMerchantByName("Doe"),
-                        createCustomers("Doe's friend Ann", "Doe's friend Ta"));
-        */
+
+        addFriendsTo(getMerchantByName("Doe"),
+                createCustomers("Doe's friend Ann", "Doe's friend Ta"));
+
         System.out.println("primary customesrs of Doe " + getPrimaryCustomersOf("Doe"));
+        System.out.println("friends of Doe " + getFriendsOf("Doe"));
     }
 
     private List<Customer> getPrimaryCustomersOf(String merchantName) {
         Merchant result = H.<Merchant> request(Merchant.class).eq("name", merchantName)
                 .fetchJoin("primaryCustomers").first();
         return result.getPrimaryCustomers();
+    }
+
+    private List<Customer> getFriendsOf(String merchantName) {
+        Merchant result = H.<Merchant> request(Merchant.class).eq("name", merchantName)
+                .fetchJoin("friends").first();
+        return result.getFriends();
     }
 
     private void loadTransactionsWithAllProperties() {
