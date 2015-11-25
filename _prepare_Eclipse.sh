@@ -1,1 +1,1 @@
-gradlew.bat eclipse
+gradlew eclipse

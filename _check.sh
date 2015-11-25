@@ -1,1 +1,1 @@
-gradlew.bat check
+gradlew check
