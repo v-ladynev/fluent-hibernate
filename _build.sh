@@ -1,0 +1,1 @@
+gradlew.bat build -x signArchives check
