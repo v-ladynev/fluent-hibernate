@@ -1,16 +1,13 @@
 package com.github.fluent.hibernate.factory;
 
 import java.io.File;
-import java.util.Map;
+import java.util.Properties;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.AvailableSettings;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
 
 import com.github.fluent.hibernate.IRequest;
 import com.github.fluent.hibernate.IStatelessRequest;
@@ -53,7 +50,7 @@ public final class HibernateSessionFactory {
             txn.commit();
         } catch (Throwable th) {
             InternalUtils.HibernateUtils.rollback(txn);
-            throw new RuntimeException(th);
+            throw InternalUtils.toRuntimeException(th);
         } finally {
             InternalUtils.HibernateUtils.close(session);
         }
@@ -113,41 +110,14 @@ public final class HibernateSessionFactory {
         }
     }
 
-    private static synchronized void createSessionFactory(ServiceRegistry serviceRegistry,
-            Class<?>[] annotatedClasses) {
-        if (sessionFactory != null) {
-            return;
-        }
-
-        Configuration configuration = new Configuration();
-        addAnnotatedClasses(configuration, annotatedClasses);
-
-        try {
-            sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-        } catch (Throwable th) {
-            StandardServiceRegistryBuilder.destroy(serviceRegistry);
-            throw new RuntimeException(th);
-        }
-    }
-
-    private static void addAnnotatedClasses(Configuration configuration, Class<?>[] annotatedClasses) {
-        if (annotatedClasses == null) {
-            return;
-        }
-
-        for (Class<?> annotatedClass : annotatedClasses) {
-            configuration.addAnnotatedClass(annotatedClass);
-        }
-    }
-
     private static synchronized void setExistingSessionFactory(SessionFactory sessionFactory) {
         closeSessionFactory();
         HibernateSessionFactory.sessionFactory = sessionFactory;
     }
 
     /**
-     * Fluent API for session factory configuration and build. The simplest way to create a session
-     * factory:
+     * Fluent API for a session factory configuration and build. The simplest way to create a
+     * session factory:
      *
      * <code>
      * HibernateSessionFactory.Builder.configureFromDefaultHibernateCfgXml().createSessionFactory();
@@ -157,39 +127,39 @@ public final class HibernateSessionFactory {
      */
     public static final class Builder {
 
-        private final StandardServiceRegistryBuilder registryBuilder;
+        private final ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
 
-        private final Map<String, String> properties = InternalUtils.CollectionUtils.newHashMap();
+        private final Properties properties = new Properties();
 
-        private Class<?>[] annotatedClasses;
+        private Builder() {
 
-        private Builder(StandardServiceRegistryBuilder registryBuilder) {
-            this.registryBuilder = registryBuilder;
         }
 
         public static Builder configureFromDefaultHibernateCfgXml() {
-            return new Builder(new StandardServiceRegistryBuilder().configure());
+            return configureFromHibernateCfgXml(null);
         }
 
         public static Builder configureFromHibernateCfgXml(String hibernateCfgXml) {
-            return new Builder(new StandardServiceRegistryBuilder().configure(hibernateCfgXml));
+            Builder result = new Builder();
+            result.configurationBuilder.configure(hibernateCfgXml);
+            return result;
         }
 
         public static Builder configureWithoutHibernateCfgXml() {
-            return new Builder(new StandardServiceRegistryBuilder());
+            return new Builder();
         }
 
         public static void configureFromExistingSessionFactory(SessionFactory sessionFactory) {
             HibernateSessionFactory.setExistingSessionFactory(sessionFactory);
         }
 
-        public Builder loadHibernatePropertiesFromFile(File pathToPropertiesFile) {
-            registryBuilder.loadProperties(pathToPropertiesFile);
+        public Builder addHibernatePropertiesFromFile(File pathToPropertiesFile) {
+            configurationBuilder.addPropertiesFromFile(pathToPropertiesFile);
             return this;
         }
 
-        public Builder loadHibernatePropertiesFromClassPathResource(String classPathResourceName) {
-            registryBuilder.loadProperties(classPathResourceName);
+        public Builder addHibernatePropertiesFromClassPathResource(String classPathResourceName) {
+            configurationBuilder.addPropertiesFromClassPath(classPathResourceName);
             return this;
         }
 
@@ -209,16 +179,13 @@ public final class HibernateSessionFactory {
         }
 
         public Builder annotatedClasses(Class<?>... annotatedClasses) {
-            this.annotatedClasses = annotatedClasses;
+            configurationBuilder.addAnnotatedClasses(annotatedClasses);
             return this;
         }
 
         public void createSessionFactory() {
-            if (!properties.isEmpty()) {
-                registryBuilder.applySettings(properties);
-            }
-
-            HibernateSessionFactory.createSessionFactory(registryBuilder.build(), annotatedClasses);
+            configurationBuilder.addProperties(properties);
+            setExistingSessionFactory(configurationBuilder.buildSessionFactory());
         }
 
     }

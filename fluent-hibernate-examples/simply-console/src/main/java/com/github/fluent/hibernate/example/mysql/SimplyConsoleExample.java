@@ -14,19 +14,20 @@ import com.github.fluent.hibernate.factory.HibernateSessionFactory;
  *
  * @author V.Ladynev
  */
-public class MySqlExample {
+public class SimplyConsoleExample {
 
     private static final String USER_A_STREET = "street A";
 
     private static final String USER_LOGIN_A = "loginA";
 
-    private static final Logger LOG = Logger.getLogger(MySqlExample.class);
+    private static final Logger LOG = Logger.getLogger(SimplyConsoleExample.class);
 
     public static void main(String[] args) {
         try {
+
             HibernateSessionFactory.Builder.configureFromDefaultHibernateCfgXml()
             .createSessionFactory();
-            new MySqlExample().doSomeDatabaseStuff();
+            new SimplyConsoleExample().doSomeDatabaseStuff();
         } finally {
             HibernateSessionFactory.closeSessionFactory();
         }

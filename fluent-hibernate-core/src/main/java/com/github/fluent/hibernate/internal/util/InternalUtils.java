@@ -1,5 +1,6 @@
 package com.github.fluent.hibernate.internal.util;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -36,6 +37,19 @@ public final class InternalUtils {
             throw new RuntimeException(String.format("Could not instantiate result class: %s",
                     classToInstantiate.getName()), ex);
         }
+    }
+
+    public static void closeQuietly(InputStream stream) {
+        try {
+            stream.close();
+        } catch (Exception ex) {
+
+        }
+    }
+
+    public static RuntimeException toRuntimeException(Throwable throwable) {
+        return throwable instanceof RuntimeException ? (RuntimeException) throwable
+                : new RuntimeException(throwable);
     }
 
     public static class StringUtils {

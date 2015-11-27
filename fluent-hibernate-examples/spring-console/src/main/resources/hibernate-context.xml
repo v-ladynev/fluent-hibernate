@@ -20,7 +20,6 @@
         <value>com.github.fluent.hibernate.example.spring.console.persistent</value>
       </list>
     </property>
-
     <property name="implicitNamingStrategy">
       <bean class="com.github.fluent.hibernate.strategy.Hibernate5NamingStrategy">
         <property name="tablePrefix" value="spring_" />

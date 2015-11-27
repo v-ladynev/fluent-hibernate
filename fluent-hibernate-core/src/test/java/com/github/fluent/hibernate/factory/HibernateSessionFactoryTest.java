@@ -21,11 +21,22 @@ public class HibernateSessionFactoryTest {
         HibernateSessionFactory.closeSessionFactory();
     }
 
-    // @Test
+    @Test
     public void configureFromDefaultHibernateCfgXml() {
         HibernateSessionFactory.Builder.configureFromDefaultHibernateCfgXml()
         .createSessionFactory();
         assertSession();
+        dealWithSimplyPersistent();
+    }
+
+    @Test
+    public void configureWithoutHibernateCfgXml() {
+        HibernateSessionFactory.Builder.configureWithoutHibernateCfgXml().userName("user")
+        .password("").connectionUrl("jdbc:h2:mem:di;MODE=ORACLE")
+        .annotatedClasses(SimplyPersistent.class).createSessionFactory();
+
+        assertSession();
+        dealWithSimplyPersistent();
     }
 
     private void assertSession() {
@@ -38,14 +49,7 @@ public class HibernateSessionFactoryTest {
         });
     }
 
-    @Test
-    public void configureWithoutHibernateCfgXml() {
-        HibernateSessionFactory.Builder.configureWithoutHibernateCfgXml().userName("user")
-        .password("").connectionUrl("jdbc:h2:mem:di;MODE=ORACLE")
-        .annotatedClasses(SimplyPersistent.class).createSessionFactory();
-
-        assertSession();
-
+    private void dealWithSimplyPersistent() {
         H.<SimplyPersistent> save(SimplyPersistent.createWithDefaultName());
         SimplyPersistent simplyPersistnet = H.<SimplyPersistent> request(SimplyPersistent.class)
                 .first();

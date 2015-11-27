@@ -8,8 +8,10 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.Assert;
 
 import com.github.fluent.hibernate.H;
+import com.github.fluent.hibernate.example.spring.console.persistent.Child;
 import com.github.fluent.hibernate.example.spring.console.persistent.Customer;
 import com.github.fluent.hibernate.example.spring.console.persistent.Merchant;
+import com.github.fluent.hibernate.example.spring.console.persistent.Parent;
 import com.github.fluent.hibernate.example.spring.console.persistent.Transaction;
 import com.github.fluent.hibernate.factory.HibernateSessionFactory;
 
@@ -30,10 +32,20 @@ public class SpringConsoleExample {
     }
 
     private void doSomeDatabaseStuff() {
-        createTransactions();
-        loadTransactionsWithAllProperties();
-        loadTransactionsWithPartProperties();
+        dealWithTaransactions();
+        dealWithMerchantsAndCustomers();
 
+        dealWithParentAndChildren();
+    }
+
+    private void dealWithParentAndChildren() {
+        Parent parent = new Parent();
+        parent.addChild(new Child());
+        parent.addChild(new Child());
+        H.save(parent);
+    }
+
+    private void dealWithMerchantsAndCustomers() {
         createCustomers("Mister", "Twister");
 
         addPrimaryCustomersTo(getMerchantByName("Doe"), getCustomersByNames("Mister", "Twister"));
@@ -45,6 +57,12 @@ public class SpringConsoleExample {
 
         System.out.println("primary customesrs of Doe " + getPrimaryCustomersOf("Doe"));
         System.out.println("friends of Doe " + getFriendsOf("Doe"));
+    }
+
+    private void dealWithTaransactions() {
+        createTransactions();
+        loadTransactionsWithAllProperties();
+        loadTransactionsWithPartProperties();
     }
 
     private List<Customer> getPrimaryCustomersOf(String merchantName) {
