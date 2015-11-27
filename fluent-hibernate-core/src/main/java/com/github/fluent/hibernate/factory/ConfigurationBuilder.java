@@ -68,7 +68,7 @@ class ConfigurationBuilder {
     }
 
     public void addProperties(Properties properties) {
-        result.mergeProperties(properties);
+        result.addProperties(properties);
     }
 
     public void addAnnotatedClasses(Class<?>[] annotatedClasses) {
