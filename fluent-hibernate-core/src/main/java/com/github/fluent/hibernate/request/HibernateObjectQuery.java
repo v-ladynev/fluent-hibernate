@@ -21,37 +21,37 @@ public class HibernateObjectQuery<T> {
         });
     }
 
-    public static <T> void saveOrUpdate(final T entity) {
-        HibernateSessionFactory.doInTransaction(new IRequest<Void>() {
+    public static <T> T saveOrUpdate(final T entity) {
+        return HibernateSessionFactory.doInTransaction(new IRequest<T>() {
             @Override
-            public Void doInTransaction(Session session) {
+            public T doInTransaction(Session session) {
                 session.saveOrUpdate(entity);
-                return null;
+                return entity;
             }
         });
     }
 
-    public static <T> void saveAll(final Iterable<T> entities) {
-        HibernateSessionFactory.doInTransaction(new IRequest<Void>() {
+    public static <T> Iterable<T> saveAll(final Iterable<T> entities) {
+        return HibernateSessionFactory.doInTransaction(new IRequest<Iterable<T>>() {
             @Override
-            public Void doInTransaction(Session session) {
+            public Iterable<T> doInTransaction(Session session) {
                 for (T entity : entities) {
                     session.save(entity);
                 }
-                return null;
+                return entities;
             }
         });
     }
 
-    public static <T> void saveOrUpdateAll(final Iterable<T> entities) {
-        HibernateSessionFactory.doInTransaction(new IRequest<Void>() {
+    public static <T> Iterable<T> saveOrUpdateAll(final Iterable<T> entities) {
+        return HibernateSessionFactory.doInTransaction(new IRequest<Iterable<T>>() {
             @Override
-            public Void doInTransaction(Session session) {
+            public Iterable<T> doInTransaction(Session session) {
                 // TODO need batch update
                 for (T entity : entities) {
                     session.saveOrUpdate(entity);
                 }
-                return null;
+                return entities;
             }
         });
     }

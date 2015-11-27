@@ -37,16 +37,16 @@ public final class H {
         return HibernateObjectQuery.save(entity);
     }
 
-    public static <T> void saveOrUpdate(T entity) {
-        HibernateObjectQuery.saveOrUpdate(entity);
+    public static <T> T saveOrUpdate(T entity) {
+        return HibernateObjectQuery.saveOrUpdate(entity);
     }
 
-    public static <T> void saveOrUpdateAll(Iterable<T> entities) {
-        HibernateObjectQuery.saveOrUpdateAll(entities);
+    public static <T> Iterable<T> saveOrUpdateAll(Iterable<T> entities) {
+        return HibernateObjectQuery.saveOrUpdateAll(entities);
     }
 
-    public static <T> void saveAll(Iterable<T> entities) {
-        HibernateObjectQuery.saveAll(entities);
+    public static <T> Iterable<T> saveAll(Iterable<T> entities) {
+        return HibernateObjectQuery.saveAll(entities);
     }
 
     public static <T> void delete(T entity) {

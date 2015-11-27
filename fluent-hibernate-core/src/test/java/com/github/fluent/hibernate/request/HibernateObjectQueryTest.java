@@ -20,7 +20,9 @@ public class HibernateObjectQueryTest extends RootEnvironmentBaseTest {
 
     @Test
     public void save() {
-        H.save(rootA());
+        Root root = rootA();
+        assertThat(H.save(root)).isSameAs(root);
+
         int count = createRequestForRootA().count();
         assertThat(count).isEqualTo(1);
     }
@@ -28,7 +30,8 @@ public class HibernateObjectQueryTest extends RootEnvironmentBaseTest {
     @Test
     public void saveOrUpdate() {
         Root root = rootA();
-        H.saveOrUpdate(root);
+        assertThat(H.saveOrUpdate(root)).isSameAs(root);
+
         int countNew = createRequestForRootA().count();
         assertThat(countNew).isEqualTo(1);
 
@@ -39,14 +42,18 @@ public class HibernateObjectQueryTest extends RootEnvironmentBaseTest {
 
     @Test
     public void saveOrUpdateAll() {
-        H.saveOrUpdateAll(rootsAB());
+        List<Root> roots = rootsAB();
+        assertThat(H.saveOrUpdateAll(roots)).containsExactlyElementsOf(roots);
+
         int count = createRootRequest().count();
         assertThat(count).isEqualTo(2);
     }
 
     @Test
     public void saveAll() {
-        H.saveAll(rootsAB());
+        List<Root> roots = rootsAB();
+        assertThat(H.saveAll(roots)).containsExactlyElementsOf(roots);
+
         int count = createRootRequest().count();
         assertThat(count).isEqualTo(2);
     }
