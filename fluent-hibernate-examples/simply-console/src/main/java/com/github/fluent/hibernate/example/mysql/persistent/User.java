@@ -10,6 +10,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -36,6 +38,8 @@ public class User {
     private UserAddress address;
 
     private List<UserFriend> friends = new ArrayList<UserFriend>();
+
+    private List<User> goodFriends = new ArrayList<User>();
 
     @Id
     @GeneratedValue
@@ -75,6 +79,14 @@ public class User {
         friends.add(friend);
     }
 
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "good_friends", joinColumns = @JoinColumn(name = "fk_user",
+    referencedColumnName = "f_pid"), inverseJoinColumns = @JoinColumn(name = "fk_friend",
+    referencedColumnName = "f_pid"))
+    public List<User> getGoodFriends() {
+        return goodFriends;
+    }
+
     public void setPid(Long pid) {
         this.pid = pid;
     }
@@ -97,6 +109,10 @@ public class User {
 
     public void setFriends(List<UserFriend> friends) {
         this.friends = friends;
+    }
+
+    public void setGoodFriends(List<User> goodFriends) {
+        this.goodFriends = goodFriends;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.github.fluent.hibernate.example.mysql;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.jboss.logging.Logger;
@@ -24,7 +25,6 @@ public class SimplyConsoleExample {
 
     public static void main(String[] args) {
         try {
-
             HibernateSessionFactory.Builder.configureFromDefaultHibernateCfgXml()
             .createSessionFactory();
             new SimplyConsoleExample().doSomeDatabaseStuff();
@@ -36,9 +36,26 @@ public class SimplyConsoleExample {
     private void doSomeDatabaseStuff() {
         deleteAllUsers();
         insertUsers();
+        /*
         countUsers();
         doSomeUserAddressStuff();
         doSomeFriendsStuff();
+         */
+        dealWithGoodFriends();
+
+    }
+
+    private void dealWithGoodFriends() {
+        addGoodFriendsToUser(findUserByLogin(USER_LOGIN_A));
+        User user = H.<User> request(User.class).eq("login", USER_LOGIN_A).fetchJoin("goodFriends")
+                .first();
+        System.out.println(user.getGoodFriends());
+    }
+
+    private void addGoodFriendsToUser(User user) {
+        user.setGoodFriends(Arrays.asList(User.create("good friend 1", "good friend 1", 20),
+                User.create("good friend 2", "good friend 2", 20)));
+        H.saveOrUpdate(user);
     }
 
     private void doSomeFriendsStuff() {
