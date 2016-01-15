@@ -1,10 +1,3 @@
-/**
- * $HeadURL$
- * $Revision$
- * $Date$
- *
- * Copyright (c) Isida-Informatica, Ltd. All Rights Reserved.
- */
 package com.github.fluent.hibernate.example.spring.console.persistent;
 
 import java.util.Calendar;
