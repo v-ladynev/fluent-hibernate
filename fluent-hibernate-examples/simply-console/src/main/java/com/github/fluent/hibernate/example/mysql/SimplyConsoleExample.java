@@ -26,7 +26,7 @@ public class SimplyConsoleExample {
     public static void main(String[] args) {
         try {
             HibernateSessionFactory.Builder.configureFromDefaultHibernateCfgXml()
-            .createSessionFactory();
+                    .createSessionFactory();
             new SimplyConsoleExample().doSomeDatabaseStuff();
         } finally {
             HibernateSessionFactory.closeSessionFactory();
@@ -42,7 +42,6 @@ public class SimplyConsoleExample {
         doSomeFriendsStuff();
          */
         dealWithGoodFriends();
-
     }
 
     private void dealWithGoodFriends() {

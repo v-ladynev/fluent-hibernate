@@ -8,10 +8,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.Assert;
 
 import com.github.fluent.hibernate.H;
-import com.github.fluent.hibernate.example.spring.console.persistent.Child;
 import com.github.fluent.hibernate.example.spring.console.persistent.Customer;
 import com.github.fluent.hibernate.example.spring.console.persistent.Merchant;
-import com.github.fluent.hibernate.example.spring.console.persistent.Parent;
 import com.github.fluent.hibernate.example.spring.console.persistent.Transaction;
 import com.github.fluent.hibernate.factory.HibernateSessionFactory;
 
@@ -24,7 +22,7 @@ public class SpringConsoleExample {
     public static void main(String[] args) {
         try {
             new ClassPathXmlApplicationContext("classpath:hibernate-context.xml")
-            .registerShutdownHook();
+                    .registerShutdownHook();
             new SpringConsoleExample().doSomeDatabaseStuff();
         } finally {
             HibernateSessionFactory.closeSessionFactory();
@@ -34,15 +32,6 @@ public class SpringConsoleExample {
     private void doSomeDatabaseStuff() {
         dealWithTaransactions();
         dealWithMerchantsAndCustomers();
-
-        dealWithParentAndChildren();
-    }
-
-    private void dealWithParentAndChildren() {
-        Parent parent = new Parent();
-        parent.addChild(new Child());
-        parent.addChild(new Child());
-        H.save(parent);
     }
 
     private void dealWithMerchantsAndCustomers() {

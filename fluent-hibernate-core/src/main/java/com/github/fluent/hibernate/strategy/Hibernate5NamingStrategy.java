@@ -1,8 +1,5 @@
 package com.github.fluent.hibernate.strategy;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.hibernate.boot.model.naming.EntityNaming;
 import org.hibernate.boot.model.naming.Identifier;
 import org.hibernate.boot.model.naming.ImplicitBasicColumnNameSource;
@@ -21,7 +18,7 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
 
     private final HibernateNamingStrategy strategy = new HibernateNamingStrategy();
 
-    private final Set<String> joinTableNames = new HashSet<String>();
+    private final JoinTableNames joinTableNames = new JoinTableNames();
 
     public void setTablePrefix(final String tablePrefix) {
         strategy.setTablePrefix(tablePrefix);
@@ -56,15 +53,16 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
 
         String tableName = strategy.collectionTableName(ownerEntityTable, associatedEntityTable);
 
-        String result = joinTableNames.contains(tableName) ? strategy.collectionTableName(
-                ownerEntityTable, associatedEntityTable,
-                transformAttributePath(source.getAssociationOwningAttributePath())) : tableName;
+        String result = joinTableNames.hasSameNameForOtherProperty(tableName, source) ? strategy
+                .collectionTableName(ownerEntityTable, associatedEntityTable,
+                        transformAttributePath(source.getAssociationOwningAttributePath()))
+                : tableName;
 
-        joinTableNames.add(result);
-        /*
-                        System.out.println(String.format("owner table name %s association %s result %s",
-                                ownerEntityTable, source.getAssociationOwningAttributePath(), result));
-        */
+        joinTableNames.put(result, source);
+
+        System.out.println(String.format("owner table name %s, association %s, result %s",
+                ownerEntityTable, source.getAssociationOwningAttributePath(), result));
+
         return toIdentifier(result, source.getBuildingContext());
     }
 

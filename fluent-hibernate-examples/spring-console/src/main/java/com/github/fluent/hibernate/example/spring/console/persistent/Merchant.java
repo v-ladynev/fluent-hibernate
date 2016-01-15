@@ -7,6 +7,7 @@
  */
 package com.github.fluent.hibernate.example.spring.console.persistent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -17,9 +18,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import com.github.fluent.hibernate.internal.util.InternalUtils;
 
 /**
  *
@@ -34,9 +34,13 @@ public class Merchant {
 
     private String name;
 
-    private List<Customer> primaryCustomers = InternalUtils.CollectionUtils.newArrayList();
+    private List<Customer> primaryCustomers = new ArrayList<Customer>();
 
-    private List<Customer> friends = InternalUtils.CollectionUtils.newArrayList();
+    private List<Customer> friends = new ArrayList<Customer>();
+
+    private Merchant firstPartner;
+
+    private Merchant secondPartner;
 
     @Id
     @GeneratedValue
@@ -60,6 +64,18 @@ public class Merchant {
         return friends;
     }
 
+    @OneToOne(fetch = FetchType.LAZY)
+    public Merchant getFirstPartner() {
+        return firstPartner;
+    }
+
+    /*
+        @OneToOne(fetch = FetchType.LAZY)
+        public Merchant getSecondPartner() {
+            return secondPartner;
+        }
+     */
+
     public void setPid(Long pid) {
         this.pid = pid;
     }
@@ -74,6 +90,14 @@ public class Merchant {
 
     public void setFriends(List<Customer> friends) {
         this.friends = friends;
+    }
+
+    public void setFirstPartner(Merchant firstPartner) {
+        this.firstPartner = firstPartner;
+    }
+
+    public void setSecondPartner(Merchant secondPartner) {
+        this.secondPartner = secondPartner;
     }
 
     public static Merchant create(String name) {

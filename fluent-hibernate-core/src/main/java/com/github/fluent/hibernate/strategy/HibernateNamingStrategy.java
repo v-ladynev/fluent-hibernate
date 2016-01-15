@@ -3,7 +3,7 @@ package com.github.fluent.hibernate.strategy;
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 
 /**
- * A naming strategy for database column and table names.
+ * A naming strategy for column and table names.
  *
  * @author S.Samsonov
  * @author V.Ladynev
