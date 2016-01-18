@@ -6,6 +6,7 @@ import org.hibernate.boot.model.naming.ImplicitBasicColumnNameSource;
 import org.hibernate.boot.model.naming.ImplicitJoinColumnNameSource;
 import org.hibernate.boot.model.naming.ImplicitJoinTableNameSource;
 import org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl;
+import org.hibernate.boot.model.source.spi.AttributePath;
 
 /**
  * A naming strategy for Hibernate 5.
@@ -32,16 +33,18 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
     @Override
     public Identifier determineBasicColumnName(ImplicitBasicColumnNameSource source) {
         String result = source.isCollectionElement() ? "elt" : strategy
-                .propertyToColumnName(transformAttributePath(source.getAttributePath()));
+                .propertyToColumnName(getPropertyName(source.getAttributePath()));
         return toIdentifier(result, source.getBuildingContext());
     }
 
     @Override
     public Identifier determineJoinColumnName(ImplicitJoinColumnNameSource source) {
-        String propertyName = source.getEntityNaming().getEntityName();
-        String propertyTableName = getText(source.getReferencedTableName());
-        return toIdentifier(strategy.foreignKeyColumnName(propertyName, propertyTableName),
-                source.getBuildingContext());
+        String propertyTableName = NamingStrategyUtils.unqualify(source.getEntityNaming()
+                .getEntityName());
+        // a property name is null for join tables for an owner table foreign key
+        String propertyName = getPropertyName(source.getAttributePath());
+        String result = strategy.foreignKeyColumnName(propertyName, propertyTableName);
+        return toIdentifier(result, source.getBuildingContext());
     }
 
     @Override
@@ -55,19 +58,15 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
 
         String result = joinTableNames.hasSameNameForOtherProperty(tableName, source) ? strategy
                 .collectionTableName(ownerEntityTable, associatedEntityTable,
-                        transformAttributePath(source.getAssociationOwningAttributePath()))
-                : tableName;
+                        getPropertyName(source.getAssociationOwningAttributePath())) : tableName;
 
         joinTableNames.put(result, source);
-
-        System.out.println(String.format("owner table name %s, association %s, result %s",
-                ownerEntityTable, source.getAssociationOwningAttributePath(), result));
 
         return toIdentifier(result, source.getBuildingContext());
     }
 
-    private static String getText(Identifier identifier) {
-        return identifier == null ? null : identifier.getText();
+    private static String getPropertyName(AttributePath attributePath) {
+        return attributePath == null ? null : attributePath.getProperty();
     }
 
 }
