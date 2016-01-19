@@ -111,6 +111,10 @@ public final class InternalUtils {
             return array == null || array.length == 0;
         }
 
+        public static int size(Collection<?> collection) {
+            return collection == null ? 0 : collection.size();
+        }
+
         public static <E> ArrayList<E> newArrayList() {
             return new ArrayList<E>();
         }

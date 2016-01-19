@@ -33,8 +33,6 @@ public class Merchant {
 
     private Merchant firstPartner;
 
-    private Merchant secondPartner;
-
     @Id
     @GeneratedValue
     @Column
@@ -62,13 +60,6 @@ public class Merchant {
         return firstPartner;
     }
 
-    /*
-        @OneToOne(fetch = FetchType.LAZY)
-        public Merchant getSecondPartner() {
-            return secondPartner;
-        }
-     */
-
     public void setPid(Long pid) {
         this.pid = pid;
     }
@@ -87,10 +78,6 @@ public class Merchant {
 
     public void setFirstPartner(Merchant firstPartner) {
         this.firstPartner = firstPartner;
-    }
-
-    public void setSecondPartner(Merchant secondPartner) {
-        this.secondPartner = secondPartner;
     }
 
     public static Merchant create(String name) {

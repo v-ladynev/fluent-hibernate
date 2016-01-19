@@ -30,8 +30,10 @@ public class SpringConsoleExample {
     }
 
     private void doSomeDatabaseStuff() {
+
         dealWithTaransactions();
         dealWithMerchantsAndCustomers();
+
     }
 
     private void dealWithMerchantsAndCustomers() {

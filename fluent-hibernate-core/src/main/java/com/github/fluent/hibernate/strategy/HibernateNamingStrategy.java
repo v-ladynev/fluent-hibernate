@@ -1,5 +1,7 @@
 package com.github.fluent.hibernate.strategy;
 
+import static com.github.fluent.hibernate.strategy.NamingStrategyUtils.concat;
+
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 
 /**
@@ -12,13 +14,17 @@ class HibernateNamingStrategy {
 
     private static final String COLUMN_NAME_PREFIX = "f_";
 
-    private static final String FOREIGN_KEY_PREFIX = "fk_";
+    private static final String FOREIGN_KEY_COLUMN_PREFIX = "fk_";
+
+    private static final String FOREIGN_KEY_PREFIX = "FK_";
+
+    private static final String UNIQUE_KEY_PREFIX = "UK_";
 
     /** Table's prefix. */
     private String tablePrefix;
 
     public String classToTableName(String className) {
-        return tablePrefix(NamingStrategyUtils.classToTableName(className));
+        return addTablePrefix(NamingStrategyUtils.classToTableName(className));
     }
 
     public String propertyToColumnName(String propertyName) {
@@ -26,7 +32,7 @@ class HibernateNamingStrategy {
     }
 
     public String tableName(String tableName) {
-        return NamingStrategyUtils.addUnderscores(tableName);
+        return NamingStrategyUtils.tableName(tableName);
     }
 
     public String collectionTableName(String ownerEntity, String ownerEntityTable,
@@ -40,7 +46,7 @@ class HibernateNamingStrategy {
 
     public String collectionTableName(String ownerEntityTable, String associatedEntityTable,
             String ownerProperty) {
-        return tablePrefix(NamingStrategyUtils.collectionTableName(ownerEntityTable,
+        return addTablePrefix(NamingStrategyUtils.collectionTableName(ownerEntityTable,
                 associatedEntityTable, ownerProperty));
     }
 
@@ -56,13 +62,13 @@ class HibernateNamingStrategy {
     public String foreignKeyColumnName(String propertyName, String propertyTableName) {
         String header = propertyName != null ? NamingStrategyUtils.unqualify(propertyName)
                 : propertyTableName;
-        return FOREIGN_KEY_PREFIX + columnName(header);
+        return FOREIGN_KEY_COLUMN_PREFIX + columnName(header);
     }
 
     public String logicalCollectionColumnName(String columnName, String propertyName,
             String referencedColumn) {
-        return InternalUtils.StringUtils.isEmpty(columnName) ? NamingStrategyUtils
-                .unqualify(propertyName) + "_" + referencedColumn : columnName;
+        return InternalUtils.StringUtils.isEmpty(columnName) ? concat(
+                NamingStrategyUtils.unqualify(propertyName), referencedColumn) : columnName;
     }
 
     public String columnName(String columnName) {
@@ -80,11 +86,8 @@ class HibernateNamingStrategy {
             return tableName;
         }
 
-        return new StringBuilder(ownerEntityTable)
-                .append("_")
-                .append(associatedEntityTable != null ? associatedEntityTable : NamingStrategyUtils
-                .unqualify(propertyName)).toString();
-
+        return concat(ownerEntityTable, associatedEntityTable != null ? associatedEntityTable
+                : NamingStrategyUtils.unqualify(propertyName));
     }
 
     public String logicalColumnName(String columnName, String propertyName) {
@@ -92,7 +95,15 @@ class HibernateNamingStrategy {
                 .unqualify(propertyName) : columnName;
     }
 
-    private String tablePrefix(String name) {
+    public String foreignKeyName(String tableName, String columnName) {
+        return FOREIGN_KEY_PREFIX + concat(tableName, columnName);
+    }
+
+    public String uniqueKeyName(String tableName, String columnName) {
+        return UNIQUE_KEY_PREFIX + concat(tableName, columnName);
+    }
+
+    private String addTablePrefix(String name) {
         return tablePrefix == null ? name : tablePrefix + name;
     }
 

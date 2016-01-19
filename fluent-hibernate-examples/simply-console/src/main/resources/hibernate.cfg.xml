@@ -3,9 +3,11 @@
     "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
-    <session-factory>
+    <session-factory name="">
         <mapping class="com.github.fluent.hibernate.example.mysql.persistent.User" />
         <mapping class="com.github.fluent.hibernate.example.mysql.persistent.UserAddress" />
         <mapping class="com.github.fluent.hibernate.example.mysql.persistent.UserFriend" />
+
+        <mapping resource="hibernate/User.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>
