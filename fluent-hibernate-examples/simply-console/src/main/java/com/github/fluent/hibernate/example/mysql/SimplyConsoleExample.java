@@ -3,11 +3,9 @@ package com.github.fluent.hibernate.example.mysql;
 import java.util.Arrays;
 import java.util.List;
 
-import org.hibernate.Session;
 import org.jboss.logging.Logger;
 
 import com.github.fluent.hibernate.H;
-import com.github.fluent.hibernate.IRequest;
 import com.github.fluent.hibernate.example.mysql.persistent.User;
 import com.github.fluent.hibernate.example.mysql.persistent.UserAddress;
 import com.github.fluent.hibernate.example.mysql.persistent.UserFriend;
@@ -28,7 +26,7 @@ public class SimplyConsoleExample {
     public static void main(String[] args) {
         try {
             HibernateSessionFactory.Builder.configureFromDefaultHibernateCfgXml()
-            .createSessionFactory();
+                    .createSessionFactory();
             new SimplyConsoleExample().doSomeDatabaseStuff();
         } finally {
             HibernateSessionFactory.closeSessionFactory();
@@ -36,7 +34,6 @@ public class SimplyConsoleExample {
     }
 
     private void doSomeDatabaseStuff() {
-        /*
         deleteAllUsers();
         insertUsers();
 
@@ -45,21 +42,6 @@ public class SimplyConsoleExample {
         doSomeFriendsStuff();
 
         dealWithGoodFriends();
-         */
-
-        HibernateSessionFactory.doInTransaction(new IRequest<Void>() {
-            @Override
-            public Void doInTransaction(Session session) {
-
-                hibernate.User user = new hibernate.User();
-                user.setName("Joe");
-                user.setGoal(250);
-                session.save(user);
-
-                return null;
-            }
-
-        });
     }
 
     private void dealWithGoodFriends() {
