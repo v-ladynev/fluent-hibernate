@@ -15,13 +15,30 @@
         <value>com.github.fluent.hibernate.example.spring.console.persistent</value>
       </list>
     </property>
+
     <property name="implicitNamingStrategy">
       <bean class="com.github.fluent.hibernate.strategy.Hibernate5NamingStrategy">
         <property name="tablePrefix" value="spring_" />
       </bean>
     </property>
-  </bean>
 
+<!--
+    <property name="implicitNamingStrategy">
+      <bean class="org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl" />
+    </property>
+
+    <property name="implicitNamingStrategy">
+      <bean class="org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl" />
+    </property>
+ -->
+<!--
+    <property name="hibernateProperties">
+      <bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="file:/work/fluent-hibernate/oracle.properties" />
+      </bean>
+    </property>
+  </bean>
+ -->
   <bean class="com.github.fluent.hibernate.factory.SpringSessionFactory" init-method="init">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>

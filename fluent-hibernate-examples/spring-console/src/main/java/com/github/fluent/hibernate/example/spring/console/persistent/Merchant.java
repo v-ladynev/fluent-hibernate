@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -21,6 +22,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table
+// @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "f_name" }))
 public class Merchant {
 
     private Long pid;
@@ -33,6 +35,8 @@ public class Merchant {
 
     private Merchant firstPartner;
 
+    private Location firstPartnerLocation;
+
     @Id
     @GeneratedValue
     @Column
@@ -40,7 +44,7 @@ public class Merchant {
         return pid;
     }
 
-    @Column
+    @Column(unique = true)
     public String getName() {
         return name;
     }
@@ -58,6 +62,11 @@ public class Merchant {
     @OneToOne(fetch = FetchType.LAZY)
     public Merchant getFirstPartner() {
         return firstPartner;
+    }
+
+    @Embedded
+    public Location getFirstPartnerLocation() {
+        return firstPartnerLocation;
     }
 
     public void setPid(Long pid) {
@@ -78,6 +87,10 @@ public class Merchant {
 
     public void setFirstPartner(Merchant firstPartner) {
         this.firstPartner = firstPartner;
+    }
+
+    public void setFirstPartnerLocation(Location firstPartnerLocation) {
+        this.firstPartnerLocation = firstPartnerLocation;
     }
 
     public static Merchant create(String name) {

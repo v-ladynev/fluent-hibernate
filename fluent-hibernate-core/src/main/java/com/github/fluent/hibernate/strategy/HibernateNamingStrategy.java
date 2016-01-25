@@ -16,12 +16,16 @@ class HibernateNamingStrategy {
 
     private static final String FOREIGN_KEY_COLUMN_PREFIX = "fk_";
 
-    private static final String FOREIGN_KEY_PREFIX = "FK_";
+    private static final String FOREIGN_KEY_PREFIX = "fk_";
 
-    private static final String UNIQUE_KEY_PREFIX = "UK_";
+    private static final String UNIQUE_KEY_PREFIX = "uk_";
 
     /** Table's prefix. */
     private String tablePrefix;
+
+    public void setTablePrefix(String tablePrefix) {
+        this.tablePrefix = tablePrefix;
+    }
 
     public String classToTableName(String className) {
         return addTablePrefix(NamingStrategyUtils.classToTableName(className));
@@ -105,10 +109,6 @@ class HibernateNamingStrategy {
 
     private String addTablePrefix(String name) {
         return tablePrefix == null ? name : tablePrefix + name;
-    }
-
-    public void setTablePrefix(String tablePrefix) {
-        this.tablePrefix = tablePrefix;
     }
 
 }

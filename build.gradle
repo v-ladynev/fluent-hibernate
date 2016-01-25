@@ -40,8 +40,8 @@ project(':fluent-hibernate-core') {
     archivesBaseName = "fluent-hibernate-core"
 
     dependencies {
-        compile group: 'org.hibernate', name: 'hibernate-core', version: '5.0.7.Final'
-        //compile group: 'org.hibernate', name: 'hibernate-core', version: '4.3.6.Final'
+        //compile group: 'org.hibernate', name: 'hibernate-core', version: '5.0.7.Final'
+        compile group: 'org.hibernate', name: 'hibernate-core', version: '4.3.6.Final'
         testCompile 'com.h2database:h2:1.4.190'
         testCompile 'org.assertj:assertj-core:1.7.1'
     }
@@ -102,9 +102,9 @@ project(':fluent-hibernate-core') {
 
 project(':fluent-hibernate-examples').subprojects {
   dependencies {
-        compile project(':fluent-hibernate-core')
-        compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.37'
-    }
+    compile project(':fluent-hibernate-core')
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.37'
+  }
 }
 
 project(':fluent-hibernate-examples:simply-console') {
@@ -127,6 +127,7 @@ project(':fluent-hibernate-examples:spring-console') {
     dependencies {
         compile group: 'org.springframework', name: 'spring-context', version: '4.2.2.RELEASE'
         compile group: 'org.springframework', name: 'spring-orm', version: '4.2.2.RELEASE'
+        compile files('libs/ojdbc6_11.2.0.4.jar')
     }
 }
 

@@ -18,6 +18,8 @@ import com.github.fluent.hibernate.internal.util.InternalUtils;
 /**
  * A naming strategy for Hibernate 5.
  *
+ * TODO embedded column names
+ *
  * @author V.Ladynev
  */
 public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliantImpl {
@@ -39,6 +41,10 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
 
     @Override
     public Identifier determineBasicColumnName(ImplicitBasicColumnNameSource source) {
+        /*
+        System.out.println(getPropertyName(source.getAttributePath()) + " "
+                + getPropertyName(source.getAttributePath().getParent()));
+         */
         String result = source.isCollectionElement() ? "elt" : strategy
                 .propertyToColumnName(getPropertyName(source.getAttributePath()));
         return toIdentifier(result, source);
@@ -67,9 +73,9 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
                 .collectionTableName(ownerEntityTable, associatedEntityTable,
                         getPropertyName(source.getAssociationOwningAttributePath())) : tableName;
 
-                joinTableNames.put(result, source);
+        joinTableNames.put(result, source);
 
-                return toIdentifier(result, source);
+        return toIdentifier(result, source);
     }
 
     @Override

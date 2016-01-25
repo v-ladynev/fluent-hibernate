@@ -22,7 +22,7 @@ public class SpringConsoleExample {
     public static void main(String[] args) {
         try {
             new ClassPathXmlApplicationContext("classpath:hibernate-context.xml")
-                    .registerShutdownHook();
+            .registerShutdownHook();
             new SpringConsoleExample().doSomeDatabaseStuff();
         } finally {
             HibernateSessionFactory.closeSessionFactory();
@@ -30,10 +30,8 @@ public class SpringConsoleExample {
     }
 
     private void doSomeDatabaseStuff() {
-
         dealWithTaransactions();
         dealWithMerchantsAndCustomers();
-
     }
 
     private void dealWithMerchantsAndCustomers() {

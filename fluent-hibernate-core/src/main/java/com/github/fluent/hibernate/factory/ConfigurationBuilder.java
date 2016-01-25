@@ -1,10 +1,3 @@
-/**
- * $HeadURL$
- * $Revision$
- * $Date$
- *
- * Copyright (c) Isida-Informatica, Ltd. All Rights Reserved.
- */
 package com.github.fluent.hibernate.factory;
 
 import java.io.File;
@@ -23,7 +16,6 @@ import com.github.fluent.hibernate.internal.util.InternalUtils;
 /**
  *
  * @author V.Ladynev
- * @version $Id$
  */
 class ConfigurationBuilder {
 
