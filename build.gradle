@@ -40,8 +40,8 @@ project(':fluent-hibernate-core') {
     archivesBaseName = "fluent-hibernate-core"
 
     dependencies {
-        //compile group: 'org.hibernate', name: 'hibernate-core', version: '5.0.7.Final'
-        compile group: 'org.hibernate', name: 'hibernate-core', version: '4.3.6.Final'
+        compile group: 'org.hibernate', name: 'hibernate-core', version: '5.0.7.Final'
+        //compile group: 'org.hibernate', name: 'hibernate-core', version: '4.3.6.Final'
         testCompile 'com.h2database:h2:1.4.190'
         testCompile 'org.assertj:assertj-core:1.7.1'
     }
