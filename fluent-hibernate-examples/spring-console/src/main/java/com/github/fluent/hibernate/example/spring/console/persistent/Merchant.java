@@ -29,6 +29,8 @@ public class Merchant {
 
     private String name;
 
+    private Location location;
+
     private List<Customer> primaryCustomers = new ArrayList<Customer>();
 
     private List<Customer> friends = new ArrayList<Customer>();
@@ -47,6 +49,11 @@ public class Merchant {
     @Column(unique = true)
     public String getName() {
         return name;
+    }
+
+    @Embedded
+    public Location getLocation() {
+        return location;
     }
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -75,6 +82,10 @@ public class Merchant {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public void setPrimaryCustomers(List<Customer> primaryCustomers) {

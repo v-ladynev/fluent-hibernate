@@ -81,8 +81,8 @@ public class User {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "good_friends", joinColumns = @JoinColumn(name = "fk_user",
-    referencedColumnName = "f_pid"), inverseJoinColumns = @JoinColumn(name = "fk_friend",
-    referencedColumnName = "f_pid"))
+            referencedColumnName = "f_pid"), inverseJoinColumns = @JoinColumn(name = "fk_friend",
+            referencedColumnName = "f_pid"))
     public List<User> getGoodFriends() {
         return goodFriends;
     }

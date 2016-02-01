@@ -1,5 +1,6 @@
 package com.github.fluent.hibernate.strategy;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import org.hibernate.boot.model.naming.EntityNaming;
@@ -12,6 +13,8 @@ import org.hibernate.boot.model.naming.ImplicitNameSource;
 import org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl;
 import org.hibernate.boot.model.naming.ImplicitUniqueKeyNameSource;
 import org.hibernate.boot.model.source.spi.AttributePath;
+import org.hibernate.cfg.Ejb3Column;
+import org.hibernate.cfg.PropertyHolder;
 
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 
@@ -41,13 +44,46 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
 
     @Override
     public Identifier determineBasicColumnName(ImplicitBasicColumnNameSource source) {
-        /*
-        System.out.println(getPropertyName(source.getAttributePath()) + " "
-                + getPropertyName(source.getAttributePath().getParent()));
-         */
-        String result = source.isCollectionElement() ? "elt" : strategy
-                .propertyToColumnName(getPropertyName(source.getAttributePath()));
-        return toIdentifier(result, source);
+        // don't know what it means
+        if (source.isCollectionElement()) {
+            return toIdentifier("elt", source);
+        }
+
+        AttributePath attributePath = source.getAttributePath();
+
+        if (isEmbeddedColumn(source)) {
+            String propertyName = getPropertyName(attributePath.getParent());
+            String embeddedPropertyName = getPropertyName(attributePath);
+            return toIdentifier(
+                    strategy.embeddedPropertyToColumnName(propertyName, embeddedPropertyName),
+                    source);
+        }
+
+        String propertyName = getPropertyName(attributePath);
+        return toIdentifier(strategy.propertyToColumnName(propertyName), source);
+    }
+
+    private boolean isEmbeddedColumn(ImplicitBasicColumnNameSource source) {
+        if (InternalUtils.StringUtils
+                .isEmpty(getPropertyName(source.getAttributePath().getParent()))) {
+            return false;
+        }
+
+        Ejb3Column column = getEjb3Column(source);
+
+        PropertyHolder propertyHolder = column.getPropertyHolder();
+
+        return propertyHolder.isComponent();
+    }
+
+    private Ejb3Column getEjb3Column(ImplicitBasicColumnNameSource source) {
+        try {
+            Field ejb3ColumnField = source.getClass().getDeclaredField("this$0");
+            ejb3ColumnField.setAccessible(true);
+            return (Ejb3Column) ejb3ColumnField.get(source);
+        } catch (Exception ex) {
+            throw InternalUtils.toRuntimeException(ex);
+        }
     }
 
     @Override
@@ -73,9 +109,9 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
                 .collectionTableName(ownerEntityTable, associatedEntityTable,
                         getPropertyName(source.getAssociationOwningAttributePath())) : tableName;
 
-        joinTableNames.put(result, source);
+                joinTableNames.put(result, source);
 
-        return toIdentifier(result, source);
+                return toIdentifier(result, source);
     }
 
     @Override

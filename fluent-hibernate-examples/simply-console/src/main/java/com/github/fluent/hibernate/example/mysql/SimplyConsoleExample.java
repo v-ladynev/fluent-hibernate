@@ -60,6 +60,7 @@ public class SimplyConsoleExample {
     private void doSomeFriendsStuff() {
         addFrindsToUser(USER_LOGIN_A);
         findUsersByFriendName();
+        getUserWithFriends();
     }
 
     private void addFrindsToUser(String userLogin) {
@@ -67,6 +68,11 @@ public class SimplyConsoleExample {
         user.addFriend(UserFriend.createByName("John"));
         user.addFriend(UserFriend.createByName("Doe"));
         H.saveOrUpdate(user);
+    }
+
+    private void getUserWithFriends() {
+        User user = H.<User> request(User.class).eq("login", USER_LOGIN_A).first();
+        System.out.println(user.getAddress().getPid());
     }
 
     private void findUsersByFriendName() {

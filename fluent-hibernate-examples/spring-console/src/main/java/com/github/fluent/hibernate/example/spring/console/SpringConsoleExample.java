@@ -10,6 +10,7 @@ import org.springframework.util.Assert;
 import com.github.fluent.hibernate.H;
 import com.github.fluent.hibernate.example.spring.console.persistent.Customer;
 import com.github.fluent.hibernate.example.spring.console.persistent.Merchant;
+import com.github.fluent.hibernate.example.spring.console.persistent.RegionalCountry;
 import com.github.fluent.hibernate.example.spring.console.persistent.Transaction;
 import com.github.fluent.hibernate.factory.HibernateSessionFactory;
 
@@ -30,8 +31,15 @@ public class SpringConsoleExample {
     }
 
     private void doSomeDatabaseStuff() {
-        dealWithTaransactions();
-        dealWithMerchantsAndCustomers();
+        // dealWithTaransactions();
+        // /dealWithMerchantsAndCustomers();
+
+        // dealWithCheck();
+    }
+
+    private void dealWithCheck() {
+        List<RegionalCountry> list = H.<RegionalCountry> request(RegionalCountry.class)
+                .eq("countryCode", "xxx").list();
     }
 
     private void dealWithMerchantsAndCustomers() {

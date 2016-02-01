@@ -35,6 +35,12 @@ class HibernateNamingStrategy {
         return COLUMN_NAME_PREFIX + NamingStrategyUtils.propertyToColumnName(propertyName);
     }
 
+    public String embeddedPropertyToColumnName(String propertyName, String embeddedPropertyName) {
+        return COLUMN_NAME_PREFIX
+                + concat(NamingStrategyUtils.propertyToColumnName(propertyName),
+                        NamingStrategyUtils.propertyToColumnName(embeddedPropertyName));
+    }
+
     public String tableName(String tableName) {
         return NamingStrategyUtils.tableName(tableName);
     }
