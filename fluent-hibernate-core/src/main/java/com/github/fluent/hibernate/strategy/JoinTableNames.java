@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate.strategy.hibernate4;
+package com.github.fluent.hibernate.strategy;
 
 import static com.github.fluent.hibernate.internal.util.InternalUtils.equal;
 
@@ -11,7 +11,7 @@ import com.github.fluent.hibernate.internal.util.InternalUtils;
  * @author V.Ladynev
  * @version $Id$
  */
-class JoinTableNames {
+public final class JoinTableNames {
 
     private final Map<String, TableDescription> names = InternalUtils.CollectionUtils.newHashMap();
 
@@ -24,7 +24,7 @@ class JoinTableNames {
         names.put(tableName, description);
     }
 
-    public static class TableDescription {
+    public static final class TableDescription {
 
         private final String owningTable;
 

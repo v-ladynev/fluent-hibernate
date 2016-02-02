@@ -18,6 +18,8 @@ import org.hibernate.cfg.PropertyHolder;
 
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 import com.github.fluent.hibernate.strategy.HibernateNamingStrategy;
+import com.github.fluent.hibernate.strategy.JoinTableNames;
+import com.github.fluent.hibernate.strategy.JoinTableNames.TableDescription;
 import com.github.fluent.hibernate.strategy.NamingStrategyUtils;
 
 /**
@@ -101,13 +103,18 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
         String associatedEntityTable = NamingStrategyUtils.unqualify(source
                 .getNonOwningEntityNaming().getEntityName());
 
+        String propertyName = getPropertyName(source.getAssociationOwningAttributePath());
+
         String tableName = strategy.collectionTableName(ownerEntityTable, associatedEntityTable);
 
-        String result = joinTableNames.hasSameNameForOtherProperty(tableName, source) ? strategy
-                .collectionTableName(ownerEntityTable, associatedEntityTable,
-                        getPropertyName(source.getAssociationOwningAttributePath())) : tableName;
+        TableDescription description = new TableDescription(ownerEntityTable,
+                associatedEntityTable, propertyName);
 
-        joinTableNames.put(result, source);
+        String result = joinTableNames.hasSameNameForOtherProperty(tableName, description) ? strategy
+                .collectionTableName(ownerEntityTable, associatedEntityTable, propertyName)
+                : tableName;
+
+        joinTableNames.put(result, description);
 
         return toIdentifier(result, source);
     }

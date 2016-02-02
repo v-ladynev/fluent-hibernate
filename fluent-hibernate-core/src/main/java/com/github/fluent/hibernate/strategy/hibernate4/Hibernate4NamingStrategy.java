@@ -4,8 +4,9 @@ import org.hibernate.cfg.ImprovedNamingStrategy;
 
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 import com.github.fluent.hibernate.strategy.HibernateNamingStrategy;
+import com.github.fluent.hibernate.strategy.JoinTableNames;
 import com.github.fluent.hibernate.strategy.NamingStrategyUtils;
-import com.github.fluent.hibernate.strategy.hibernate4.JoinTableNames.TableDescription;
+import com.github.fluent.hibernate.strategy.JoinTableNames.TableDescription;
 
 /**
  * A naming strategy for Hibernate 4.
