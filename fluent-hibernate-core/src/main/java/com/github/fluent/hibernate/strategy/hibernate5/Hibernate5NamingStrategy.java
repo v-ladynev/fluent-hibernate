@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate.strategy;
+package com.github.fluent.hibernate.strategy.hibernate5;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -17,11 +17,11 @@ import org.hibernate.cfg.Ejb3Column;
 import org.hibernate.cfg.PropertyHolder;
 
 import com.github.fluent.hibernate.internal.util.InternalUtils;
+import com.github.fluent.hibernate.strategy.HibernateNamingStrategy;
+import com.github.fluent.hibernate.strategy.NamingStrategyUtils;
 
 /**
  * A naming strategy for Hibernate 5.
- *
- * TODO embedded column names
  *
  * @author V.Ladynev
  */
@@ -33,7 +33,7 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
 
     private final JoinTableNames joinTableNames = new JoinTableNames();
 
-    public void setTablePrefix(final String tablePrefix) {
+    public void setTablePrefix(String tablePrefix) {
         strategy.setTablePrefix(tablePrefix);
     }
 
@@ -70,9 +70,7 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
         }
 
         Ejb3Column column = getEjb3Column(source);
-
         PropertyHolder propertyHolder = column.getPropertyHolder();
-
         return propertyHolder.isComponent();
     }
 
@@ -109,9 +107,9 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
                 .collectionTableName(ownerEntityTable, associatedEntityTable,
                         getPropertyName(source.getAssociationOwningAttributePath())) : tableName;
 
-                joinTableNames.put(result, source);
+        joinTableNames.put(result, source);
 
-                return toIdentifier(result, source);
+        return toIdentifier(result, source);
     }
 
     @Override

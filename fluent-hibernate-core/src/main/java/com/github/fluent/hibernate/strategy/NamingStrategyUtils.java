@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  *
  * @author V.Ladynev
  */
-final class NamingStrategyUtils {
+public final class NamingStrategyUtils {
 
     /** Ending of a plural. */
     private static final String ES = "es";

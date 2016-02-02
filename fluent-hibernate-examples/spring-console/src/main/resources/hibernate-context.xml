@@ -10,6 +10,7 @@
   http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
 
+
   <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
     <property name="packagesToScan">
       <list>
@@ -18,18 +19,35 @@
     </property>
 
     <property name="implicitNamingStrategy">
-      <bean class="com.github.fluent.hibernate.strategy.Hibernate5NamingStrategy">
+      <bean class="com.github.fluent.hibernate.strategy.hibernate5.Hibernate5NamingStrategy">
         <property name="tablePrefix" value="spring_" />
       </bean>
     </property>
-
   </bean>
 
+
+<!--
+  <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+    <property name="packagesToScan">
+      <list>
+        <value>com.github.fluent.hibernate.example.spring.console.persistent</value>
+      </list>
+    </property>
+
+    <property name="namingStrategy">
+      <bean class="com.github.fluent.hibernate.strategy.hibernate4.Hibernate4NamingStrategy">
+        <property name="tablePrefix" value="spring_" />
+      </bean>
+    </property>
+  </bean>
+-->
   <bean class="com.github.fluent.hibernate.factory.SpringSessionFactory" init-method="init">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
 </beans>
+
+
 
 <!--
     <property name="implicitNamingStrategy">

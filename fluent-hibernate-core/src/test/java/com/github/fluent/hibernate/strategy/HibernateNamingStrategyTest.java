@@ -5,8 +5,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.fluent.hibernate.strategy.HibernateNamingStrategy;
-
 /**
  *
  * @author homyakov
@@ -27,8 +25,7 @@ public class HibernateNamingStrategyTest {
     @Test
     public void testForeignKeyColumnNameStringStringStringString() {
         assertEquals("Foreign key: propertyName -> fk_property_name", "fk_property_name",
-                strategy.foreignKeyColumnName("propertyName", "propertyEntityName",
-                        "propertyTableName", "referencedColumnName"));
+                strategy.foreignKeyColumnName("propertyName", "propertyTableName"));
     }
 
     @Test
@@ -66,8 +63,8 @@ public class HibernateNamingStrategyTest {
     public void testCollectionTableName() {
         assertEquals("Collection table name: "
                 + "ownerEntity,associatedEntity -> fluent_owner_entities_associated_entities",
-                "fluent_owner_entities_associated_entities", strategy.collectionTableName("owner",
-                        "ownerEntity", "associated", "associatedEntity", "property"));
+                "fluent_owner_entities_associated_entities",
+                strategy.collectionTableName("ownerEntity", "associatedEntity"));
     }
 
 }
