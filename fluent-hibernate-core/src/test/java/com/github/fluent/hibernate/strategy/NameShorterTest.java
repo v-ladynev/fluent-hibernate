@@ -1,5 +1,7 @@
 package com.github.fluent.hibernate.strategy;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
 
 /**
@@ -10,9 +12,8 @@ public class NameShorterTest {
 
     @Test
     public void tableName() {
-        String name = create(23).tableName("merchants_friends_customers");
-        System.out.println(name);
-        System.out.println(name.length());
+        assertThat(create(23).tableName("merchants_friends_customers")).isEqualTo(
+                "merchants_frinds_cstmrs");
     }
 
     private Chuck create(int maxLength) {

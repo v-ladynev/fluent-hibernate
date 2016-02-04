@@ -8,7 +8,7 @@ public class Chuck {
 
     private final int maxLength;
 
-    private int currentLength;
+    private int currentToRemove;
 
     public Chuck(int maxLength) {
         this.maxLength = maxLength;
@@ -19,12 +19,11 @@ public class Chuck {
     }
 
     private String makeShorter(String name) {
-        int length = name.length();
-        if (length <= maxLength) {
+        currentToRemove = name.length() - maxLength;
+
+        if (currentToRemove <= 0) {
             return name;
         }
-
-        currentLength = length;
 
         String[] parts = name.split("_");
         makeShorter(parts, name.length());
@@ -33,7 +32,7 @@ public class Chuck {
     }
 
     private void makeShorter(String[] parts, int initialLength) {
-        for (int i = parts.length - 1; i >= 0 && currentLength > maxLength; i--) {
+        for (int i = parts.length - 1; i >= 0 && currentToRemove > 0; i--) {
             parts[i] = removeVowels(parts[i]);
         }
     }
@@ -41,10 +40,10 @@ public class Chuck {
     private String removeVowels(String part) {
         boolean dontRemoveFirst = true;
         boolean dontRemoveLast = true;
-        String result = NamingStrategyUtils.removeVowelsFromTheRight(part, currentLength,
+        String result = NamingStrategyUtils.removeVowelsFromTheRight(part, currentToRemove,
                 dontRemoveFirst, dontRemoveLast);
 
-        currentLength -= part.length() - result.length();
+        currentToRemove -= part.length() - result.length();
 
         return result;
     }
