@@ -10,7 +10,9 @@ public class NameShorterTest {
 
     @Test
     public void tableName() {
-        System.out.println(create(23).tableName("merchants_friends_customers"));
+        String name = create(23).tableName("merchants_friends_customers");
+        System.out.println(name);
+        System.out.println(name.length());
     }
 
     private Chuck create(int maxLength) {

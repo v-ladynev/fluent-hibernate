@@ -3,12 +3,19 @@ package com.github.fluent.hibernate.strategy;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import com.github.fluent.hibernate.internal.util.InternalUtils;
+
 /**
  * Utils for naming strategies.
  *
  * @author V.Ladynev
  */
 public final class NamingStrategyUtils {
+
+    private static final char NAME_PARTS_SEPARATOR = '_';
+
+    private static final String NAME_PARTS_SEPARATOR_AS_STRING = String
+            .valueOf(NAME_PARTS_SEPARATOR);
 
     /** Ending of a plural. */
     private static final String ES = "es";
@@ -44,12 +51,12 @@ public final class NamingStrategyUtils {
     }
 
     public static String addUnderscores(String name) {
-        StringBuilder result = new StringBuilder(name.replace('.', '_'));
+        StringBuilder result = new StringBuilder(name.replace('.', NAME_PARTS_SEPARATOR));
         for (int i = 1; i < result.length() - 1; i++) {
             if (Character.isLowerCase(result.charAt(i - 1))
                     && Character.isUpperCase(result.charAt(i))
                     && Character.isLowerCase(result.charAt(i + 1))) {
-                result.insert(i++, '_');
+                result.insert(i++, NAME_PARTS_SEPARATOR);
             }
         }
         return result.toString().toLowerCase(Locale.ROOT);
@@ -61,7 +68,11 @@ public final class NamingStrategyUtils {
     }
 
     public static String concat(String left, String right) {
-        return left + "_" + right;
+        return left + NAME_PARTS_SEPARATOR + right;
+    }
+
+    public static String concat(String[] parts) {
+        return InternalUtils.StringUtils.join(parts, NAME_PARTS_SEPARATOR_AS_STRING);
     }
 
     /**

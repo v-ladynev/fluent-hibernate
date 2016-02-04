@@ -91,6 +91,19 @@ public final class InternalUtils {
             return true;
         }
 
+        public static String join(String[] strings, String seperator) {
+            int length = strings.length;
+            if (length == 0) {
+                return EMPTY;
+            }
+            StringBuilder result = new StringBuilder(length
+                    * (strings[0].length() + seperator.length())).append(strings[0]);
+            for (int i = 1; i < length; i++) {
+                result.append(seperator).append(strings[i]);
+            }
+            return result.toString();
+        }
+
     }
 
     public static final class CollectionUtils {

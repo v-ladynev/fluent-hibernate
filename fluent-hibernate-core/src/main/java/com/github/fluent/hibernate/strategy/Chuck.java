@@ -1,7 +1,5 @@
 package com.github.fluent.hibernate.strategy;
 
-import java.util.StringTokenizer;
-
 /**
  *
  * @author V.Ladynev
@@ -9,6 +7,8 @@ import java.util.StringTokenizer;
 public class Chuck {
 
     private final int maxLength;
+
+    private int currentLength;
 
     public Chuck(int maxLength) {
         this.maxLength = maxLength;
@@ -19,56 +19,34 @@ public class Chuck {
     }
 
     private String makeShorter(String name) {
-        if (name.length() <= maxLength) {
+        int length = name.length();
+        if (length <= maxLength) {
             return name;
         }
 
-        String[] tokens = splitName(name);
-        shortenName(name, tokens);
+        currentLength = length;
 
-        return assembleResults(tokens);
+        String[] parts = name.split("_");
+        makeShorter(parts, name.length());
+
+        return NamingStrategyUtils.concat(parts);
     }
 
-    private String[] splitName(String someName) {
-        StringTokenizer toki = new StringTokenizer(someName, "_");
-        String[] tokens = new String[toki.countTokens()];
-        int i = 0;
-        while (toki.hasMoreTokens()) {
-            tokens[i++] = toki.nextToken();
-        }
-        return tokens;
-    }
-
-    private void shortenName(String someName, String[] tokens) {
-        int currentLength = someName.length();
-        while (currentLength > maxLength) {
-            int tokenIndex = getIndexOfLongest(tokens);
-            String oldToken = tokens[tokenIndex];
-            tokens[tokenIndex] = NamingStrategyUtils.removeVowelsFromTheRight(oldToken, 10, true,
-                    true);
-            currentLength -= oldToken.length() - tokens[tokenIndex].length();
+    private void makeShorter(String[] parts, int initialLength) {
+        for (int i = parts.length - 1; i >= 0 && currentLength > maxLength; i--) {
+            parts[i] = removeVowels(parts[i]);
         }
     }
 
-    private String assembleResults(String[] tokens) {
-        StringBuilder result = new StringBuilder(tokens[0]);
-        for (int j = 1; j < tokens.length; j++) {
-            result.append("_").append(tokens[j]);
-        }
-        return result.toString();
-    }
+    private String removeVowels(String part) {
+        boolean dontRemoveFirst = true;
+        boolean dontRemoveLast = true;
+        String result = NamingStrategyUtils.removeVowelsFromTheRight(part, currentLength,
+                dontRemoveFirst, dontRemoveLast);
 
-    private int getIndexOfLongest(String[] tokens) {
-        int maxLength = 0;
-        int index = -1;
-        for (int i = 0; i < tokens.length; i++) {
-            String string = tokens[i];
-            if (maxLength < string.length()) {
-                maxLength = string.length();
-                index = i;
-            }
-        }
-        return index;
+        currentLength -= part.length() - result.length();
+
+        return result;
     }
 
 }

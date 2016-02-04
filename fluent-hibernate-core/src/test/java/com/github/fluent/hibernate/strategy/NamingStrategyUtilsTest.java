@@ -9,7 +9,7 @@ import org.junit.Test;
  *
  * @author V.Ladynev
  */
-public class NameStrategyUtilsTest {
+public class NamingStrategyUtilsTest {
 
     @Test
     public void removeVowels() {
