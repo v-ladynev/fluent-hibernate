@@ -25,24 +25,22 @@ public final class NamingStrategyUtils {
 
     }
 
-    public static String tableName(String tableName) {
-        return addUnderscores(tableName);
+    /**
+     * Unqualify propety, add underscores and pluralize.
+     *
+     * com.github.fluent.SomeName -> some_names
+     */
+    public static String propertyToPluralizedName(String property) {
+        return pluralize(propertyToName(property));
     }
 
-    public static String classToTableName(String className) {
-        return pluralize(addUnderscores(unqualify(className)));
-    }
-
-    public static String collectionTableName(String ownerEntityTable, String associatedEntityTable,
-            String ownerProperty) {
-        String ownerTable = pluralize(tableName(ownerEntityTable));
-        String associatedTable = pluralize(tableName(associatedEntityTable));
-        return ownerProperty == null ? concat(ownerTable, associatedTable) : concat(
-                concat(ownerTable, propertyToColumnName(ownerProperty)), associatedTable);
-    }
-
-    public static String propertyToColumnName(String propertyName) {
-        return addUnderscores(unqualify(propertyName));
+    /**
+     * Unqualify propety and add underscores.
+     *
+     * com.github.fluent.SomeName -> some_name
+     */
+    public static String propertyToName(String property) {
+        return addUnderscores(unqualify(property));
     }
 
     public static String addUnderscores(String name) {
@@ -107,6 +105,44 @@ public final class NamingStrategyUtils {
 
     private static boolean matches(CharSequence string, Pattern pattern) {
         return pattern.matcher(string).matches();
+    }
+
+    public static String removeVowelsFromTheRight(String name, int maxCountToRemove) {
+        return removeVowelsFromTheRight(name, maxCountToRemove, false, false);
+    }
+
+    public static String removeVowelsFromTheRight(String name, int maxCountToRemove,
+            boolean dontRemoveFirst, boolean dontRemoveLast) {
+        StringBuilder result = new StringBuilder(name);
+
+        int firstIndex = dontRemoveFirst ? 1 : 0;
+        int lastIndex = dontRemoveLast ? result.length() - 2 : result.length() - 1;
+        for (int i = lastIndex, removed = 0; i >= firstIndex && removed < maxCountToRemove; i--) {
+            if (isVowel(result.charAt(i))) {
+                result.deleteCharAt(i);
+                removed++;
+            }
+        }
+
+        return result.toString();
+    }
+
+    public static boolean isVowel(char value) {
+        switch (value) {
+        case 'a':
+        case 'e':
+        case 'i':
+        case 'o':
+        case 'u':
+        case 'A':
+        case 'E':
+        case 'I':
+        case 'O':
+        case 'U':
+            return true;
+        default:
+            return false;
+        }
     }
 
 }

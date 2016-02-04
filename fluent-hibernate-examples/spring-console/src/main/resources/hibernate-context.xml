@@ -25,7 +25,6 @@
     </property>
   </bean>
 
-
 <!--
   <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
     <property name="packagesToScan">
@@ -40,7 +39,7 @@
       </bean>
     </property>
   </bean>
--->
+ -->
   <bean class="com.github.fluent.hibernate.factory.SpringSessionFactory" init-method="init">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>

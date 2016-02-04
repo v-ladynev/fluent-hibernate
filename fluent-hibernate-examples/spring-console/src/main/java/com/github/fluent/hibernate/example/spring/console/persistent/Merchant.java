@@ -22,7 +22,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table
-// @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "f_name" }))
 public class Merchant {
 
     private Long pid;

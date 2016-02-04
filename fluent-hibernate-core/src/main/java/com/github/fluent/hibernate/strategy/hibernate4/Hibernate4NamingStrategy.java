@@ -5,13 +5,11 @@ import org.hibernate.cfg.ImprovedNamingStrategy;
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 import com.github.fluent.hibernate.strategy.HibernateNamingStrategy;
 import com.github.fluent.hibernate.strategy.JoinTableNames;
-import com.github.fluent.hibernate.strategy.NamingStrategyUtils;
 import com.github.fluent.hibernate.strategy.JoinTableNames.TableDescription;
+import com.github.fluent.hibernate.strategy.NamingStrategyUtils;
 
 /**
  * A naming strategy for Hibernate 4.
- *
- * TODO add constraints support.
  *
  * @author V.Ladynev
  */
@@ -44,9 +42,9 @@ public class Hibernate4NamingStrategy extends ImprovedNamingStrategy {
                 .collectionTableName(ownerEntityTable, associatedEntityTable, propertyName)
                 : tableName;
 
-                joinTableNames.put(result, description);
+        joinTableNames.put(result, description);
 
-                return result;
+        return result;
     }
 
     @Override

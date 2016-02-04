@@ -1,6 +1,8 @@
 package com.github.fluent.hibernate.strategy;
 
 import static com.github.fluent.hibernate.strategy.NamingStrategyUtils.concat;
+import static com.github.fluent.hibernate.strategy.NamingStrategyUtils.propertyToName;
+import static com.github.fluent.hibernate.strategy.NamingStrategyUtils.propertyToPluralizedName;
 
 /**
  * A naming strategy for column and table names.
@@ -26,21 +28,16 @@ public class HibernateNamingStrategy {
     }
 
     public String classToTableName(String className) {
-        return addTablePrefix(NamingStrategyUtils.classToTableName(className));
+        return addTablePrefix(propertyToPluralizedName(className));
     }
 
     public String propertyToColumnName(String propertyName) {
-        return COLUMN_NAME_PREFIX + NamingStrategyUtils.propertyToColumnName(propertyName);
+        return COLUMN_NAME_PREFIX + propertyToName(propertyName);
     }
 
     public String embeddedPropertyToColumnName(String propertyName, String embeddedPropertyName) {
         return COLUMN_NAME_PREFIX
-                + concat(NamingStrategyUtils.propertyToColumnName(propertyName),
-                        NamingStrategyUtils.propertyToColumnName(embeddedPropertyName));
-    }
-
-    public String tableName(String tableName) {
-        return NamingStrategyUtils.tableName(tableName);
+                + concat(propertyToName(propertyName), propertyToName(embeddedPropertyName));
     }
 
     public String collectionTableName(String ownerEntityTable, String associatedEntityTable) {
@@ -49,8 +46,13 @@ public class HibernateNamingStrategy {
 
     public String collectionTableName(String ownerEntityTable, String associatedEntityTable,
             String ownerProperty) {
-        return addTablePrefix(NamingStrategyUtils.collectionTableName(ownerEntityTable,
-                associatedEntityTable, ownerProperty));
+        String ownerTable = propertyToPluralizedName(ownerEntityTable);
+        String associatedTable = propertyToPluralizedName(associatedEntityTable);
+
+        String result = ownerProperty == null ? concat(ownerTable, associatedTable) : concat(
+                concat(ownerTable, propertyToName(ownerProperty)), associatedTable);
+
+        return addTablePrefix(result);
     }
 
     public String joinKeyColumnName(String joinedColumn, String joinedTable) {

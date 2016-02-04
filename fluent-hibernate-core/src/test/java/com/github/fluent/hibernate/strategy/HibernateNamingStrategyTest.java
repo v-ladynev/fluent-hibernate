@@ -23,7 +23,7 @@ public class HibernateNamingStrategyTest {
     }
 
     @Test
-    public void testForeignKeyColumnNameStringStringStringString() {
+    public void testForeignKeyColumnName() {
         assertEquals("Foreign key: propertyName -> fk_property_name", "fk_property_name",
                 strategy.foreignKeyColumnName("propertyName", "propertyTableName"));
     }
@@ -34,6 +34,15 @@ public class HibernateNamingStrategyTest {
                 strategy.propertyToColumnName("field"));
         assertEquals("Field name: camelCaseField -> f_camel_case_field", "f_camel_case_field",
                 strategy.propertyToColumnName("camelCaseField"));
+
+        // TODO fix
+        /*
+        assertEquals("Field name: camelCF -> f_camel_cf", "f_camel_cf",
+                strategy.propertyToColumnName("camelCF"));
+
+        assertEquals("Field name: camelCFX -> f_camel_cfx", "f_camel_cfx",
+                strategy.propertyToColumnName("camelCFX"));
+         */
     }
 
     @Test
@@ -44,6 +53,8 @@ public class HibernateNamingStrategyTest {
         String[] exps = new String[] { "classes", "classes", "keys", "queries", "answers", //
                 "prefixes", "camel_case_class_names", "users", "faces", "cliffs", "safes", //
                 "books", "tables", "dishes", "matches", "diagnoses", "axes" };
+
+        // TODO add multiple capitals test
 
         for (int i = 0; i < args.length; i++) {
             String arg = args[i], exp = TABLE_PREFIX + exps[i];

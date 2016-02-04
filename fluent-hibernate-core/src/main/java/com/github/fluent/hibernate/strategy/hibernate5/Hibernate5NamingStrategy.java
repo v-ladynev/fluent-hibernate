@@ -53,6 +53,12 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
 
         AttributePath attributePath = source.getAttributePath();
 
+        // System.out.println(attributePath);
+
+        if (attributePath.getFullPath().equals("friends.element")) {
+            // System.out.println("xxx");
+        }
+
         if (isEmbeddedColumn(source)) {
             String propertyName = getPropertyName(attributePath.getParent());
             String embeddedPropertyName = getPropertyName(attributePath);
@@ -98,10 +104,8 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
 
     @Override
     public Identifier determineJoinTableName(ImplicitJoinTableNameSource source) {
-        String ownerEntityTable = NamingStrategyUtils.unqualify(source.getOwningEntityNaming()
-                .getEntityName());
-        String associatedEntityTable = NamingStrategyUtils.unqualify(source
-                .getNonOwningEntityNaming().getEntityName());
+        String ownerEntityTable = source.getOwningEntityNaming().getEntityName();
+        String associatedEntityTable = source.getNonOwningEntityNaming().getEntityName();
 
         String propertyName = getPropertyName(source.getAssociationOwningAttributePath());
 
