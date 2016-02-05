@@ -35,7 +35,7 @@ public final class NamingStrategyUtils {
     /**
      * Unqualify propety, add underscores and pluralize.
      *
-     * com.github.fluent.SomeName -> some_names
+     * com.github.fluent.SomeName - some_names
      */
     public static String propertyToPluralizedName(String property) {
         return pluralize(propertyToName(property));
@@ -44,7 +44,7 @@ public final class NamingStrategyUtils {
     /**
      * Unqualify propety and add underscores.
      *
-     * com.github.fluent.SomeName -> some_name
+     * com.github.fluent.SomeName - some_name
      */
     public static String propertyToName(String property) {
         return addUnderscores(unqualify(property));
