@@ -1,6 +1,6 @@
 package com.github.fluent.hibernate.strategy;
 
-import static com.github.fluent.hibernate.strategy.NamingStrategyUtils.removeVowelsFromTheRight;
+import static com.github.fluent.hibernate.strategy.NamingStrategyUtils.removeVowelsSmart;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
@@ -13,29 +13,18 @@ public class NamingStrategyUtilsTest {
 
     @Test
     public void removeVowels() {
-        assertThat(removeVowelsFromTheRight("aeiouAEIOU", 10)).isEmpty();
-        assertThat(removeVowelsFromTheRight("aeiouAEIOU", 5)).isEqualTo("aeiou");
-        assertThat(removeVowelsFromTheRight("a1e2i3o4u5A6E7I8O9U", 10)).isEqualTo("123456789");
+        assertThat(removeVowelsSmart("aeiouAEIOU", 10)).isEqualTo("aeiouAEIOU");
+        assertThat(removeVowelsSmart("a1e2i3o4u5A6E7I8O9U", 10)).isEqualTo("a123456789U");
 
-        boolean dontRemoveFirst = true;
-        boolean dontRemoveLast = false;
-        assertThat(removeVowelsFromTheRight("aeiouAEIOU", 10, dontRemoveFirst, dontRemoveLast))
-                .isEqualTo("a");
-        assertThat(
-                removeVowelsFromTheRight("a1e2i3o4u5A6E7I8O9U", 10, dontRemoveFirst, dontRemoveLast))
-                .isEqualTo("a123456789");
+        assertThat(removeVowelsSmart("", 10)).isEqualTo("");
+        assertThat(removeVowelsSmart("a", 10)).isEqualTo("a");
+        assertThat(removeVowelsSmart("ae", 10)).isEqualTo("ae");
 
-        dontRemoveFirst = true;
-        dontRemoveLast = true;
-        assertThat(removeVowelsFromTheRight("aeiouAEIOU", 10, dontRemoveFirst, dontRemoveLast))
-                .isEqualTo("aU");
-        assertThat(
-                removeVowelsFromTheRight("a1e2i3o4u5A6E7I8O9U", 10, dontRemoveFirst, dontRemoveLast))
-                .isEqualTo("a123456789U");
-
-        assertThat(removeVowelsFromTheRight("", 10, dontRemoveFirst, dontRemoveLast)).isEqualTo("");
-        assertThat(removeVowelsFromTheRight("a", 10, dontRemoveFirst, dontRemoveLast)).isEqualTo(
-                "a");
+        assertThat(removeVowelsSmart("aeb", 10)).isEqualTo("aeb");
+        assertThat(removeVowelsSmart("bae", 10)).isEqualTo("bae");
+        assertThat(removeVowelsSmart("aebae", 10)).isEqualTo("aebae");
+        assertThat(removeVowelsSmart("aeeb", 10)).isEqualTo("aeeb");
+        assertThat(removeVowelsSmart("friends", 10)).isEqualTo("friends");
     }
 
 }

@@ -91,17 +91,52 @@ public final class InternalUtils {
             return true;
         }
 
-        public static String join(String[] strings, String seperator) {
-            int length = strings.length;
-            if (length == 0) {
+        public static String joinWithSpace(String... strings) {
+            return join(strings, " ");
+        }
+
+        public static String join(String[] strings, String separator) {
+            return join(Arrays.asList(strings), separator);
+        }
+
+        public static String join(List<String> strings, String separator) {
+            int size = CollectionUtils.size(strings);
+
+            if (size == 0) {
                 return EMPTY;
             }
-            StringBuilder result = new StringBuilder(length
-                    * (strings[0].length() + seperator.length())).append(strings[0]);
-            for (int i = 1; i < length; i++) {
-                result.append(seperator).append(strings[i]);
+
+            StringBuilder result = new StringBuilder(size
+                    * (strings.get(0).length() + separator.length()));
+
+            if (!isEmpty(strings.get(0))) {
+                result.append(strings.get(0));
+            }
+
+            for (int i = 1; i < size; i++) {
+                if (!isEmpty(strings.get(i))) {
+                    result.append(separator).append(strings.get(i));
+                }
             }
             return result.toString();
+        }
+
+        public static final class Joiner {
+
+            private final String separator;
+
+            private Joiner(String separator) {
+                this.separator = separator;
+            }
+
+            public static Joiner on(String separator) {
+                return new Joiner(separator);
+            }
+
+            public String join(String... strings) {
+                return InternalUtils.StringUtils.join(strings, separator);
+            }
+
         }
 
     }
@@ -134,6 +169,24 @@ public final class InternalUtils {
 
         public static <K, V> HashMap<K, V> newHashMap() {
             return new HashMap<K, V>();
+        }
+
+    }
+
+    public static final class Asserts {
+
+        private Asserts() {
+
+        }
+
+        public static void isTrue(boolean expression, String message) {
+            if (!expression) {
+                throw new IllegalArgumentException(message);
+            }
+        }
+
+        public static void fail(String message) {
+            isTrue(false, message);
         }
 
     }

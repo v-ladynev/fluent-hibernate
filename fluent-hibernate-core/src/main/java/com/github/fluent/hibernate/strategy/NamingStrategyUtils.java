@@ -118,24 +118,28 @@ public final class NamingStrategyUtils {
         return pattern.matcher(string).matches();
     }
 
-    public static String removeVowelsFromTheRight(String name, int maxCountToRemove) {
-        return removeVowelsFromTheRight(name, maxCountToRemove, false, false);
-    }
+    /**
+     * Remove vowels from the right to the left. Don't remove the first and the last letter. Don't
+     * remove a vowel, if it has a neighbour vowel. It removes not more vowels than
+     * maxCountToRemove.
+     */
+    public static String removeVowelsSmart(String str, int maxCountToRemove) {
+        StringBuilder result = new StringBuilder(str);
 
-    public static String removeVowelsFromTheRight(String name, int maxCountToRemove,
-            boolean dontRemoveFirst, boolean dontRemoveLast) {
-        StringBuilder result = new StringBuilder(name);
-
-        int firstIndex = dontRemoveFirst ? 1 : 0;
-        int lastIndex = dontRemoveLast ? result.length() - 2 : result.length() - 1;
+        int firstIndex = 1;
+        int lastIndex = result.length() - 2;
         for (int i = lastIndex, removed = 0; i >= firstIndex && removed < maxCountToRemove; i--) {
-            if (isVowel(result.charAt(i))) {
+            if (isVowel(result.charAt(i)) && !hasNeighbourVowel(result, i)) {
                 result.deleteCharAt(i);
                 removed++;
             }
         }
 
         return result.toString();
+    }
+
+    private static boolean hasNeighbourVowel(StringBuilder str, int index) {
+        return isVowel(str.charAt(index + 1)) || isVowel(str.charAt(index - 1));
     }
 
     public static boolean isVowel(char value) {

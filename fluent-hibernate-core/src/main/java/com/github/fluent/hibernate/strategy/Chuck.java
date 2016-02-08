@@ -8,13 +8,32 @@ public class Chuck {
 
     private final int maxLength;
 
+    private final boolean dontTouchFirst;
+
     private int currentToRemove;
 
-    public Chuck(int maxLength) {
+    public Chuck(int maxLength, boolean dontTouchFirst) {
         this.maxLength = maxLength;
+        this.dontTouchFirst = dontTouchFirst;
     }
 
     public String tableName(String name) {
+        return makeShorter(name);
+    }
+
+    public String columnName(String name) {
+        return makeShorter(name);
+    }
+
+    public String embeddedColumnName(String name) {
+        return makeShorter(name);
+    }
+
+    public String joinTableName(String name) {
+        return makeShorter(name);
+    }
+
+    public String constraintName(String name) {
         return makeShorter(name);
     }
 
@@ -32,16 +51,15 @@ public class Chuck {
     }
 
     private void makeShorter(String[] parts, int initialLength) {
-        for (int i = parts.length - 1; i >= 0 && currentToRemove > 0; i--) {
+        int firstIndex = dontTouchFirst ? 1 : 0;
+
+        for (int i = parts.length - 1; i >= firstIndex && currentToRemove > 0; i--) {
             parts[i] = removeVowels(parts[i]);
         }
     }
 
     private String removeVowels(String part) {
-        boolean dontRemoveFirst = true;
-        boolean dontRemoveLast = true;
-        String result = NamingStrategyUtils.removeVowelsFromTheRight(part, currentToRemove,
-                dontRemoveFirst, dontRemoveLast);
+        String result = NamingStrategyUtils.removeVowelsSmart(part, currentToRemove);
 
         currentToRemove -= part.length() - result.length();
 

@@ -33,18 +33,17 @@ public class Hibernate4NamingStrategy extends ImprovedNamingStrategy {
     @Override
     public String collectionTableName(String ownerEntity, String ownerEntityTable,
             String associatedEntity, String associatedEntityTable, String propertyName) {
-        String tableName = strategy.collectionTableName(ownerEntityTable, associatedEntityTable);
+        String tableName = strategy.joinTableName(ownerEntityTable, associatedEntityTable);
 
         TableDescription description = new TableDescription(ownerEntityTable,
                 associatedEntityTable, propertyName);
 
         String result = joinTableNames.hasSameNameForOtherProperty(tableName, description) ? strategy
-                .collectionTableName(ownerEntityTable, associatedEntityTable, propertyName)
-                : tableName;
+                .joinTableName(ownerEntityTable, associatedEntityTable, propertyName) : tableName;
 
-        joinTableNames.put(result, description);
+                joinTableNames.put(result, description);
 
-        return result;
+                return result;
     }
 
     @Override

@@ -39,6 +39,9 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
         strategy.setTablePrefix(tablePrefix);
     }
 
+    /**
+     * Get a name of a table for persistent.
+     */
     @Override
     protected String transformEntityName(EntityNaming entityNaming) {
         return strategy.classToTableName(entityNaming.getEntityName());
@@ -109,14 +112,13 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
 
         String propertyName = getPropertyName(source.getAssociationOwningAttributePath());
 
-        String tableName = strategy.collectionTableName(ownerEntityTable, associatedEntityTable);
+        String tableName = strategy.joinTableName(ownerEntityTable, associatedEntityTable);
 
         TableDescription description = new TableDescription(ownerEntityTable,
                 associatedEntityTable, propertyName);
 
         String result = joinTableNames.hasSameNameForOtherProperty(tableName, description) ? strategy
-                .collectionTableName(ownerEntityTable, associatedEntityTable, propertyName)
-                : tableName;
+                .joinTableName(ownerEntityTable, associatedEntityTable, propertyName) : tableName;
 
         joinTableNames.put(result, description);
 

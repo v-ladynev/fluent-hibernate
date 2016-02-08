@@ -75,7 +75,7 @@ public class HibernateNamingStrategyTest {
         assertEquals("Collection table name: "
                 + "ownerEntity,associatedEntity -> fluent_owner_entities_associated_entities",
                 "fluent_owner_entities_associated_entities",
-                strategy.collectionTableName("ownerEntity", "associatedEntity"));
+                strategy.joinTableName("ownerEntity", "associatedEntity"));
     }
 
 }
