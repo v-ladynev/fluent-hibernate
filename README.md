@@ -26,7 +26,7 @@ Get all users
 ```Java
 List<User> users = H.<User> request(User.class).list();
 ```
-Getting an user with a login "my_login"
+Getting a user with a login "my_login"
 ```Java
 final String loginToFind = "my_login";
 User user = H.<User> request(User.class).eq("login", loginToFind).first();
