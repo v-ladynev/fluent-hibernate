@@ -26,13 +26,13 @@ Get all users
 ```Java
 List<User> users = H.<User> request(User.class).list();
 ```
-Getting a user with a login "my_login"
+Getting a user with a login `my_login`
 ```Java
 final String loginToFind = "my_login";
 User user = H.<User> request(User.class).eq("login", loginToFind).first();
 ```
 #### A partial objects loading
-Get all users, but only with "login" and "id" properties are filled (other properties will be null).
+Get all users, but only with `login` and `id` properties are filled (other properties will be null).
 ```Java
 List<User> users = H.<User> request(User.class).proj("login").proj("id")
     .transform(User.class).list();
