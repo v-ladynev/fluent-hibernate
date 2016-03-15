@@ -33,13 +33,14 @@ public final class EntityScanner {
      * @param packages
      *            one or more Java package names
      *
-     * @throws Exception
-     *             if scanning fails for any reason
-     *
      * @return entity classes
      */
-    public static List<Class<?>> scanPackages(String... packages) throws Exception {
-        return scanPackages(packages, null, Entity.class);
+    public static List<Class<?>> scanPackages(String... packages) {
+        try {
+            return scanPackages(packages, null, Entity.class);
+        } catch (Exception ex) {
+            throw InternalUtils.toRuntimeException(ex);
+        }
     }
 
     static List<Class<?>> scanPackages(String[] packages, List<ClassLoader> loaders,
@@ -52,14 +53,12 @@ public final class EntityScanner {
     private List<Class<?>> scan(Class<? extends Annotation> annotation) throws Exception {
         checker = new AnnotationChecker(annotation);
 
-        ClasspathScanner scanner = new ClasspathScanner(
-                new ClasspathScanner.IClassAcceptor() {
-                    @Override
-                    public boolean accept(String classResource, ClassLoader loader)
-                            throws Exception {
-                        return checker.hasAnnotation(loader.getResourceAsStream(classResource));
-                    }
-                });
+        ClasspathScanner scanner = new ClasspathScanner(new ClasspathScanner.IClassAcceptor() {
+            @Override
+            public boolean accept(String classResource, ClassLoader loader) throws Exception {
+                return checker.hasAnnotation(loader.getResourceAsStream(classResource));
+            }
+        });
 
         scanner.setPackagesToScan(packagesToScan);
         scanner.setLoaders(loaders);

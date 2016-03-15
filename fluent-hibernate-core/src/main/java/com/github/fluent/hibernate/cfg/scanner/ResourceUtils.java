@@ -16,6 +16,8 @@ final class ResourceUtils {
 
     private static final char PATH_SEPARATOR = '/';
 
+    private static final String PATH_SEPARATOR_AS_STRING = String.valueOf(PATH_SEPARATOR);
+
     private static final String CLASS_FILE_NAME_EXTENSION = ".class";
 
     private static final String URL_PROTOCOL_FILE = "file";
@@ -39,9 +41,19 @@ final class ResourceUtils {
         return packageName.replace(PACKAGE_SEPARATOR, PATH_SEPARATOR);
     }
 
+    public static String resourcePathFromRoot(String resourcePath) {
+        return resourcePath.startsWith(PATH_SEPARATOR_AS_STRING) ? resourcePath : PATH_SEPARATOR
+                + resourcePath;
+    }
+
     public static String getClassNameFromPath(String classFilePath) {
         int classNameEnd = classFilePath.length() - CLASS_FILE_NAME_EXTENSION.length();
         return classFilePath.substring(0, classNameEnd).replace(PATH_SEPARATOR, PACKAGE_SEPARATOR);
+    }
+
+    public static String classAsResource(Class<?> clazz) {
+        return clazz.getName().replace(PACKAGE_SEPARATOR, PATH_SEPARATOR)
+                + CLASS_FILE_NAME_EXTENSION;
     }
 
     public static String toDescriptor(Class<? extends Annotation> annotation) {
