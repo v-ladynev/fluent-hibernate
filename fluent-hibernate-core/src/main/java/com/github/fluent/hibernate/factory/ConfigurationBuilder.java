@@ -3,6 +3,7 @@ package com.github.fluent.hibernate.factory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Properties;
 
 import org.hibernate.SessionFactory;
@@ -11,6 +12,7 @@ import org.hibernate.boot.registry.BootstrapServiceRegistryBuilder;
 import org.hibernate.boot.registry.classloading.spi.ClassLoaderService;
 import org.hibernate.cfg.Configuration;
 
+import com.github.fluent.hibernate.cfg.scanner.EntityScanner;
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 
 /**
@@ -69,6 +71,13 @@ class ConfigurationBuilder {
         }
 
         for (Class<?> annotatedClass : annotatedClasses) {
+            result.addAnnotatedClass(annotatedClass);
+        }
+    }
+
+    public void addPackagesToScan(String[] packagesToScan) {
+        List<Class<?>> classes = EntityScanner.scanPackages(packagesToScan);
+        for (Class<?> annotatedClass : classes) {
             result.addAnnotatedClass(annotatedClass);
         }
     }

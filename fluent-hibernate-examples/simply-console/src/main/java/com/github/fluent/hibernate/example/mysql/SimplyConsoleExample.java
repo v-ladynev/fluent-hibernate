@@ -25,8 +25,9 @@ public class SimplyConsoleExample {
 
     public static void main(String[] args) {
         try {
-            HibernateSessionFactory.Builder.configureFromDefaultHibernateCfgXml()
-                    .createSessionFactory();
+            HibernateSessionFactory.Builder.configureWithoutHibernateCfgXml()
+                    .packagesToScan("com.github.fluent.hibernate.example.mysql.persistent")
+            .createSessionFactory();
             new SimplyConsoleExample().doSomeDatabaseStuff();
         } finally {
             HibernateSessionFactory.closeSessionFactory();
@@ -62,7 +63,7 @@ public class SimplyConsoleExample {
         System.out.println(String.format("User %s age %d", user.getName(), user.getAge()));
 
         H.update("update User set age = age + 1 where pid = :userPid").p("userPid", user.getPid())
-        .execute();
+                .execute();
 
         user = findUserByLogin(USER_LOGIN_A);
         System.out.println(String.format("User %s age %d", user.getName(), user.getAge()));

@@ -149,6 +149,16 @@ public final class HibernateSessionFactory {
             return new Builder();
         }
 
+        public Builder annotatedClasses(Class<?>... annotatedClasses) {
+            configurationBuilder.addAnnotatedClasses(annotatedClasses);
+            return this;
+        }
+
+        public Builder packagesToScan(String... packagesToScan) {
+            configurationBuilder.addPackagesToScan(packagesToScan);
+            return this;
+        }
+
         public static void configureFromExistingSessionFactory(SessionFactory sessionFactory) {
             HibernateSessionFactory.setExistingSessionFactory(sessionFactory);
         }
@@ -175,11 +185,6 @@ public final class HibernateSessionFactory {
 
         public Builder password(String password) {
             properties.put(AvailableSettings.PASS, password);
-            return this;
-        }
-
-        public Builder annotatedClasses(Class<?>... annotatedClasses) {
-            configurationBuilder.addAnnotatedClasses(annotatedClasses);
             return this;
         }
 
