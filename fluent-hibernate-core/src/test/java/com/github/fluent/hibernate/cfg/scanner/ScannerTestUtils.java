@@ -25,8 +25,8 @@ import com.google.common.io.Resources;
 public final class ScannerTestUtils {
 
     private static final Class<?>[] JAR_CLASSES = new Class<?>[] { FirstRootEntityJar.class,
-        FirstRootEntityJar.NestedEntityJar.class, SecondRootEntityJar.class,
-        FirstSubpackageEntityJar.class, NotEntityJar.class };
+            FirstRootEntityJar.NestedEntityJar.class, SecondRootEntityJar.class,
+            FirstSubpackageEntityJar.class, NotEntityJar.class };
 
     private ScannerTestUtils() {
 
@@ -35,6 +35,17 @@ public final class ScannerTestUtils {
     public static URLClassLoader createClassLoader(ClassLoader parent, URL... url)
             throws MalformedURLException {
         return new URLClassLoader(url, parent);
+    }
+
+    public static URL urlForJar(String jarName) {
+        URLClassLoader loader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
+        for (URL url : loader.getURLs()) {
+            if (url.getPath().endsWith(jarName)) {
+                return url;
+            }
+        }
+
+        return null;
     }
 
     public static URL writeTestJar() throws IOException {
