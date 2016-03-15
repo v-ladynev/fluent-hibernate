@@ -10,8 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import com.sun.istack.internal.NotNull;
-
 /**
  *
  * @author V.Ladynev
@@ -24,7 +22,6 @@ public class Student {
     @GeneratedValue
     private int id;
 
-    @NotNull
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER)
