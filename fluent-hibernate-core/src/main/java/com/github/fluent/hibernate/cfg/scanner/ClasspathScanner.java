@@ -179,11 +179,21 @@ public class ClasspathScanner {
             return;
         }
 
-        if (acceptor.accept(classResource, loader)) {
+        if (canAddToResult(classResource) && acceptor.accept(classResource, loader)) {
             Class<?> clazz = ClassLoaderUtils.classForName(
                     ResourceUtils.getClassNameFromPath(classResource), loader);
             result.add(clazz);
         }
+    }
+
+    private boolean canAddToResult(String classResource) throws IOException {
+        for (String resourceToScan : resourcesToScan) {
+            if (classResource.startsWith(resourceToScan)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static URL getClassPathEntry(JarFile jarFile, String path) throws MalformedURLException {
