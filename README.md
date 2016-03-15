@@ -1,6 +1,5 @@
 # fluent-hibernate
-A library to work with Hibernate by fluent API. This library hasn't dependencies except Hibernate
-dependencies. It requires Java 1.6 and above. Now it can be used with Hibernate 5 only. To use the library with Hibernate 4, it is need to rebuild the library using Hibernate 4 as a dependency.
+A library to work with Hibernate by fluent API. This library hasn't dependencies, except Hibernate libraries. It requires Java 1.6 and above. Now it can be used with Hibernate 5 only. To use the library with Hibernate 4, it should be rebuilt, using Hibernate 4 as a dependency.
 
 [![Build Status](https://travis-ci.org/v-ladynev/fluent-hibernate.svg?branch=master)](https://travis-ci.org/v-ladynev/fluent-hibernate)
 
@@ -8,8 +7,7 @@ dependencies. It requires Java 1.6 and above. Now it can be used with Hibernate 
 ##### Direct link
 [![Release 0.1.4](https://img.shields.io/badge/release-0.1.4-blue.svg)](https://github.com/v-ladynev/fluent-hibernate/releases/download/0.1.4/fluent-hibernate-core-0.1.4.jar)
 
-##### Maven
-Add this in your pom.xml
+##### Maven (`pom.xml`)
 ```XML
 <dependency>
 	<groupId>com.github.v-ladynev</groupId>
@@ -18,24 +16,23 @@ Add this in your pom.xml
 </dependency>
 ```
 
-##### Gradle
-Add this in your build.gradle
+##### Gradle (`build.gradle`)
 ```Gradle
 'com.github.v-ladynev:fluent-hibernate-core:0.1.4'
 ```
 
 ## Examples
-Get all users.
+Get all users
 ```Java
 List<User> users = H.<User> request(User.class).list();
 ```
-Getting user with login "my_login".
+Getting a user with a login `my_login`
 ```Java
 final String loginToFind = "my_login";
 User user = H.<User> request(User.class).eq("login", loginToFind).first();
 ```
-#### Partial objects loading
-Get all users, but only with "login" and "id" properties filled (other properties will be null).
+#### A partial objects loading
+Get all users, but only with `login` and `id` properties are filled (other properties will be null).
 ```Java
 List<User> users = H.<User> request(User.class).proj("login").proj("id")
     .transform(User.class).list();
