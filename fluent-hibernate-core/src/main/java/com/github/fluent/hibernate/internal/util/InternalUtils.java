@@ -1,10 +1,13 @@
 package com.github.fluent.hibernate.internal.util;
 
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -34,7 +37,7 @@ public final class InternalUtils {
         try {
             return classToInstantiate.newInstance();
         } catch (Exception ex) {
-            throw new RuntimeException(String.format("Could not instantiate result class: %s",
+            throw new RuntimeException(String.format("Could not instantiate a class: %s",
                     classToInstantiate.getName()), ex);
         }
     }
@@ -52,9 +55,11 @@ public final class InternalUtils {
                 : new RuntimeException(throwable);
     }
 
-    public static class StringUtils {
+    public static final class StringUtils {
 
         public static final String EMPTY = "";
+
+        public static final String[] EMPTY_ARRAY = new String[0];
 
         private StringUtils() {
 
@@ -139,6 +144,11 @@ public final class InternalUtils {
 
         }
 
+        public static String[] splitBySpace(String value) {
+            String result = value == null ? EMPTY : value.trim();
+            return result.length() == 0 ? EMPTY_ARRAY : result.split("\\s+");
+        }
+
     }
 
     public static final class CollectionUtils {
@@ -159,16 +169,43 @@ public final class InternalUtils {
             return array == null || array.length == 0;
         }
 
+        public static <T> List<T> correctToEmpty(List<T> list) {
+            return list == null ? Collections.<T> emptyList() : list;
+        }
+
         public static int size(Collection<?> collection) {
             return collection == null ? 0 : collection.size();
+        }
+
+        public static <T> int size(T[] array) {
+            return array == null ? 0 : array.length;
         }
 
         public static <E> ArrayList<E> newArrayList() {
             return new ArrayList<E>();
         }
 
+        public static <E> ArrayList<E> newArrayListWithCapacity(int size) {
+            return new ArrayList<E>(size);
+        }
+
         public static <K, V> HashMap<K, V> newHashMap() {
             return new HashMap<K, V>();
+        }
+
+        public static <K> HashSet<K> newHashSet() {
+            return new HashSet<K>();
+        }
+
+        public static <T> T[] correctOneNullToEmpty(T[] array) {
+            return size(array) == 1 && array[0] == null ? newArray(array, 0) : array;
+        }
+
+        public static <T> T[] newArray(T[] reference, int length) {
+            Class<?> type = reference.getClass().getComponentType();
+            @SuppressWarnings("unchecked")
+            T[] result = (T[]) Array.newInstance(type, length);
+            return result;
         }
 
     }

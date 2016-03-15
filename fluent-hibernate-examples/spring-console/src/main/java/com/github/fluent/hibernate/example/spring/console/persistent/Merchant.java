@@ -50,11 +50,17 @@ public class Merchant {
         return name;
     }
 
+    /*
     @Embedded
     public Location getLocation() {
         return location;
     }
+     */
 
+    /**
+     *
+     * TODO check primary customers problem.
+     */
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Customer> getPrimaryCustomers() {
         return primaryCustomers;

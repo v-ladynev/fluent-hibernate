@@ -23,7 +23,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "users")
-public class User {
+public class User extends Person {
 
     public static final String LOGIN = "login";
 
@@ -31,15 +31,15 @@ public class User {
 
     private String login;
 
-    private String name;
-
-    private Integer age;
-
     private UserAddress address;
 
     private List<UserFriend> friends = new ArrayList<UserFriend>();
 
     private List<User> goodFriends = new ArrayList<User>();
+
+    public User() {
+        System.out.println("user xxxxxxxxxxxxxxxx");
+    }
 
     @Id
     @GeneratedValue
@@ -53,27 +53,29 @@ public class User {
         return login;
     }
 
-    @Column(name = "f_name")
-    public String getName() {
-        return name;
-    }
-
-    @Column(name = "f_age")
-    public Integer getAge() {
-        return age;
-    }
-
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "f_user_address_pid")
     public UserAddress getAddress() {
         return address;
     }
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(/*mappedBy = "user",*/cascade = CascadeType.ALL, orphanRemoval = true)
+    /*
+    @JoinTable(name = "user_friends", joinColumns = @JoinColumn(name = "f_user_pid",
+            foreignKey = @ForeignKey(name = "fk_user")), inverseJoinColumns = @JoinColumn(
+            name = "fk_friend_pid", foreignKey = @ForeignKey(name = "fk_user_friend")),
+            uniqueConstraints = @UniqueConstraint(name = "friend_unique_key",
+            columnNames = { "f_friend_pid" }))
+     */
+    @JoinColumn(name = "fk_xxx_user")
     public List<UserFriend> getFriends() {
         return friends;
     }
 
+    /*
+        User_f_pid bigint not null,
+        friends_f_pid
+     */
     public void addFriend(UserFriend friend) {
         friend.setUser(this);
         friends.add(friend);
@@ -81,8 +83,8 @@ public class User {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "good_friends", joinColumns = @JoinColumn(name = "fk_user",
-            referencedColumnName = "f_pid"), inverseJoinColumns = @JoinColumn(name = "fk_friend",
-            referencedColumnName = "f_pid"))
+    referencedColumnName = "f_pid"), inverseJoinColumns = @JoinColumn(name = "fk_friend",
+    referencedColumnName = "f_pid"))
     public List<User> getGoodFriends() {
         return goodFriends;
     }
@@ -93,14 +95,6 @@ public class User {
 
     public void setLogin(String login) {
         this.login = login;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
     }
 
     public void setAddress(UserAddress address) {
@@ -117,7 +111,7 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("login = '%s', name = '%s', age = '%d'", login, name, age);
+        return String.format("login = '%s', name = '%s', age = '%d'", login, getName(), getAge());
     }
 
     public static User create(String login, String name, int age) {

@@ -3,10 +3,11 @@ package com.github.fluent.hibernate.example.spring.console.persistent;
 import java.util.UUID;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-//@Entity
+@Entity
 @Table
 public class RegionalArea2 {
 

@@ -2,11 +2,8 @@ package com.github.fluent.hibernate.example.mysql.persistent;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -15,11 +12,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "user_friends")
-public class UserFriend {
+public class UserFriend extends Person {
 
     private Long pid;
-
-    private String name;
 
     private User user;
 
@@ -30,16 +25,13 @@ public class UserFriend {
         return pid;
     }
 
+    /*
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_user")
+    // @JoinColumn(name = "fk_user")
     public User getUser() {
         return user;
     }
-
-    @Column(name = "f_name")
-    public String getName() {
-        return name;
-    }
+     */
 
     public void setPid(Long pid) {
         this.pid = pid;
@@ -47,10 +39,6 @@ public class UserFriend {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public static UserFriend createByName(String name) {

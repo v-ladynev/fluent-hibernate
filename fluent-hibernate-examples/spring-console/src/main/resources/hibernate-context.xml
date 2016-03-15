@@ -17,12 +17,13 @@
         <value>com.github.fluent.hibernate.example.spring.console.persistent</value>
       </list>
     </property>
-
+<!--
     <property name="implicitNamingStrategy">
       <bean class="com.github.fluent.hibernate.strategy.hibernate5.Hibernate5NamingStrategy">
         <property name="tablePrefix" value="spring_" />
       </bean>
     </property>
+-->
   </bean>
 
 <!--

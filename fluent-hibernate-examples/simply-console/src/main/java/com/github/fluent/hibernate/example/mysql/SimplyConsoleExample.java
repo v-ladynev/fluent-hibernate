@@ -34,14 +34,38 @@ public class SimplyConsoleExample {
     }
 
     private void doSomeDatabaseStuff() {
+
         deleteAllUsers();
         insertUsers();
-
-        countUsers();
-        doSomeUserAddressStuff();
         doSomeFriendsStuff();
 
+        deleteFriend();
+
+        /*
+        updateUserAge();
+        countUsers();
+        doSomeUserAddressStuff();
+         */
+
         dealWithGoodFriends();
+
+        /*
+        List<String> rrr = H.<String> request(User.class)
+                .proj(new ConcatProjection("login", "name", "age")).list();
+
+        System.out.println(rrr);
+         */
+    }
+
+    private void updateUserAge() {
+        User user = findUserByLogin(USER_LOGIN_A);
+        System.out.println(String.format("User %s age %d", user.getName(), user.getAge()));
+
+        H.update("update User set age = age + 1 where pid = :userPid").p("userPid", user.getPid())
+        .execute();
+
+        user = findUserByLogin(USER_LOGIN_A);
+        System.out.println(String.format("User %s age %d", user.getName(), user.getAge()));
     }
 
     private void dealWithGoodFriends() {
@@ -79,6 +103,12 @@ public class SimplyConsoleExample {
         List<User> users = H.<User> request(User.class).innerJoin("friends").proj("name")
                 .eq("friends.name", "John").transform(User.class).list();
         LOG.info(String.format("Users with friends: %s", users));
+    }
+
+    private void deleteFriend() {
+        User user = getUserWithFriends(USER_LOGIN_A);
+        user.getFriends().remove(0);
+        H.saveOrUpdate(user);
     }
 
     private void doSomeUserAddressStuff() {
