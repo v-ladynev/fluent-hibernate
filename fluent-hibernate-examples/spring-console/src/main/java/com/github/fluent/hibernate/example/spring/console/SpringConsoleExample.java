@@ -10,8 +10,6 @@ import org.springframework.util.Assert;
 import com.github.fluent.hibernate.H;
 import com.github.fluent.hibernate.example.spring.console.persistent.Customer;
 import com.github.fluent.hibernate.example.spring.console.persistent.Merchant;
-import com.github.fluent.hibernate.example.spring.console.persistent.RegionalCountry;
-import com.github.fluent.hibernate.example.spring.console.persistent.Student;
 import com.github.fluent.hibernate.example.spring.console.persistent.Transaction;
 import com.github.fluent.hibernate.factory.HibernateSessionFactory;
 
@@ -33,66 +31,12 @@ public class SpringConsoleExample {
     }
 
     private void doSomeDatabaseStuff() {
-        Student a = H.save(new Student("John"));
-        Student b = H.save(new Student("Kelly"));
-        H.save(new Student("Mary"));
-
-        b.getFriends().add(a);
-        H.saveOrUpdate(b);
-
-        Student x = H.getById(Student.class, b.getId());
-        System.out.println(x.getFriends().get(0).getName());
-
         /*
                 dealWithTaransactions();
                 dealWithMerchantsAndCustomers();
 
                 dealWithCheck();
          */
-        /*
-                final UserDetails user = new UserDetails();
-                final UserDetails user2 = new UserDetails();
-                user.setUserName("Faisal");
-                user2.setUserName("Raza");
-
-                final Vehicle vehicle = new Vehicle();
-                final Vehicle vehicle2 = new Vehicle();
-                final Vehicle vehicle3 = new Vehicle();
-
-                vehicle.setVehicleName("Bullet ThunderBird");
-                vehicle2.setVehicleName("yamaha");
-                vehicle3.setVehicleName("bullet");
-
-                // Didirectional relationship
-                user.getVehicle().add(vehicle);
-                vehicle.getUserList().add(user);
-
-                user.getVehicle().add(vehicle2);
-                vehicle2.getUserList().add(user);
-
-                user2.getVehicle().add(vehicle3);
-                vehicle3.getUserList().add(user2);
-
-                HibernateSessionFactory.doInTransaction(new IRequest<Void>() {
-                    @Override
-                    public Void doInTransaction(Session session) {
-                        session.save(user);
-                        session.save(user2);
-
-                        session.save(vehicle);
-                        session.save(vehicle2);
-                        session.save(vehicle3);
-
-                        return null;
-                    }
-
-                });
-         */
-    }
-
-    private void dealWithCheck() {
-        List<RegionalCountry> list = H.<RegionalCountry> request(RegionalCountry.class)
-                .eq("countryCode", "xxx").list();
     }
 
     private void dealWithMerchantsAndCustomers() {

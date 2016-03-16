@@ -38,6 +38,8 @@ public class Merchant {
 
     private Location firstPartnerLocation;
 
+    private List<Merchant> partners = new ArrayList<Merchant>();
+
     @Id
     @GeneratedValue
     @Column
@@ -50,12 +52,10 @@ public class Merchant {
         return name;
     }
 
-    /*
     @Embedded
     public Location getLocation() {
         return location;
     }
-     */
 
     /**
      *
@@ -79,6 +79,11 @@ public class Merchant {
     @Embedded
     public Location getFirstPartnerLocation() {
         return firstPartnerLocation;
+    }
+
+    @ManyToMany
+    public List<Merchant> getPartners() {
+        return partners;
     }
 
     public void setPid(Long pid) {
@@ -107,6 +112,10 @@ public class Merchant {
 
     public void setFirstPartnerLocation(Location firstPartnerLocation) {
         this.firstPartnerLocation = firstPartnerLocation;
+    }
+
+    public void setPartners(List<Merchant> partners) {
+        this.partners = partners;
     }
 
     public static Merchant create(String name) {
