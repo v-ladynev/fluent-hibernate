@@ -1,9 +1,11 @@
-package com.github.fluent.hibernate.strategy;
+package com.github.fluent.hibernate.cfg.strategy;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import com.github.fluent.hibernate.cfg.strategy.HibernateNamingStrategy;
 
 /**
  *

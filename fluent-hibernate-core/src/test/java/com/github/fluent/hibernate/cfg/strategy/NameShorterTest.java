@@ -1,14 +1,16 @@
-package com.github.fluent.hibernate.strategy;
+package com.github.fluent.hibernate.cfg.strategy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
+import com.github.fluent.hibernate.cfg.strategy.NameShorter;
+
 /**
  *
  * @author V.Ladynev
  */
-public class ChuckTest {
+public class NameShorterTest {
 
     @Test
     public void tableName() {
@@ -23,8 +25,8 @@ public class ChuckTest {
                 "merchants_friends");
     }
 
-    private Chuck create(int maxLength, boolean dontTouchFirst) {
-        return new Chuck(maxLength, dontTouchFirst);
+    private NameShorter create(int maxLength, boolean dontTouchFirst) {
+        return new NameShorter(maxLength, dontTouchFirst);
     }
 
 }

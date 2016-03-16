@@ -1,12 +1,12 @@
-package com.github.fluent.hibernate.strategy.hibernate4;
+package com.github.fluent.hibernate.cfg.strategy.hibernate4;
 
 import org.hibernate.cfg.ImprovedNamingStrategy;
 
+import com.github.fluent.hibernate.cfg.strategy.HibernateNamingStrategy;
+import com.github.fluent.hibernate.cfg.strategy.JoinTableNames;
+import com.github.fluent.hibernate.cfg.strategy.NamingStrategyUtils;
+import com.github.fluent.hibernate.cfg.strategy.JoinTableNames.TableDescription;
 import com.github.fluent.hibernate.internal.util.InternalUtils;
-import com.github.fluent.hibernate.strategy.HibernateNamingStrategy;
-import com.github.fluent.hibernate.strategy.JoinTableNames;
-import com.github.fluent.hibernate.strategy.JoinTableNames.TableDescription;
-import com.github.fluent.hibernate.strategy.NamingStrategyUtils;
 
 /**
  * A naming strategy for Hibernate 4.

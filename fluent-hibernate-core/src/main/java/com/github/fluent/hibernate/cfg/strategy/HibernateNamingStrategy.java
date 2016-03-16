@@ -1,9 +1,9 @@
-package com.github.fluent.hibernate.strategy;
+package com.github.fluent.hibernate.cfg.strategy;
 
+import static com.github.fluent.hibernate.cfg.strategy.NamingStrategyUtils.concat;
+import static com.github.fluent.hibernate.cfg.strategy.NamingStrategyUtils.propertyToName;
+import static com.github.fluent.hibernate.cfg.strategy.NamingStrategyUtils.propertyToPluralizedName;
 import static com.github.fluent.hibernate.internal.util.InternalUtils.StringUtils.joinWithSpace;
-import static com.github.fluent.hibernate.strategy.NamingStrategyUtils.concat;
-import static com.github.fluent.hibernate.strategy.NamingStrategyUtils.propertyToName;
-import static com.github.fluent.hibernate.strategy.NamingStrategyUtils.propertyToPluralizedName;
 
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 
@@ -51,7 +51,7 @@ public class HibernateNamingStrategy {
         String result = addTablePrefix(propertyToPluralizedName(className));
 
         if (needRestrict(restrictTableNames)) {
-            return assertName(new Chuck(maxLength, hasTablePrefix).tableName(result), className,
+            return assertName(new NameShorter(maxLength, hasTablePrefix).tableName(result), className,
                     "@Table(name=\"prefix_table_name\")");
         }
 
@@ -63,7 +63,7 @@ public class HibernateNamingStrategy {
 
         if (needRestrict(restrictColumnNames)) {
             final boolean dontTouchFirst = true;
-            return assertName(new Chuck(maxLength, dontTouchFirst).columnName(result),
+            return assertName(new NameShorter(maxLength, dontTouchFirst).columnName(result),
                     propertyName, "@Column(name=\"f_column_name\")");
         }
 
@@ -76,7 +76,7 @@ public class HibernateNamingStrategy {
 
         if (needRestrict(restrictEmbeddedColumnNames)) {
             final boolean dontTouchFirst = true;
-            return assertName(new Chuck(maxLength, dontTouchFirst).embeddedColumnName(result),
+            return assertName(new NameShorter(maxLength, dontTouchFirst).embeddedColumnName(result),
                     joinWithSpace(propertyName, embeddedPropertyName),
                     "@AttributeOverrides({@AttributeOverride(name=\"propertyName\", "
                             + "column=@Column(\"f_column_name\"))");
@@ -100,7 +100,7 @@ public class HibernateNamingStrategy {
         result = addTablePrefix(result);
 
         if (needRestrict(restrictJoinTableNames)) {
-            return assertName(new Chuck(maxLength, hasTablePrefix).joinTableName(result),
+            return assertName(new NameShorter(maxLength, hasTablePrefix).joinTableName(result),
                     joinWithSpace(ownerEntityTable, associatedEntityTable, ownerProperty),
                     "@JoinTable(name=\"prefix_join_table_name\")");
         }
@@ -125,7 +125,7 @@ public class HibernateNamingStrategy {
 
         if (needRestrict(restrictColumnNames)) {
             final boolean dontTouchFirst = true;
-            return assertName(new Chuck(maxLength, dontTouchFirst).columnName(result),
+            return assertName(new NameShorter(maxLength, dontTouchFirst).columnName(result),
                     joinWithSpace(propertyTableName, propertyName), "@JoinColumn(name=\"fk_name\")");
         }
 
@@ -137,7 +137,7 @@ public class HibernateNamingStrategy {
 
         if (needRestrict(resrictConstraintNames)) {
             final boolean dontTouchFirst = true;
-            return assertName(new Chuck(maxLength, dontTouchFirst).constraintName(result),
+            return assertName(new NameShorter(maxLength, dontTouchFirst).constraintName(result),
                     joinWithSpace(tableName, columnName), "@ForeignKey(name=\"fk_name\")");
         }
 
@@ -150,7 +150,7 @@ public class HibernateNamingStrategy {
 
         if (needRestrict(resrictConstraintNames)) {
             final boolean dontTouchFirst = true;
-            return assertName(new Chuck(maxLength, dontTouchFirst).constraintName(result),
+            return assertName(new NameShorter(maxLength, dontTouchFirst).constraintName(result),
                     joinWithSpace(tableName, columnName),
                     "@UniqueConstraint (if it is appropriate)");
         }

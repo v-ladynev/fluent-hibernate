@@ -1,10 +1,10 @@
-package com.github.fluent.hibernate.strategy;
+package com.github.fluent.hibernate.cfg.strategy;
 
 /**
  *
  * @author V.Ladynev
  */
-public class Chuck {
+class NameShorter {
 
     private final int maxLength;
 
@@ -12,7 +12,7 @@ public class Chuck {
 
     private int currentToRemove;
 
-    public Chuck(int maxLength, boolean dontTouchFirst) {
+    public NameShorter(int maxLength, boolean dontTouchFirst) {
         this.maxLength = maxLength;
         this.dontTouchFirst = dontTouchFirst;
     }

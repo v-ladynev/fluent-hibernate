@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate.strategy.hibernate5;
+package com.github.fluent.hibernate.cfg.strategy.hibernate5;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -16,11 +16,11 @@ import org.hibernate.boot.model.source.spi.AttributePath;
 import org.hibernate.cfg.Ejb3Column;
 import org.hibernate.cfg.PropertyHolder;
 
+import com.github.fluent.hibernate.cfg.strategy.HibernateNamingStrategy;
+import com.github.fluent.hibernate.cfg.strategy.JoinTableNames;
+import com.github.fluent.hibernate.cfg.strategy.NamingStrategyUtils;
+import com.github.fluent.hibernate.cfg.strategy.JoinTableNames.TableDescription;
 import com.github.fluent.hibernate.internal.util.InternalUtils;
-import com.github.fluent.hibernate.strategy.HibernateNamingStrategy;
-import com.github.fluent.hibernate.strategy.JoinTableNames;
-import com.github.fluent.hibernate.strategy.JoinTableNames.TableDescription;
-import com.github.fluent.hibernate.strategy.NamingStrategyUtils;
 
 /**
  * A naming strategy for Hibernate 5.

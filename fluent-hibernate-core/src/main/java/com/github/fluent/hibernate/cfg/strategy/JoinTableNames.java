@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate.strategy;
+package com.github.fluent.hibernate.cfg.strategy;
 
 import static com.github.fluent.hibernate.internal.util.InternalUtils.equal;
 

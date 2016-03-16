@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate.strategy;
+package com.github.fluent.hibernate.cfg.strategy;
 
 import java.util.Locale;
 import java.util.regex.Pattern;

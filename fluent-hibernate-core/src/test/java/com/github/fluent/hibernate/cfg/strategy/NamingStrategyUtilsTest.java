@@ -1,6 +1,6 @@
-package com.github.fluent.hibernate.strategy;
+package com.github.fluent.hibernate.cfg.strategy;
 
-import static com.github.fluent.hibernate.strategy.NamingStrategyUtils.removeVowelsSmart;
+import static com.github.fluent.hibernate.cfg.strategy.NamingStrategyUtils.removeVowelsSmart;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
