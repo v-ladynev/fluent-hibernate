@@ -28,7 +28,7 @@ public class HibernateNamingStrategy {
 
     private boolean hasTablePrefix;
 
-    // private final int maxLength = 18;
+    // private final int maxLength = 25;
 
     private final int maxLength = 0;
 
@@ -51,8 +51,8 @@ public class HibernateNamingStrategy {
         String result = addTablePrefix(propertyToPluralizedName(className));
 
         if (needRestrict(restrictTableNames)) {
-            return assertName(new NameShorter(maxLength, hasTablePrefix).tableName(result), className,
-                    "@Table(name=\"prefix_table_name\")");
+            return assertName(new NameShorter(maxLength, hasTablePrefix).tableName(result),
+                    className, "@Table(name=\"prefix_table_name\")");
         }
 
         return result;
@@ -76,7 +76,8 @@ public class HibernateNamingStrategy {
 
         if (needRestrict(restrictEmbeddedColumnNames)) {
             final boolean dontTouchFirst = true;
-            return assertName(new NameShorter(maxLength, dontTouchFirst).embeddedColumnName(result),
+            return assertName(
+                    new NameShorter(maxLength, dontTouchFirst).embeddedColumnName(result),
                     joinWithSpace(propertyName, embeddedPropertyName),
                     "@AttributeOverrides({@AttributeOverride(name=\"propertyName\", "
                             + "column=@Column(\"f_column_name\"))");

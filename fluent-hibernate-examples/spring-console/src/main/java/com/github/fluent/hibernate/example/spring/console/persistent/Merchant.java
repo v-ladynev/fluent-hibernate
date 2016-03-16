@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.github.fluent.hibernate.annotations.FluentName;
+
 /**
  *
  * @author V.Ladynev
@@ -77,6 +79,7 @@ public class Merchant {
     }
 
     @Embedded
+    @FluentName(prefix = "fpl")
     public Location getFirstPartnerLocation() {
         return firstPartnerLocation;
     }

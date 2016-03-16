@@ -1,6 +1,7 @@
 package com.github.fluent.hibernate.cfg.strategy.hibernate5;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import org.hibernate.boot.model.naming.EntityNaming;
@@ -15,11 +16,13 @@ import org.hibernate.boot.model.naming.ImplicitUniqueKeyNameSource;
 import org.hibernate.boot.model.source.spi.AttributePath;
 import org.hibernate.cfg.Ejb3Column;
 import org.hibernate.cfg.PropertyHolder;
+import org.hibernate.internal.util.ReflectHelper;
 
+import com.github.fluent.hibernate.annotations.FluentName;
 import com.github.fluent.hibernate.cfg.strategy.HibernateNamingStrategy;
 import com.github.fluent.hibernate.cfg.strategy.JoinTableNames;
-import com.github.fluent.hibernate.cfg.strategy.NamingStrategyUtils;
 import com.github.fluent.hibernate.cfg.strategy.JoinTableNames.TableDescription;
+import com.github.fluent.hibernate.cfg.strategy.NamingStrategyUtils;
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 
 /**
@@ -65,12 +68,22 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
         if (isEmbeddedColumn(source)) {
             String propertyName = getPropertyName(attributePath.getParent());
             String embeddedPropertyName = getPropertyName(attributePath);
+
+            System.out.println(getEmbeddedPrefix(source));
+
             return toIdentifier(
                     strategy.embeddedPropertyToColumnName(propertyName, embeddedPropertyName),
                     source);
         }
 
+        /*
+         'firstPartnerLocation'. Result 'f_frst_p
+        rtnr_lction' is too long. Use '@Column(name="f_column_name")' to hardcode the name
+         */
+
         String propertyName = getPropertyName(attributePath);
+
+        // Hibernate calls this for @Embedded column, but doesn't use
         return toIdentifier(strategy.propertyToColumnName(propertyName), source);
     }
 
@@ -83,6 +96,30 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
         Ejb3Column column = getEjb3Column(source);
         PropertyHolder propertyHolder = column.getPropertyHolder();
         return propertyHolder.isComponent();
+    }
+
+    private String getEmbeddedPrefix(ImplicitBasicColumnNameSource source) {
+        Ejb3Column column = getEjb3Column(source);
+
+        String propertyName = getPropertyName(source.getAttributePath().getParent());
+        try {
+
+            Class<?> mappedClass = column.getPropertyHolder().getPersistentClass().getMappedClass();
+
+            Method getter = ReflectHelper.findGetterMethod(mappedClass, propertyName);
+
+            FluentName annotation = getter.getAnnotation(FluentName.class);
+
+            if (annotation != null) {
+                return annotation.prefix();
+            } else {
+                return null;
+            }
+
+        } catch (Exception ex) {
+            return null;
+        }
+
     }
 
     private Ejb3Column getEjb3Column(ImplicitBasicColumnNameSource source) {
