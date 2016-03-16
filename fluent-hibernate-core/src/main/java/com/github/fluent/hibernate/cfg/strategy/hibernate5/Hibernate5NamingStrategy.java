@@ -66,20 +66,19 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
         }
 
         if (isEmbeddedColumn(source)) {
-            String propertyName = getPropertyName(attributePath.getParent());
+
             String embeddedPropertyName = getPropertyName(attributePath);
 
-            System.out.println(getEmbeddedPrefix(source));
+            String embeddedPrefix = getEmbeddedPrefix(source);
 
-            return toIdentifier(
-                    strategy.embeddedPropertyToColumnName(propertyName, embeddedPropertyName),
-                    source);
+            boolean hasEmbeddedPrefix = !InternalUtils.StringUtils.isEmpty(embeddedPrefix);
+
+            String prefix = hasEmbeddedPrefix ? embeddedPrefix : getPropertyName(attributePath
+                    .getParent());
+
+            return toIdentifier(strategy.embeddedPropertyToColumnName(prefix, embeddedPropertyName,
+                    hasEmbeddedPrefix), source);
         }
-
-        /*
-         'firstPartnerLocation'. Result 'f_frst_p
-        rtnr_lction' is too long. Use '@Column(name="f_column_name")' to hardcode the name
-         */
 
         String propertyName = getPropertyName(attributePath);
 

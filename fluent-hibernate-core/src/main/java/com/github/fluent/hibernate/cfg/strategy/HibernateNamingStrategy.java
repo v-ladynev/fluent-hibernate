@@ -28,9 +28,9 @@ public class HibernateNamingStrategy {
 
     private boolean hasTablePrefix;
 
-    // private final int maxLength = 25;
+    private final int maxLength = 25;
 
-    private final int maxLength = 0;
+    // private final int maxLength = 0;
 
     private final boolean restrictTableNames = true;
 
@@ -70,20 +70,31 @@ public class HibernateNamingStrategy {
         return result;
     }
 
-    public String embeddedPropertyToColumnName(String propertyName, String embeddedPropertyName) {
-        String result = COLUMN_NAME_PREFIX
-                + concat(propertyToName(propertyName), propertyToName(embeddedPropertyName));
+    public String embeddedPropertyToColumnName(String prefix, String embeddedPropertyName,
+            boolean dontTouchPrefix) {
+        String fullPrefix = COLUMN_NAME_PREFIX
+                + (dontTouchPrefix ? prefix : propertyToName(prefix));
+        String columnPostfix = propertyToName(embeddedPropertyName);
+        String column = concat(fullPrefix, columnPostfix);
 
-        if (needRestrict(restrictEmbeddedColumnNames)) {
-            final boolean dontTouchFirst = true;
-            return assertName(
-                    new NameShorter(maxLength, dontTouchFirst).embeddedColumnName(result),
-                    joinWithSpace(propertyName, embeddedPropertyName),
-                    "@AttributeOverrides({@AttributeOverride(name=\"propertyName\", "
-                            + "column=@Column(\"f_column_name\"))");
+        if (!needRestrict(restrictEmbeddedColumnNames)) {
+            return column;
         }
 
-        return result;
+        String result = null;
+        if (dontTouchPrefix) {
+            final boolean dontTouchFirst = false;
+            result = concat(fullPrefix, new NameShorter(maxLength - fullPrefix.length(),
+                    dontTouchFirst).embeddedColumnName(columnPostfix));
+        } else {
+            final boolean dontTouchFirst = true;
+            result = new NameShorter(maxLength, dontTouchFirst).embeddedColumnName(column);
+        }
+
+        return assertName(result, joinWithSpace(prefix, embeddedPropertyName),
+                "@AttributeOverrides({@AttributeOverride(name=\"propertyName\", "
+                        + "column=@Column(\"f_column_name\"))");
+
     }
 
     public String joinTableName(String ownerEntityTable, String associatedEntityTable) {
