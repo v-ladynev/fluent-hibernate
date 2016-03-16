@@ -58,12 +58,9 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
         }
 
         AttributePath attributePath = source.getAttributePath();
+        String propertyName = getPropertyName(attributePath);
 
-        // System.out.println(attributePath);
-
-        if (attributePath.getFullPath().equals("friends.element")) {
-            // System.out.println("xxx");
-        }
+        Method propertyGetter = getPropertyGetter(source, propertyName);
 
         if (isEmbeddedColumn(source)) {
 
@@ -80,7 +77,11 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
                     hasEmbeddedPrefix), source);
         }
 
-        String propertyName = getPropertyName(attributePath);
+        if (propertyName.equals("firstPartnerLocation")) {
+
+        }
+
+        System.out.println(propertyName);
 
         // Hibernate calls this for @Embedded column, but doesn't use
         return toIdentifier(strategy.propertyToColumnName(propertyName), source);
@@ -97,6 +98,7 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
         return propertyHolder.isComponent();
     }
 
+    // TODO check a field annotation
     private String getEmbeddedPrefix(ImplicitBasicColumnNameSource source) {
         Ejb3Column column = getEjb3Column(source);
 
@@ -119,6 +121,12 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
             return null;
         }
 
+    }
+
+    private Method getPropertyGetter(ImplicitBasicColumnNameSource source, String propertyName) {
+        Ejb3Column column = getEjb3Column(source);
+        Class<?> mappedClass = column.getPropertyHolder().getPersistentClass().getMappedClass();
+        return ReflectHelper.findGetterMethod(mappedClass, propertyName);
     }
 
     private Ejb3Column getEjb3Column(ImplicitBasicColumnNameSource source) {

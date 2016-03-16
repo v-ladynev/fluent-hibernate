@@ -28,19 +28,19 @@ public class HibernateNamingStrategy {
 
     private boolean hasTablePrefix;
 
-    private final int maxLength = 25;
+    // private final int maxLength = 16;
 
-    // private final int maxLength = 0;
+    private final int maxLength = 0;
 
-    private final boolean restrictTableNames = true;
+    private final boolean restrictTableNames = false;
 
     private final boolean restrictColumnNames = true;
 
     private final boolean restrictEmbeddedColumnNames = true;
 
-    private final boolean restrictJoinTableNames = true;
+    private final boolean restrictJoinTableNames = false;
 
-    private final boolean resrictConstraintNames = true;
+    private final boolean resrictConstraintNames = false;
 
     public void setTablePrefix(String tablePrefix) {
         this.tablePrefix = tablePrefix;
