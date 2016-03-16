@@ -22,9 +22,7 @@ public class FluentHibernateResultTransformer extends BasicTransformerAdapter {
 
     @Override
     public Object transformTuple(Object[] tuple, String[] aliases) {
-        if (setters == null) {
-            setters = createSetters(resultClass, aliases);
-        }
+        createCachedSetters(resultClass, aliases);
 
         Object result = InternalUtils.newInstance(resultClass);
 
@@ -33,6 +31,12 @@ public class FluentHibernateResultTransformer extends BasicTransformerAdapter {
         }
 
         return result;
+    }
+
+    private void createCachedSetters(Class<?> resultClass, String[] aliases) {
+        if (setters == null) {
+            setters = createSetters(resultClass, aliases);
+        }
     }
 
     private static Setter[] createSetters(Class<?> resultClass, String[] aliases) {

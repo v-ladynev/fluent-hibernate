@@ -3,11 +3,12 @@ package com.github.fluent.hibernate.internal.transformer;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import org.hibernate.HibernateException;
 import org.hibernate.PropertyNotFoundException;
-import org.hibernate.internal.util.ReflectHelper;
 
 /**
  * Accesses setter of property by reflection magic.
@@ -19,13 +20,11 @@ class SetterAccessor {
 
     private static final String SPLITTER_REG_EX = "\\.";
 
-    @SuppressWarnings("rawtypes")
-    public Setter getSetter(Class theClass, String propertyName) {
+    public Setter getSetter(Class<?> theClass, String propertyName) {
         return createSetter(theClass, propertyName);
     }
 
-    @SuppressWarnings("rawtypes")
-    private static Setter createSetter(Class theClass, String propertyName) {
+    private static Setter createSetter(Class<?> theClass, String propertyName) {
         Setter result = getSetterOrNull(theClass, propertyName);
         if (result == null) {
             throw new PropertyNotFoundException(String.format(
@@ -35,8 +34,7 @@ class SetterAccessor {
         return result;
     }
 
-    @SuppressWarnings("rawtypes")
-    private static Setter getSetterOrNull(Class theClass, String propertyName) {
+    private static Setter getSetterOrNull(Class<?> theClass, String propertyName) {
         if (theClass == Object.class || theClass == null) {
             return null;
         }
@@ -45,7 +43,7 @@ class SetterAccessor {
 
         Method[] getMethods = new Method[pNames.length - 1];
         Method[] setMethods = new Method[pNames.length - 1];
-        Class tmpClass = theClass;
+        Class<?> tmpClass = theClass;
         for (int i = 0; i < getMethods.length; i++) {
             getMethods[i] = getterMethod(tmpClass, pNames[i]);
             setMethods[i] = setterMethod(tmpClass, pNames[i]);
@@ -58,14 +56,12 @@ class SetterAccessor {
 
         Method method = setterMethod(tmpClass, pNames[pNames.length - 1]);
         if (method != null) {
-            if (!ReflectHelper.isPublic(theClass, method)) {
-                method.setAccessible(true);
-            }
+            makePublic(theClass, method);
             return new Setter(theClass, getMethods, setMethods, method, propertyName);
         }
         Setter setter = getSetterOrNull(theClass.getSuperclass(), propertyName);
         if (setter == null) {
-            Class[] interfaces = theClass.getInterfaces();
+            Class<?>[] interfaces = theClass.getInterfaces();
             for (int i = 0; setter == null && i < interfaces.length; i++) {
                 setter = getSetterOrNull(interfaces[i], propertyName);
             }
@@ -74,10 +70,9 @@ class SetterAccessor {
 
     }
 
-    @SuppressWarnings("rawtypes")
-    private static Method setterMethod(Class theClass, String propertyName) {
+    private static Method setterMethod(Class<?> theClass, String propertyName) {
         Getter getter = getGetterOrNull(theClass, propertyName);
-        Class returnType = getter == null ? null : getter.getReturnType();
+        Class<?> returnType = getter == null ? null : getter.getReturnType();
 
         PropertyDescriptor[] descriptors = getPropertyDescriptors(theClass);
 
@@ -101,9 +96,7 @@ class SetterAccessor {
         return potentialSetter;
     }
 
-    @SuppressWarnings("rawtypes")
-    private static Getter getGetterOrNull(Class theClass, String propertyName) {
-
+    private static Getter getGetterOrNull(Class<?> theClass, String propertyName) {
         if (theClass == Object.class || theClass == null) {
             return null;
         }
@@ -111,14 +104,13 @@ class SetterAccessor {
         Method method = getterMethod(theClass, propertyName);
 
         if (method != null) {
-            if (!ReflectHelper.isPublic(theClass, method)) {
-                method.setAccessible(true);
-            }
+            makePublic(theClass, method);
             return new Getter(method);
         }
+
         Getter getter = getGetterOrNull(theClass.getSuperclass(), propertyName);
         if (getter == null) {
-            Class[] interfaces = theClass.getInterfaces();
+            Class<?>[] interfaces = theClass.getInterfaces();
             for (int i = 0; getter == null && i < interfaces.length; i++) {
                 getter = getGetterOrNull(interfaces[i], propertyName);
             }
@@ -126,8 +118,17 @@ class SetterAccessor {
         return getter;
     }
 
-    @SuppressWarnings("rawtypes")
-    private static Method getterMethod(Class theClass, String propertyName) {
+    private static void makePublic(Class<?> clazz, Method method) {
+        if (!isPublic(clazz, method)) {
+            method.setAccessible(true);
+        }
+    }
+
+    private static boolean isPublic(Class<?> clazz, Member member) {
+        return Modifier.isPublic(member.getModifiers()) && Modifier.isPublic(clazz.getModifiers());
+    }
+
+    private static Method getterMethod(Class<?> theClass, String propertyName) {
         PropertyDescriptor[] descriptors = getPropertyDescriptors(theClass);
 
         for (PropertyDescriptor descriptor : descriptors) {
