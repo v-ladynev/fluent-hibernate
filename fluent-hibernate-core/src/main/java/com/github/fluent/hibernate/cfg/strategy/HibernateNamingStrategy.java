@@ -28,7 +28,7 @@ public class HibernateNamingStrategy {
 
     private boolean hasTablePrefix;
 
-    // private final int maxLength = 16;
+    // private final int maxLength = 19;
 
     private final int maxLength = 0;
 

@@ -4,8 +4,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import javax.persistence.Embedded;
-
 import org.hibernate.boot.model.naming.EntityNaming;
 import org.hibernate.boot.model.naming.Identifier;
 import org.hibernate.boot.model.naming.ImplicitBasicColumnNameSource;
@@ -60,38 +58,52 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
 
         AttributePath attributePath = source.getAttributePath();
         String propertyName = getPropertyName(attributePath);
+        String parentPropertyName = getPropertyName(attributePath.getParent());
 
-        Method propertyGetter = getPropertyGetter(source, propertyName);
+        Ejb3Column column = getEjb3Column(source);
 
-        // Hibernate calls this method the first time for @Embedded column, but doesn't use a result
-        if (propertyGetter.isAnnotationPresent(Embedded.class)) {
-            String embeddedPropertyName = getPropertyName(attributePath);
-            String embeddedPrefix = getEmbeddedPrefix(propertyGetter);
+        if (isEmbedded(column)) {
+            String embeddedPrefix = getEmbeddedPrefix(column, parentPropertyName);
 
             boolean hasEmbeddedPrefix = !InternalUtils.StringUtils.isEmpty(embeddedPrefix);
-            String prefix = hasEmbeddedPrefix ? embeddedPrefix : getPropertyName(attributePath
-                    .getParent());
+            String prefix = hasEmbeddedPrefix ? embeddedPrefix : parentPropertyName;
 
-            return toIdentifier(strategy.embeddedPropertyToColumnName(prefix, embeddedPropertyName,
-                    hasEmbeddedPrefix), source);
+            return toIdentifier(
+                    strategy.embeddedPropertyToColumnName(prefix, propertyName, hasEmbeddedPrefix),
+                    source);
         }
 
+        // Hibernate calls this method the first time for @Embedded column, but doesn't use a result
         return toIdentifier(strategy.propertyToColumnName(propertyName), source);
     }
 
-    private static String getEmbeddedPrefix(Method getter) {
+    private static String getEmbeddedPrefix(Ejb3Column column, String propertyName) {
+        Method getter = getPropertyGetter(column, propertyName);
+
+        if (getter == null) {
+            return null;
+        }
+
         FluentName annotation = getter.getAnnotation(FluentName.class);
         return annotation == null ? null : annotation.prefix();
     }
 
     // TODO check a field annotation
-    private Method getPropertyGetter(ImplicitBasicColumnNameSource source, String propertyName) {
-        Ejb3Column column = getEjb3Column(source);
-        Class<?> mappedClass = column.getPropertyHolder().getPersistentClass().getMappedClass();
-        return ReflectHelper.findGetterMethod(mappedClass, propertyName);
+    private static Method getPropertyGetter(Ejb3Column column, String propertyName) {
+        try {
+            Class<?> mappedClass = column.getPropertyHolder().getPersistentClass().getMappedClass();
+            return ReflectHelper.findGetterMethod(mappedClass, propertyName);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 
-    private Ejb3Column getEjb3Column(ImplicitBasicColumnNameSource source) {
+    private static boolean isEmbedded(Ejb3Column column) {
+        return column.getPropertyHolder().isComponent();
+    }
+
+    private static Ejb3Column getEjb3Column(ImplicitBasicColumnNameSource source) {
         try {
             Field ejb3ColumnField = source.getClass().getDeclaredField("this$0");
             ejb3ColumnField.setAccessible(true);
