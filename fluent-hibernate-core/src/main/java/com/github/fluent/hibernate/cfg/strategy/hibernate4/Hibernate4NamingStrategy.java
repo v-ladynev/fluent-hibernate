@@ -6,6 +6,7 @@ import com.github.fluent.hibernate.cfg.strategy.HibernateNamingStrategy;
 import com.github.fluent.hibernate.cfg.strategy.JoinTableNames;
 import com.github.fluent.hibernate.cfg.strategy.JoinTableNames.TableDescription;
 import com.github.fluent.hibernate.cfg.strategy.NamingStrategyUtils;
+import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 
 /**
@@ -17,9 +18,17 @@ public class Hibernate4NamingStrategy extends ImprovedNamingStrategy {
 
     private static final long serialVersionUID = -7668259354481970558L;
 
-    private final HibernateNamingStrategy strategy = new HibernateNamingStrategy();
+    private final HibernateNamingStrategy strategy;
 
     private final JoinTableNames joinTableNames = new JoinTableNames();
+
+    public Hibernate4NamingStrategy() {
+        this(new StrategyOptions());
+    }
+
+    public Hibernate4NamingStrategy(StrategyOptions options) {
+        strategy = new HibernateNamingStrategy(options);
+    }
 
     public void setTablePrefix(String tablePrefix) {
         strategy.getOptions().setTablePrefix(tablePrefix);
@@ -45,9 +54,9 @@ public class Hibernate4NamingStrategy extends ImprovedNamingStrategy {
         String result = joinTableNames.hasSameNameForOtherProperty(tableName, description) ? strategy
                 .joinTableName(ownerEntityTable, associatedEntityTable, propertyName) : tableName;
 
-                joinTableNames.put(result, description);
+        joinTableNames.put(result, description);
 
-                return result;
+        return result;
     }
 
     @Override

@@ -11,6 +11,7 @@ import org.hibernate.cfg.AvailableSettings;
 
 import com.github.fluent.hibernate.IRequest;
 import com.github.fluent.hibernate.IStatelessRequest;
+import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 
 /**
@@ -185,6 +186,16 @@ public final class HibernateSessionFactory {
 
         public Builder password(String password) {
             properties.put(AvailableSettings.PASS, password);
+            return this;
+        }
+
+        public Builder useNamingStrategy() {
+            configurationBuilder.useNamingStrategy();
+            return this;
+        }
+
+        public Builder useNamingStrategy(StrategyOptions options) {
+            configurationBuilder.useNamingStrategy(options);
             return this;
         }
 

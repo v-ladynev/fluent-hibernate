@@ -6,6 +6,7 @@ import java.util.List;
 import org.jboss.logging.Logger;
 
 import com.github.fluent.hibernate.H;
+import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
 import com.github.fluent.hibernate.example.mysql.persistent.User;
 import com.github.fluent.hibernate.example.mysql.persistent.UserAddress;
 import com.github.fluent.hibernate.example.mysql.persistent.UserFriend;
@@ -25,9 +26,14 @@ public class SimplyConsoleExample {
 
     public static void main(String[] args) {
         try {
+            final String packageToScan = "com.github.fluent.hibernate.example.mysql.persistent";
+            StrategyOptions options = StrategyOptions.builder().restrictLength(30)
+                    .restrictConstraintNames(false).build();
+
             HibernateSessionFactory.Builder.configureWithoutHibernateCfgXml()
-            .packagesToScan("com.github.fluent.hibernate.example.mysql.persistent")
+                    .packagesToScan(packageToScan).useNamingStrategy(options)
                     .createSessionFactory();
+
             new SimplyConsoleExample().doSomeDatabaseStuff();
         } finally {
             HibernateSessionFactory.closeSessionFactory();
@@ -35,14 +41,14 @@ public class SimplyConsoleExample {
     }
 
     private void doSomeDatabaseStuff() {
-
+        /*
         deleteAllUsers();
         insertUsers();
         doSomeFriendsStuff();
 
         deleteFriend();
 
-        /*
+
         updateUserAge();
         countUsers();
         doSomeUserAddressStuff();
@@ -63,7 +69,7 @@ public class SimplyConsoleExample {
         System.out.println(String.format("User %s age %d", user.getName(), user.getAge()));
 
         H.update("update User set age = age + 1 where pid = :userPid").p("userPid", user.getPid())
-        .execute();
+                .execute();
 
         user = findUserByLogin(USER_LOGIN_A);
         System.out.println(String.format("User %s age %d", user.getName(), user.getAge()));

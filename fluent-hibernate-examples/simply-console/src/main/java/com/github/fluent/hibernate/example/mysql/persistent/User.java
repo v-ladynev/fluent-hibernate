@@ -55,7 +55,6 @@ public class User extends Person {
         return address;
     }
 
-    @OneToMany(/*mappedBy = "user",*/cascade = CascadeType.ALL, orphanRemoval = true)
     /*
     @JoinTable(name = "user_friends", joinColumns = @JoinColumn(name = "f_user_pid",
             foreignKey = @ForeignKey(name = "fk_user")), inverseJoinColumns = @JoinColumn(
@@ -63,7 +62,7 @@ public class User extends Person {
             uniqueConstraints = @UniqueConstraint(name = "friend_unique_key",
             columnNames = { "f_friend_pid" }))
      */
-    @JoinColumn(name = "fk_xxx_user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<UserFriend> getFriends() {
         return friends;
     }

@@ -139,12 +139,30 @@ public class StrategyOptions {
         this.restrictConstraintNames = restrictConstraintNames;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
 
         private final StrategyOptions result = new StrategyOptions();
 
+        public Builder tablePrefix(String tablePrefix) {
+            result.setTablePrefix(tablePrefix);
+            return this;
+        }
+
+        public Builder dontRestrictLength() {
+            return restrictLength(0);
+        }
+
         public Builder restrictLength(int maxLength) {
             result.setMaxLength(maxLength);
+            return this;
+        }
+
+        public Builder restrictConstraintNames(boolean restrictConstraintNames) {
+            result.setRestrictConstraintNames(restrictConstraintNames);
             return this;
         }
 

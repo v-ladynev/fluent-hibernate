@@ -34,9 +34,17 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
 
     private static final long serialVersionUID = 3482010804082494311L;
 
-    private final HibernateNamingStrategy strategy = new HibernateNamingStrategy();
+    private final HibernateNamingStrategy strategy;
 
     private final JoinTableNames joinTableNames = new JoinTableNames();
+
+    public Hibernate5NamingStrategy() {
+        this(new StrategyOptions());
+    }
+
+    public Hibernate5NamingStrategy(StrategyOptions options) {
+        strategy = new HibernateNamingStrategy(options);
+    }
 
     public void setOptions(StrategyOptions options) {
         strategy.setOptions(options);
@@ -147,9 +155,9 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
         String result = joinTableNames.hasSameNameForOtherProperty(tableName, description) ? strategy
                 .joinTableName(ownerEntityTable, associatedEntityTable, propertyName) : tableName;
 
-        joinTableNames.put(result, description);
+                joinTableNames.put(result, description);
 
-        return toIdentifier(result, source);
+                return toIdentifier(result, source);
     }
 
     @Override

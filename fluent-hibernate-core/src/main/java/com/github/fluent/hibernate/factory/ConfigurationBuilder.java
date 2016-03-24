@@ -13,6 +13,8 @@ import org.hibernate.boot.registry.classloading.spi.ClassLoaderService;
 import org.hibernate.cfg.Configuration;
 
 import com.github.fluent.hibernate.cfg.scanner.EntityScanner;
+import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
+import com.github.fluent.hibernate.cfg.strategy.hibernate5.Hibernate5NamingStrategy;
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 
 /**
@@ -80,6 +82,14 @@ class ConfigurationBuilder {
         for (Class<?> annotatedClass : classes) {
             result.addAnnotatedClass(annotatedClass);
         }
+    }
+
+    public void useNamingStrategy() {
+        result.setImplicitNamingStrategy(new Hibernate5NamingStrategy());
+    }
+
+    public void useNamingStrategy(StrategyOptions options) {
+        result.setImplicitNamingStrategy(new Hibernate5NamingStrategy(options));
     }
 
     private BootstrapServiceRegistry createBootstrapServiceRegistry() {

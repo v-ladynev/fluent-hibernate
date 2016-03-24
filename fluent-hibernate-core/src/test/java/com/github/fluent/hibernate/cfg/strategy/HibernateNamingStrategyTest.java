@@ -18,9 +18,8 @@ public class HibernateNamingStrategyTest {
 
     @Before
     public void setUp() {
-        strategy = new HibernateNamingStrategy();
-        strategy.getOptions().setMaxLength(0);
-        strategy.getOptions().setTablePrefix(TABLE_PREFIX);
+        strategy = new HibernateNamingStrategy(StrategyOptions.builder().tablePrefix(TABLE_PREFIX)
+                .dontRestrictLength().build());
     }
 
     @Test

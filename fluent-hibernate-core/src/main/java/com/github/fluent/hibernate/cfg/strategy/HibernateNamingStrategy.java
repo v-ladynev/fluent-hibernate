@@ -15,7 +15,11 @@ import com.github.fluent.hibernate.internal.util.InternalUtils;
  */
 public class HibernateNamingStrategy {
 
-    private StrategyOptions options = new StrategyOptions();
+    private StrategyOptions options;
+
+    public HibernateNamingStrategy(StrategyOptions options) {
+        this.options = options;
+    }
 
     public StrategyOptions getOptions() {
         return options;
@@ -31,7 +35,7 @@ public class HibernateNamingStrategy {
         if (needRestrict(options.isRestrictTableNames())) {
             return assertName(
                     new NameShorter(options.getMaxLength(), options.isHasTablePrefix())
-                            .tableName(result),
+                    .tableName(result),
                     className, "@Table(name=\"prefix_table_name\")");
         }
 
@@ -67,11 +71,11 @@ public class HibernateNamingStrategy {
             final boolean dontTouchFirst = false;
             result = concat(fullPrefix,
                     new NameShorter(options.getMaxLength() - fullPrefix.length(), dontTouchFirst)
-            .embeddedColumnName(columnPostfix));
+                            .embeddedColumnName(columnPostfix));
         } else {
             final boolean dontTouchFirst = true;
             result = new NameShorter(options.getMaxLength(), dontTouchFirst)
-            .embeddedColumnName(column);
+                    .embeddedColumnName(column);
         }
 
         return assertName(result, joinWithSpace(prefix, embeddedPropertyName),
@@ -97,7 +101,7 @@ public class HibernateNamingStrategy {
         if (needRestrict(options.isRestrictJoinTableNames())) {
             return assertName(
                     new NameShorter(options.getMaxLength(), options.isHasTablePrefix())
-                    .joinTableName(result),
+                            .joinTableName(result),
                     joinWithSpace(ownerEntityTable, associatedEntityTable, ownerProperty),
                     "@JoinTable(name=\"prefix_join_table_name\")");
         }
@@ -134,7 +138,7 @@ public class HibernateNamingStrategy {
     public String foreignKeyName(String tableName, String columnName) {
         String result = options.getForeignKeyPrefix() + concat(tableName, columnName);
 
-        if (needRestrict(options.isRestrictConstraintNames())) {
+        if (needRestrict(options.isRestrictColumnNames())) {
             final boolean dontTouchFirst = true;
             return assertName(
                     new NameShorter(options.getMaxLength(), dontTouchFirst).constraintName(result),
@@ -166,7 +170,7 @@ public class HibernateNamingStrategy {
             InternalUtils.Asserts.fail(String.format(
                     "Can't restrict name of '%s'. Result '%s' has the length %d, max length is %d. "
                             + "Use '%s' to hardcode the name", object, name, currentLength,
-                    maxLength, annotation));
+                            maxLength, annotation));
         }
 
         return name;
