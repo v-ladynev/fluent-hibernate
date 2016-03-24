@@ -20,10 +20,15 @@
 
     <property name="implicitNamingStrategy">
       <bean class="com.github.fluent.hibernate.cfg.strategy.hibernate5.Hibernate5NamingStrategy">
-        <property name="tablePrefix" value="spring_" />
+        <property name="options">
+          <bean class="com.github.fluent.hibernate.cfg.strategy.StrategyOptions">
+            <property name="tablePrefix" value="spring_" />
+            <property name="maxLength" value="30" />
+            <property name="restrictConstraintNames" value="false" />
+          </bean>
+        </property>
       </bean>
     </property>
-
   </bean>
 
 <!--

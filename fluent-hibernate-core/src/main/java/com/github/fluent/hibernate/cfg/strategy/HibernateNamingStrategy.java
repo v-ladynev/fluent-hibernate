@@ -15,10 +15,14 @@ import com.github.fluent.hibernate.internal.util.InternalUtils;
  */
 public class HibernateNamingStrategy {
 
-    private final StrategyOptions options = new StrategyOptions();
+    private StrategyOptions options = new StrategyOptions();
 
-    public void setTablePrefix(String tablePrefix) {
-        options.setTablePrefix(tablePrefix);
+    public StrategyOptions getOptions() {
+        return options;
+    }
+
+    public void setOptions(StrategyOptions options) {
+        this.options = options;
     }
 
     public String classToTableName(String className) {
@@ -130,7 +134,7 @@ public class HibernateNamingStrategy {
     public String foreignKeyName(String tableName, String columnName) {
         String result = options.getForeignKeyPrefix() + concat(tableName, columnName);
 
-        if (needRestrict(options.isResrictConstraintNames())) {
+        if (needRestrict(options.isRestrictConstraintNames())) {
             final boolean dontTouchFirst = true;
             return assertName(
                     new NameShorter(options.getMaxLength(), dontTouchFirst).constraintName(result),
@@ -144,7 +148,7 @@ public class HibernateNamingStrategy {
     public String uniqueKeyName(String tableName, String columnName) {
         String result = options.getUniqueKeyPrefix() + concat(tableName, columnName);
 
-        if (needRestrict(options.isResrictConstraintNames())) {
+        if (needRestrict(options.isRestrictConstraintNames())) {
             final boolean dontTouchFirst = true;
             return assertName(
                     new NameShorter(options.getMaxLength(), dontTouchFirst).constraintName(result),
@@ -156,10 +160,13 @@ public class HibernateNamingStrategy {
     }
 
     private String assertName(String name, String object, String annotation) {
-        if (name.length() > options.getMaxLength()) {
+        int currentLength = name.length();
+        int maxLength = options.getMaxLength();
+        if (currentLength > maxLength) {
             InternalUtils.Asserts.fail(String.format(
-                    "Can't restrict name of '%s'. Result '%s' is too long. "
-                            + "Use '%s' to hardcode the name", object, name, annotation));
+                    "Can't restrict name of '%s'. Result '%s' has the length %d, max length is %d. "
+                            + "Use '%s' to hardcode the name", object, name, currentLength,
+                    maxLength, annotation));
         }
 
         return name;

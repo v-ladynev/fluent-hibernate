@@ -40,7 +40,7 @@ public class StrategyOptions {
 
     private boolean restrictJoinTableNames = true;
 
-    private boolean resrictConstraintNames = true;
+    private boolean restrictConstraintNames = true;
 
     public String getColumnNamePrefix() {
         return columnNamePrefix;
@@ -90,8 +90,8 @@ public class StrategyOptions {
         return restrictJoinTableNames;
     }
 
-    public boolean isResrictConstraintNames() {
-        return resrictConstraintNames;
+    public boolean isRestrictConstraintNames() {
+        return restrictConstraintNames;
     }
 
     public void setColumnNamePrefix(String columnNamePrefix) {
@@ -135,8 +135,8 @@ public class StrategyOptions {
         this.restrictJoinTableNames = restrictJoinTableNames;
     }
 
-    public void setResrictConstraintNames(boolean resrictConstraintNames) {
-        this.resrictConstraintNames = resrictConstraintNames;
+    public void setRestrictConstraintNames(boolean restrictConstraintNames) {
+        this.restrictConstraintNames = restrictConstraintNames;
     }
 
     public static class Builder {

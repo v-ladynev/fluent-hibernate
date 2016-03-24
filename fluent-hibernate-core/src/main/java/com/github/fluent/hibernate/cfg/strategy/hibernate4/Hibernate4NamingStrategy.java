@@ -4,8 +4,8 @@ import org.hibernate.cfg.ImprovedNamingStrategy;
 
 import com.github.fluent.hibernate.cfg.strategy.HibernateNamingStrategy;
 import com.github.fluent.hibernate.cfg.strategy.JoinTableNames;
-import com.github.fluent.hibernate.cfg.strategy.NamingStrategyUtils;
 import com.github.fluent.hibernate.cfg.strategy.JoinTableNames.TableDescription;
+import com.github.fluent.hibernate.cfg.strategy.NamingStrategyUtils;
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 
 /**
@@ -22,7 +22,11 @@ public class Hibernate4NamingStrategy extends ImprovedNamingStrategy {
     private final JoinTableNames joinTableNames = new JoinTableNames();
 
     public void setTablePrefix(String tablePrefix) {
-        strategy.setTablePrefix(tablePrefix);
+        strategy.getOptions().setTablePrefix(tablePrefix);
+    }
+
+    public void setMaxLength(int maxLength) {
+        strategy.getOptions().setMaxLength(maxLength);
     }
 
     @Override

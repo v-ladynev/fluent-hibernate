@@ -5,8 +5,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.fluent.hibernate.cfg.strategy.HibernateNamingStrategy;
-
 /**
  *
  * @author homyakov
@@ -21,7 +19,8 @@ public class HibernateNamingStrategyTest {
     @Before
     public void setUp() {
         strategy = new HibernateNamingStrategy();
-        strategy.setTablePrefix(TABLE_PREFIX);
+        strategy.getOptions().setMaxLength(0);
+        strategy.getOptions().setTablePrefix(TABLE_PREFIX);
     }
 
     @Test

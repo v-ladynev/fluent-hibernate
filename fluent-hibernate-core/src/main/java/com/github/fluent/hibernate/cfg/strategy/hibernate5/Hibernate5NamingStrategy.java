@@ -22,6 +22,7 @@ import com.github.fluent.hibernate.cfg.strategy.HibernateNamingStrategy;
 import com.github.fluent.hibernate.cfg.strategy.JoinTableNames;
 import com.github.fluent.hibernate.cfg.strategy.JoinTableNames.TableDescription;
 import com.github.fluent.hibernate.cfg.strategy.NamingStrategyUtils;
+import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 
 /**
@@ -37,12 +38,20 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
 
     private final JoinTableNames joinTableNames = new JoinTableNames();
 
+    public void setOptions(StrategyOptions options) {
+        strategy.setOptions(options);
+    }
+
     public void setTablePrefix(String tablePrefix) {
-        strategy.setTablePrefix(tablePrefix);
+        strategy.getOptions().setTablePrefix(tablePrefix);
+    }
+
+    public void setMaxLength(int maxLength) {
+        strategy.getOptions().setMaxLength(maxLength);
     }
 
     /**
-     * Get a name of a table for persistent.
+     * Get a name of a table for a persistent.
      */
     @Override
     protected String transformEntityName(EntityNaming entityNaming) {
