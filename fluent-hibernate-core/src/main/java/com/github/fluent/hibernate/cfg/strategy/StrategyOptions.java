@@ -1,5 +1,7 @@
 package com.github.fluent.hibernate.cfg.strategy;
 
+import com.github.fluent.hibernate.internal.util.InternalUtils;
+
 /**
  *
  *
@@ -20,7 +22,7 @@ public class StrategyOptions {
 
     private String foreignKeyColumnPrefix = FOREIGN_KEY_COLUMN_PREFIX;
 
-    private String foreignkeyColumnPrefix = FOREIGN_KEY_PREFIX;
+    private String foreignKeyPrefix = FOREIGN_KEY_PREFIX;
 
     private String uniqueKeyPrefix = UNIQUE_KEY_PREFIX;
 
@@ -48,8 +50,8 @@ public class StrategyOptions {
         return foreignKeyColumnPrefix;
     }
 
-    public String getForeignkeyColumnPrefix() {
-        return foreignkeyColumnPrefix;
+    public String getForeignKeyPrefix() {
+        return foreignKeyPrefix;
     }
 
     public String getUniqueKeyPrefix() {
@@ -58,6 +60,10 @@ public class StrategyOptions {
 
     public String getTablePrefix() {
         return tablePrefix;
+    }
+
+    public String addTablePrefix(String name) {
+        return tablePrefix == null ? name : tablePrefix + name;
     }
 
     public boolean isHasTablePrefix() {
@@ -96,8 +102,8 @@ public class StrategyOptions {
         this.foreignKeyColumnPrefix = foreignKeyColumnPrefix;
     }
 
-    public void setForeignkeyColumnPrefix(String foreignkeyColumnPrefix) {
-        this.foreignkeyColumnPrefix = foreignkeyColumnPrefix;
+    public void setForeignKeyPrefix(String foreignKeyPrefix) {
+        this.foreignKeyPrefix = foreignKeyPrefix;
     }
 
     public void setUniqueKeyPrefix(String uniqueKeyPrefix) {
@@ -106,10 +112,7 @@ public class StrategyOptions {
 
     public void setTablePrefix(String tablePrefix) {
         this.tablePrefix = tablePrefix;
-    }
-
-    public void setHasTablePrefix(boolean hasTablePrefix) {
-        this.hasTablePrefix = hasTablePrefix;
+        hasTablePrefix = !InternalUtils.StringUtils.isEmpty(tablePrefix);
     }
 
     public void setMaxLength(int maxLength) {
@@ -134,6 +137,21 @@ public class StrategyOptions {
 
     public void setResrictConstraintNames(boolean resrictConstraintNames) {
         this.resrictConstraintNames = resrictConstraintNames;
+    }
+
+    public static class Builder {
+
+        private final StrategyOptions result = new StrategyOptions();
+
+        public Builder restrictLength(int maxLength) {
+            result.setMaxLength(maxLength);
+            return this;
+        }
+
+        public StrategyOptions build() {
+            return result;
+        }
+
     }
 
 }
