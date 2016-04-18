@@ -5,7 +5,6 @@ import javax.persistence.MappedSuperclass;
 
 /**
  *
- *
  * @author V.Ladynev
  */
 @MappedSuperclass
@@ -15,12 +14,12 @@ public class Person {
 
     private Integer age;
 
-    @Column(name = "f_name")
+    @Column
     public String getName() {
         return name;
     }
 
-    @Column(name = "f_age")
+    @Column
     public Integer getAge() {
         return age;
     }

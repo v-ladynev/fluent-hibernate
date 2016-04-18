@@ -1,6 +1,7 @@
 package com.github.fluent.hibernate.cfg.strategy;
 
-import com.github.fluent.hibernate.internal.util.InternalUtils;
+import static com.github.fluent.hibernate.internal.util.InternalUtils.StringUtils.isEmpty;
+import static com.github.fluent.hibernate.internal.util.InternalUtils.StringUtils.length;
 
 /**
  *
@@ -28,8 +29,6 @@ public class StrategyOptions {
 
     private String tablePrefix;
 
-    private boolean hasTablePrefix;
-
     private int maxLength;
 
     private boolean restrictTableNames = true;
@@ -44,6 +43,10 @@ public class StrategyOptions {
 
     public String getColumnNamePrefix() {
         return columnNamePrefix;
+    }
+
+    int getColumnNamePrefixLength() {
+        return length(columnNamePrefix);
     }
 
     public String getForeignKeyColumnPrefix() {
@@ -62,12 +65,8 @@ public class StrategyOptions {
         return tablePrefix;
     }
 
-    public String addTablePrefix(String name) {
-        return tablePrefix == null ? name : tablePrefix + name;
-    }
-
-    public boolean isHasTablePrefix() {
-        return hasTablePrefix;
+    boolean hasTablePrefix() {
+        return !isEmpty(tablePrefix);
     }
 
     public int getMaxLength() {
@@ -112,7 +111,6 @@ public class StrategyOptions {
 
     public void setTablePrefix(String tablePrefix) {
         this.tablePrefix = tablePrefix;
-        hasTablePrefix = !InternalUtils.StringUtils.isEmpty(tablePrefix);
     }
 
     public void setMaxLength(int maxLength) {
@@ -157,12 +155,52 @@ public class StrategyOptions {
         }
 
         public Builder restrictLength(int maxLength) {
-            result.setMaxLength(maxLength);
+            result.maxLength = maxLength;
+            return this;
+        }
+
+        public Builder columnNamePrefix(String columnNamePrefix) {
+            result.columnNamePrefix = columnNamePrefix;
+            return this;
+        }
+
+        public Builder foreignKeyColumnPrefix(String foreignKeyColumnPrefix) {
+            result.foreignKeyColumnPrefix = foreignKeyColumnPrefix;
+            return this;
+        }
+
+        public Builder setForeignKeyPrefix(String foreignKeyPrefix) {
+            result.foreignKeyPrefix = foreignKeyPrefix;
+            return this;
+        }
+
+        public Builder setUniqueKeyPrefix(String uniqueKeyPrefix) {
+            result.uniqueKeyPrefix = uniqueKeyPrefix;
             return this;
         }
 
         public Builder restrictConstraintNames(boolean restrictConstraintNames) {
             result.setRestrictConstraintNames(restrictConstraintNames);
+            return this;
+        }
+
+        public Builder setRestrictTableNames(boolean restrictTableNames) {
+            result.restrictTableNames = restrictTableNames;
+            return this;
+        }
+
+        public Builder setRestrictColumnNames(boolean restrictColumnNames) {
+            result.restrictColumnNames = restrictColumnNames;
+            return this;
+        }
+
+        public Builder setRestrictEmbeddedColumnNames(boolean restrictEmbeddedColumnNames) {
+            result.restrictEmbeddedColumnNames = restrictEmbeddedColumnNames;
+            return this;
+        }
+
+        public Builder setRestrictJoinTableNames(boolean restrictJoinTableNames) {
+            result.restrictJoinTableNames = restrictJoinTableNames;
             return this;
         }
 

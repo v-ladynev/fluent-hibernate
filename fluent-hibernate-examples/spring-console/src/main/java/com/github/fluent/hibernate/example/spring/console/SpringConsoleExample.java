@@ -23,7 +23,6 @@ public class SpringConsoleExample {
         try {
             new ClassPathXmlApplicationContext("classpath:hibernate-context.xml")
                     .registerShutdownHook();
-
             new SpringConsoleExample().doSomeDatabaseStuff();
         } finally {
             HibernateSessionFactory.closeSessionFactory();
@@ -34,7 +33,7 @@ public class SpringConsoleExample {
         /*
                 dealWithTaransactions();
                 dealWithMerchantsAndCustomers();
-
+        
                 dealWithCheck();
          */
     }

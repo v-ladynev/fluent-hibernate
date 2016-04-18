@@ -44,11 +44,12 @@ public class SimplyConsoleExample {
         /*
         deleteAllUsers();
         insertUsers();
+        
         doSomeFriendsStuff();
-
+        
         deleteFriend();
-
-
+        
+        
         updateUserAge();
         countUsers();
         doSomeUserAddressStuff();
@@ -56,12 +57,6 @@ public class SimplyConsoleExample {
 
         // dealWithGoodFriends();
 
-        /*
-        List<String> rrr = H.<String> request(User.class)
-                .proj(new ConcatProjection("login", "name", "age")).list();
-
-        System.out.println(rrr);
-         */
     }
 
     private void updateUserAge() {

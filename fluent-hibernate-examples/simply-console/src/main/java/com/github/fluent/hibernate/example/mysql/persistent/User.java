@@ -10,7 +10,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -22,7 +21,7 @@ import javax.persistence.Table;
  * @author V.Ladynev
  */
 @Entity
-@Table(name = "users")
+@Table
 public class User extends Person {
 
     public static final String LOGIN = "login";
@@ -39,18 +38,18 @@ public class User extends Person {
 
     @Id
     @GeneratedValue
-    @Column(name = "f_pid")
+    @Column
     public Long getPid() {
         return pid;
     }
 
-    @Column(name = "f_login")
+    @Column
     public String getLogin() {
         return login;
     }
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "f_user_address_pid")
+    @JoinColumn
     public UserAddress getAddress() {
         return address;
     }
@@ -67,19 +66,17 @@ public class User extends Person {
         return friends;
     }
 
-    /*
-        User_f_pid bigint not null,
-        friends_f_pid
-     */
     public void addFriend(UserFriend friend) {
         friend.setUser(this);
         friends.add(friend);
     }
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    /*
     @JoinTable(name = "good_friends", joinColumns = @JoinColumn(name = "fk_user",
             referencedColumnName = "f_pid"), inverseJoinColumns = @JoinColumn(name = "fk_friend",
             referencedColumnName = "f_pid"))
+    */
     public List<User> getGoodFriends() {
         return goodFriends;
     }

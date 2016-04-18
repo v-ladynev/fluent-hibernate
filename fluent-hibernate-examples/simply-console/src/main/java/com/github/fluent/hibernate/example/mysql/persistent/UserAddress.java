@@ -8,13 +8,12 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
- * An user address.
+ * A user address.
  *
  * @author V.Ladynev
- * @version $Id$
  */
 @Entity
-@Table(name = "user_addresses")
+@Table
 public class UserAddress {
 
     private Long pid;
@@ -25,12 +24,12 @@ public class UserAddress {
 
     @Id
     @GeneratedValue
-    @Column(name = "f_pid")
+    @Column
     public Long getPid() {
         return pid;
     }
 
-    @Column(name = "f_street")
+    @Column
     public String getStreet() {
         return street;
     }

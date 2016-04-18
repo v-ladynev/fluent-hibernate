@@ -80,13 +80,14 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
         Ejb3Column column = getEjb3Column(source);
 
         if (isEmbedded(column)) {
-            String embeddedPrefix = getEmbeddedPrefix(column, parentPropertyName);
+            String embeddedPrefix = getFluentNamePrefix(column, parentPropertyName);
 
             boolean hasEmbeddedPrefix = !InternalUtils.StringUtils.isEmpty(embeddedPrefix);
             String prefix = hasEmbeddedPrefix ? embeddedPrefix : parentPropertyName;
 
+            boolean dontTouchPrefix = hasEmbeddedPrefix;
             return toIdentifier(
-                    strategy.embeddedPropertyToColumnName(prefix, propertyName, hasEmbeddedPrefix),
+                    strategy.embeddedPropertyToColumnName(prefix, propertyName, dontTouchPrefix),
                     source);
         }
 
@@ -94,7 +95,7 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
         return toIdentifier(strategy.propertyToColumnName(propertyName), source);
     }
 
-    private static String getEmbeddedPrefix(Ejb3Column column, String propertyName) {
+    private static String getFluentNamePrefix(Ejb3Column column, String propertyName) {
         Method getter = getPropertyGetter(column, propertyName);
 
         if (getter == null) {
@@ -132,8 +133,8 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
 
     @Override
     public Identifier determineJoinColumnName(ImplicitJoinColumnNameSource source) {
-        String propertyTableName = NamingStrategyUtils.unqualify(source.getEntityNaming()
-                .getEntityName());
+        String propertyTableName = NamingStrategyUtils
+                .unqualify(source.getEntityNaming().getEntityName());
         // a property name is null for join tables for an owner table foreign key
         String propertyName = getPropertyName(source.getAttributePath());
         String result = strategy.foreignKeyColumnName(propertyName, propertyTableName);
@@ -149,17 +150,21 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
 
         String tableName = strategy.joinTableName(ownerEntityTable, associatedEntityTable);
 
-        TableDescription description = new TableDescription(ownerEntityTable,
-                associatedEntityTable, propertyName);
+        TableDescription description = new TableDescription(ownerEntityTable, associatedEntityTable,
+                propertyName);
 
-        String result = joinTableNames.hasSameNameForOtherProperty(tableName, description) ? strategy
-                .joinTableName(ownerEntityTable, associatedEntityTable, propertyName) : tableName;
+        String result = joinTableNames.hasSameNameForOtherProperty(tableName, description)
+                ? strategy.joinTableName(ownerEntityTable, associatedEntityTable, propertyName)
+                : tableName;
 
-                joinTableNames.put(result, description);
+        joinTableNames.put(result, description);
 
-                return toIdentifier(result, source);
+        return toIdentifier(result, source);
     }
 
+    /**
+     * Generates a name for a foreign key constraint.
+     */
     @Override
     public Identifier determineForeignKeyName(ImplicitForeignKeyNameSource source) {
         List<Identifier> columnNames = source.getColumnNames();
@@ -169,8 +174,8 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
             return super.determineForeignKeyName(source);
         }
 
-        String result = strategy.foreignKeyName(source.getTableName().getText(), columnNames.get(0)
-                .getText());
+        String result = strategy.foreignKeyName(source.getTableName().getText(),
+                columnNames.get(0).getText());
 
         return toIdentifier(result, source);
     }
@@ -184,8 +189,8 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
             return super.determineUniqueKeyName(source);
         }
 
-        String result = strategy.uniqueKeyName(source.getTableName().getText(), columnNames.get(0)
-                .getText());
+        String result = strategy.uniqueKeyName(source.getTableName().getText(),
+                columnNames.get(0).getText());
 
         return toIdentifier(result, source);
     }
@@ -195,8 +200,8 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
     }
 
     private static Identifier toIdentifier(String stringForm, ImplicitNameSource source) {
-        return source.getBuildingContext().getMetadataCollector().getDatabase()
-                .getJdbcEnvironment().getIdentifierHelper().toIdentifier(stringForm);
+        return source.getBuildingContext().getMetadataCollector().getDatabase().getJdbcEnvironment()
+                .getIdentifierHelper().toIdentifier(stringForm);
     }
 
 }

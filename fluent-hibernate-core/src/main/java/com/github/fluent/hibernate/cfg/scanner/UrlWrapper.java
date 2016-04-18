@@ -11,7 +11,7 @@ import sun.net.www.protocol.file.FileURLConnection;
 
 /**
  * This class wraps URL and ClassLoader for using it with collections. The same URLs with distinct
- * class loaders are considered as equal. It doesn't use equals and hashcode of URL.
+ * class loaders are considered as equal. It doesn't use equals and a hash code of the URL.
  *
  * @author V.Ladynev
  */

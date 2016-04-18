@@ -30,4 +30,11 @@ public class StringUtilsTest {
         assertThat(StringUtils.splitBySpace(" a  b ")).containsExactly("a", "b");
     }
 
+    @Test
+    public void join() {
+        assertThat(StringUtils.join("a", "b", "_")).isEqualTo("a_b");
+        assertThat(StringUtils.join(null, "b", "_")).isEqualTo("b");
+        assertThat(StringUtils.join("a", null, "_")).isEqualTo("a");
+    }
+
 }

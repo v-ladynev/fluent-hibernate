@@ -1,6 +1,6 @@
 package com.github.fluent.hibernate.cfg.strategy;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,30 +18,25 @@ public class HibernateNamingStrategyTest {
 
     @Before
     public void setUp() {
-        strategy = new HibernateNamingStrategy(StrategyOptions.builder().tablePrefix(TABLE_PREFIX)
-                .dontRestrictLength().build());
+        strategy = new HibernateNamingStrategy(
+                StrategyOptions.builder().tablePrefix(TABLE_PREFIX).dontRestrictLength().build());
     }
 
     @Test
     public void testForeignKeyColumnName() {
-        assertEquals("Foreign key: propertyName -> fk_property_name", "fk_property_name",
-                strategy.foreignKeyColumnName("propertyName", "propertyTableName"));
+        assertThat(strategy.foreignKeyColumnName("propertyName", "propertyTableName"))
+                .isEqualTo("fk_property_name");
     }
 
     @Test
     public void testPropertyToColumnName() {
-        assertEquals("Simple field name: field -> f_field", "f_field",
-                strategy.propertyToColumnName("field"));
-        assertEquals("Field name: camelCaseField -> f_camel_case_field", "f_camel_case_field",
-                strategy.propertyToColumnName("camelCaseField"));
+        assertThat(strategy.propertyToColumnName("field")).isEqualTo("f_field");
+        assertThat(strategy.propertyToColumnName("camelCaseField")).isEqualTo("f_camel_case_field");
 
         // TODO fix
         /*
-        assertEquals("Field name: camelCF -> f_camel_cf", "f_camel_cf",
-                strategy.propertyToColumnName("camelCF"));
-
-        assertEquals("Field name: camelCFX -> f_camel_cfx", "f_camel_cfx",
-                strategy.propertyToColumnName("camelCFX"));
+        assertThat(strategy.propertyToColumnName("camelCF")).isEqualTo("f_camel_cf");
+        assertThat(strategy.propertyToColumnName("f_camel_cfx")).isEqualTo("camelCFX");
          */
     }
 
@@ -58,24 +53,52 @@ public class HibernateNamingStrategyTest {
 
         for (int i = 0; i < args.length; i++) {
             String arg = args[i], exp = TABLE_PREFIX + exps[i];
-
-            assertEquals("Pluralize table name: " + arg + " -> " + exp, exp,
-                    strategy.classToTableName(arg));
+            assertThat(strategy.classToTableName(arg)).isEqualTo(exp);
         }
     }
 
     @Test
     public void testJoinKeyColumnName() {
-        assertEquals("Join key: joinedColumn -> joined_column_id", "joined_column_id",
-                strategy.joinKeyColumnName("joinedColumn", "joinedTable"));
+        assertThat(strategy.joinKeyColumnName("joinedColumn", "joinedTable"))
+                .isEqualTo("joined_column_id");
     }
 
     @Test
     public void testCollectionTableName() {
-        assertEquals("Collection table name: "
-                + "ownerEntity,associatedEntity -> fluent_owner_entities_associated_entities",
-                "fluent_owner_entities_associated_entities",
-                strategy.joinTableName("ownerEntity", "associatedEntity"));
+        assertThat(strategy.joinTableName("ownerEntity", "associatedEntity"))
+                .isEqualTo("fluent_owner_entities_associated_entities");
+    }
+
+    @Test
+    public void testEmbeddedPropertyToColumnName() {
+        final boolean dontTouchPrefix = false;
+
+        strategy.getOptions().setMaxLength(13);
+        assertThat(strategy.embeddedPropertyToColumnName("prefix", "property", dontTouchPrefix))
+                .isEqualTo("f_prfx_prprty");
+
+        strategy.getOptions().setMaxLength(15);
+        assertThat(strategy.embeddedPropertyToColumnName("prefix", "property", dontTouchPrefix))
+                .isEqualTo("f_prfx_property");
+
+        strategy.getOptions().setMaxLength(13);
+        strategy.getOptions().setColumnNamePrefix(null);
+        assertThat(strategy.embeddedPropertyToColumnName("prefix", "property", dontTouchPrefix))
+                .isEqualTo("prfx_property");
+    }
+
+    @Test
+    public void testEmbeddedPropertyToColumnNameExcludePrefix() {
+        final boolean dontTouchPrefix = true;
+
+        strategy.getOptions().setMaxLength(15);
+        assertThat(strategy.embeddedPropertyToColumnName("prefix", "property", dontTouchPrefix))
+                .isEqualTo("f_prefix_prprty");
+
+        strategy.getOptions().setMaxLength(13);
+        strategy.getOptions().setColumnNamePrefix(null);
+        assertThat(strategy.embeddedPropertyToColumnName("prefix", "property", dontTouchPrefix))
+                .isEqualTo("prefix_prprty");
     }
 
 }

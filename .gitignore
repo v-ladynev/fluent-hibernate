@@ -78,4 +78,4 @@ local.properties
 atlassian-ide-plugin.xml
 
 gradle.properties
-ui/
+/fluent-hibernate-examples/

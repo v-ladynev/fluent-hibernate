@@ -27,15 +27,15 @@ class SetterAccessor {
     private static Setter createSetter(Class<?> theClass, String propertyName) {
         Setter result = getSetterOrNull(theClass, propertyName);
         if (result == null) {
-            throw new PropertyNotFoundException(String.format(
-                    "Could not find a setter for property %s in class %s", propertyName,
-                    theClass.getName()));
+            throw new PropertyNotFoundException(
+                    String.format("Could not find a setter for property `%s` in the class `%s`",
+                            propertyName, theClass.getName()));
         }
         return result;
     }
 
     private static Setter getSetterOrNull(Class<?> theClass, String propertyName) {
-        if (theClass == Object.class || theClass == null) {
+        if (theClass == Object.class || theClass == null || propertyName == null) {
             return null;
         }
 
@@ -48,8 +48,8 @@ class SetterAccessor {
             getMethods[i] = getterMethod(tmpClass, pNames[i]);
             setMethods[i] = setterMethod(tmpClass, pNames[i]);
             if (getMethods[i] == null) {
-                throw new HibernateException(String.format(
-                        "intermediate setter property not found : %s", pNames[i]));
+                throw new HibernateException(
+                        String.format("intermediate setter property not found : %s", pNames[i]));
             }
             tmpClass = getMethods[i].getReturnType();
         }

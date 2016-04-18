@@ -13,7 +13,7 @@ import javax.persistence.Table;
  * @author V.Ladynev
  */
 @Entity
-@Table(name = "user_friends")
+@Table
 public class UserFriend extends Person {
 
     private Long pid;
@@ -22,13 +22,13 @@ public class UserFriend extends Person {
 
     @Id
     @GeneratedValue
-    @Column(name = "f_pid")
+    @Column
     public Long getPid() {
         return pid;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "fk_user")
+    // @JoinColumn
     public User getUser() {
         return user;
     }

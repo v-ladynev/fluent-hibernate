@@ -23,8 +23,10 @@
         <property name="options">
           <bean class="com.github.fluent.hibernate.cfg.strategy.StrategyOptions">
             <property name="tablePrefix" value="spring_" />
-            <property name="maxLength" value="30" />
+            <property name="maxLength" value="19" />
             <property name="restrictConstraintNames" value="false" />
+            <property name="restrictEmbeddedColumnNames" value="false" />
+            <property name="restrictJoinTableNames" value="false" />
           </bean>
         </property>
       </bean>

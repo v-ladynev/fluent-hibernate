@@ -68,7 +68,7 @@ public final class NamingStrategyUtils {
     }
 
     public static String concat(String left, String right) {
-        return left + NAME_PARTS_SEPARATOR + right;
+        return InternalUtils.StringUtils.join(left, right, NAME_PARTS_SEPARATOR_AS_STRING);
     }
 
     public static String concat(String[] parts) {
@@ -119,9 +119,8 @@ public final class NamingStrategyUtils {
     }
 
     /**
-     * Remove vowels from the right to the left. Don't remove the first and the last letter. Don't
-     * remove a vowel, if it has a neighbour vowel. It removes not more vowels than
-     * maxCountToRemove.
+     * Remove vowels from the right to the left. Don't remove the first and the last letter. It
+     * removes not more vowels than maxCountToRemove.
      */
     public static String removeVowelsSmart(String str, int maxCountToRemove) {
         StringBuilder result = new StringBuilder(str);
@@ -129,17 +128,13 @@ public final class NamingStrategyUtils {
         int firstIndex = 1;
         int lastIndex = result.length() - 2;
         for (int i = lastIndex, removed = 0; i >= firstIndex && removed < maxCountToRemove; i--) {
-            if (isVowel(result.charAt(i)) && !hasNeighbourVowel(result, i)) {
+            if (isVowel(result.charAt(i))) {
                 result.deleteCharAt(i);
                 removed++;
             }
         }
 
         return result.toString();
-    }
-
-    private static boolean hasNeighbourVowel(StringBuilder str, int index) {
-        return isVowel(str.charAt(index + 1)) || isVowel(str.charAt(index - 1));
     }
 
     public static boolean isVowel(char value) {

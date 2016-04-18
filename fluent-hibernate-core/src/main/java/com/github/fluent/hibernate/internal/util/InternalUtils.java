@@ -96,6 +96,18 @@ public final class InternalUtils {
             return true;
         }
 
+        public static int length(String value) {
+            return value == null ? 0 : value.length();
+        }
+
+        public static String join(String first, String second) {
+            return isEmpty(first) ? second : (isEmpty(second) ? first : first + second);
+        }
+
+        public static String join(String first, String second, String separator) {
+            return isEmpty(first) ? second : (isEmpty(second) ? first : first + separator + second);
+        }
+
         public static String joinWithSpace(String... strings) {
             return join(strings, " ");
         }
@@ -111,8 +123,8 @@ public final class InternalUtils {
                 return EMPTY;
             }
 
-            StringBuilder result = new StringBuilder(size
-                    * (strings.get(0).length() + separator.length()));
+            StringBuilder result = new StringBuilder(
+                    size * (strings.get(0).length() + separator.length()));
 
             if (!isEmpty(strings.get(0))) {
                 result.append(strings.get(0));

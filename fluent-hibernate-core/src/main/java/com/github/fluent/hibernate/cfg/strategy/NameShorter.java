@@ -6,7 +6,7 @@ package com.github.fluent.hibernate.cfg.strategy;
  */
 class NameShorter {
 
-    private final int maxLength;
+    private int maxLength;
 
     private final boolean dontTouchFirst;
 
@@ -25,8 +25,8 @@ class NameShorter {
         return makeShorter(name);
     }
 
-    public String embeddedColumnName(String name) {
-        return makeShorter(name);
+    public String embeddedColumnName(String columnPostfix) {
+        return makeShorter(columnPostfix);
     }
 
     public String joinTableName(String name) {
