@@ -11,23 +11,23 @@ import static com.github.fluent.hibernate.internal.util.InternalUtils.StringUtil
  */
 public class StrategyOptions {
 
-    private static final String COLUMN_NAME_PREFIX = "f_";
+    private static final String COLUMN_PREFIX = "f_";
 
     private static final String FOREIGN_KEY_COLUMN_PREFIX = "fk_";
 
-    private static final String FOREIGN_KEY_PREFIX = "fk_";
+    private static final String FOREIGN_KEY_CONSTRAINT_PREFIX = "fk_";
 
-    private static final String UNIQUE_KEY_PREFIX = "uk_";
+    private static final String UNIQUE_KEY_CONSTRAINT_PREFIX = "uk_";
 
-    private String columnNamePrefix = COLUMN_NAME_PREFIX;
+    private String tablePrefix;
+
+    private String columnPrefix = COLUMN_PREFIX;
 
     private String foreignKeyColumnPrefix = FOREIGN_KEY_COLUMN_PREFIX;
 
-    private String foreignKeyPrefix = FOREIGN_KEY_PREFIX;
+    private String foreignKeyConstraintPrefix = FOREIGN_KEY_CONSTRAINT_PREFIX;
 
-    private String uniqueKeyPrefix = UNIQUE_KEY_PREFIX;
-
-    private String tablePrefix;
+    private String uniqueKeyConstraintPrefix = UNIQUE_KEY_CONSTRAINT_PREFIX;
 
     private int maxLength;
 
@@ -41,32 +41,48 @@ public class StrategyOptions {
 
     private boolean restrictConstraintNames = true;
 
-    public String getColumnNamePrefix() {
-        return columnNamePrefix;
-    }
-
-    int getColumnNamePrefixLength() {
-        return length(columnNamePrefix);
-    }
-
-    public String getForeignKeyColumnPrefix() {
-        return foreignKeyColumnPrefix;
-    }
-
-    public String getForeignKeyPrefix() {
-        return foreignKeyPrefix;
-    }
-
-    public String getUniqueKeyPrefix() {
-        return uniqueKeyPrefix;
-    }
-
     public String getTablePrefix() {
         return tablePrefix;
     }
 
     boolean hasTablePrefix() {
         return !isEmpty(tablePrefix);
+    }
+
+    public String getColumnPrefix() {
+        return columnPrefix;
+    }
+
+    int getColumnPrefixLength() {
+        return length(columnPrefix);
+    }
+
+    boolean hasColumnPrefix() {
+        return !isEmpty(columnPrefix);
+    }
+
+    public String getForeignKeyColumnPrefix() {
+        return foreignKeyColumnPrefix;
+    }
+
+    boolean hasForeignKeyColumnPrefix() {
+        return !isEmpty(foreignKeyColumnPrefix);
+    }
+
+    public String getForeignKeyConstraintPrefix() {
+        return foreignKeyConstraintPrefix;
+    }
+
+    boolean hasForeignKeyConstraintPrefix() {
+        return !isEmpty(foreignKeyConstraintPrefix);
+    }
+
+    public String getUniqueKeyConstraintPrefix() {
+        return uniqueKeyConstraintPrefix;
+    }
+
+    boolean hasUniqueKeyConstraintPrefix() {
+        return !isEmpty(uniqueKeyConstraintPrefix);
     }
 
     public int getMaxLength() {
@@ -93,24 +109,24 @@ public class StrategyOptions {
         return restrictConstraintNames;
     }
 
-    public void setColumnNamePrefix(String columnNamePrefix) {
-        this.columnNamePrefix = columnNamePrefix;
+    public void setTablePrefix(String tablePrefix) {
+        this.tablePrefix = tablePrefix;
+    }
+
+    public void setColumnPrefix(String columnPrefix) {
+        this.columnPrefix = columnPrefix;
     }
 
     public void setForeignKeyColumnPrefix(String foreignKeyColumnPrefix) {
         this.foreignKeyColumnPrefix = foreignKeyColumnPrefix;
     }
 
-    public void setForeignKeyPrefix(String foreignKeyPrefix) {
-        this.foreignKeyPrefix = foreignKeyPrefix;
+    public void setForeignKeyConstraintPrefix(String foreignKeyConstraintPrefix) {
+        this.foreignKeyConstraintPrefix = foreignKeyConstraintPrefix;
     }
 
-    public void setUniqueKeyPrefix(String uniqueKeyPrefix) {
-        this.uniqueKeyPrefix = uniqueKeyPrefix;
-    }
-
-    public void setTablePrefix(String tablePrefix) {
-        this.tablePrefix = tablePrefix;
+    public void setUniqueKeyConstraintPrefix(String uniqueKeyConstraintPrefix) {
+        this.uniqueKeyConstraintPrefix = uniqueKeyConstraintPrefix;
     }
 
     public void setMaxLength(int maxLength) {
@@ -159,23 +175,29 @@ public class StrategyOptions {
             return this;
         }
 
-        public Builder columnNamePrefix(String columnNamePrefix) {
-            result.columnNamePrefix = columnNamePrefix;
+        public Builder columnPrefix(String columnPrefix) {
+            result.columnPrefix = columnPrefix;
             return this;
         }
 
+        /**
+         * Sets a foreign key column prefix.
+         */
         public Builder foreignKeyColumnPrefix(String foreignKeyColumnPrefix) {
             result.foreignKeyColumnPrefix = foreignKeyColumnPrefix;
             return this;
         }
 
-        public Builder setForeignKeyPrefix(String foreignKeyPrefix) {
-            result.foreignKeyPrefix = foreignKeyPrefix;
+        /**
+         * Sets a foreign key constraint prefix.
+         */
+        public Builder foreignKeyConstraintPrefix(String foreignKeyConstraintPrefix) {
+            result.foreignKeyConstraintPrefix = foreignKeyConstraintPrefix;
             return this;
         }
 
-        public Builder setUniqueKeyPrefix(String uniqueKeyPrefix) {
-            result.uniqueKeyPrefix = uniqueKeyPrefix;
+        public Builder uniqueKeyConstraintPrefix(String uniqueKeyConstraintPrefix) {
+            result.uniqueKeyConstraintPrefix = uniqueKeyConstraintPrefix;
             return this;
         }
 
@@ -184,23 +206,35 @@ public class StrategyOptions {
             return this;
         }
 
-        public Builder setRestrictTableNames(boolean restrictTableNames) {
+        public Builder restrictTableNames(boolean restrictTableNames) {
             result.restrictTableNames = restrictTableNames;
             return this;
         }
 
-        public Builder setRestrictColumnNames(boolean restrictColumnNames) {
+        public Builder restrictColumnNames(boolean restrictColumnNames) {
             result.restrictColumnNames = restrictColumnNames;
             return this;
         }
 
-        public Builder setRestrictEmbeddedColumnNames(boolean restrictEmbeddedColumnNames) {
+        public Builder restrictEmbeddedColumnNames(boolean restrictEmbeddedColumnNames) {
             result.restrictEmbeddedColumnNames = restrictEmbeddedColumnNames;
             return this;
         }
 
-        public Builder setRestrictJoinTableNames(boolean restrictJoinTableNames) {
+        public Builder restrictJoinTableNames(boolean restrictJoinTableNames) {
             result.restrictJoinTableNames = restrictJoinTableNames;
+            return this;
+        }
+
+        /**
+         * Don't use any prefixes like a table name prefix.
+         */
+        public Builder withoutPrefixes() {
+            result.tablePrefix = null;
+            result.columnPrefix = null;
+            result.foreignKeyColumnPrefix = null;
+            result.foreignKeyConstraintPrefix = null;
+            result.uniqueKeyConstraintPrefix = null;
             return this;
         }
 

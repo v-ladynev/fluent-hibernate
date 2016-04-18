@@ -79,3 +79,4 @@ atlassian-ide-plugin.xml
 
 gradle.properties
 /fluent-hibernate-examples/
+/fluent-hibernate-core/

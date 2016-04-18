@@ -174,7 +174,7 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
             return super.determineForeignKeyName(source);
         }
 
-        String result = strategy.foreignKeyName(source.getTableName().getText(),
+        String result = strategy.foreignKeyConstraintName(source.getTableName().getText(),
                 columnNames.get(0).getText());
 
         return toIdentifier(result, source);
@@ -189,7 +189,7 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
             return super.determineUniqueKeyName(source);
         }
 
-        String result = strategy.uniqueKeyName(source.getTableName().getText(),
+        String result = strategy.uniqueKeyConstraintName(source.getTableName().getText(),
                 columnNames.get(0).getText());
 
         return toIdentifier(result, source);
