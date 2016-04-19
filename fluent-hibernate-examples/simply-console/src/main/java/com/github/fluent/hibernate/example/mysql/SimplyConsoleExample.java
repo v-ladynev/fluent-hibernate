@@ -27,8 +27,8 @@ public class SimplyConsoleExample {
     public static void main(String[] args) {
         try {
             final String packageToScan = "com.github.fluent.hibernate.example.mysql.persistent";
-            StrategyOptions options = StrategyOptions.builder().dontRestrictLength()
-                    .withoutPrefixes().restrictConstraintNames(false).build();
+            StrategyOptions options = StrategyOptions.builder().withoutPrefixes()
+                    .autodetectMaxLength().restrictConstraintNames(false).build();
 
             HibernateSessionFactory.Builder.configureWithoutHibernateCfgXml()
                     .packagesToScan(packageToScan).useNamingStrategy(options)

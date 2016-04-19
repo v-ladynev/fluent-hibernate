@@ -31,7 +31,8 @@ public class HibernateNamingStrategy {
     }
 
     public String classToTableName(String className) {
-        String result = join(options.getTablePrefix(), propertyToPluralizedName(className));
+        String result = join(options.getTablePrefix(),
+                propertyToPluralizedName(InternalUtils.ClassUtils.getShortName(className)));
 
         if (needRestrict(options.isRestrictTableNames())) {
             return assertName(new NameShorter(options.getMaxLength(), options.hasTablePrefix())

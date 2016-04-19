@@ -222,6 +222,24 @@ public final class InternalUtils {
 
     }
 
+    public static final class ClassUtils {
+
+        private static final char PACKAGE_SEPARATOR = '.';
+
+        private static final char INNER_CLASS_SEPARATOR = '$';
+
+        private ClassUtils() {
+
+        }
+
+        public static String getShortName(String className) {
+            int lastDotIndex = className.lastIndexOf(PACKAGE_SEPARATOR);
+            String result = lastDotIndex < 0 ? className : className.substring(lastDotIndex + 1);
+            return result.replace(INNER_CLASS_SEPARATOR, PACKAGE_SEPARATOR);
+        }
+
+    }
+
     public static final class Asserts {
 
         private Asserts() {

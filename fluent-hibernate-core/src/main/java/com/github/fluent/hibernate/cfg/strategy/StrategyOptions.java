@@ -41,6 +41,8 @@ public class StrategyOptions {
 
     private boolean restrictConstraintNames = true;
 
+    public boolean autodetectMaxLength;
+
     public String getTablePrefix() {
         return tablePrefix;
     }
@@ -109,6 +111,10 @@ public class StrategyOptions {
         return restrictConstraintNames;
     }
 
+    public boolean isAutodetectMaxLength() {
+        return autodetectMaxLength;
+    }
+
     public void setTablePrefix(String tablePrefix) {
         this.tablePrefix = tablePrefix;
     }
@@ -151,6 +157,10 @@ public class StrategyOptions {
 
     public void setRestrictConstraintNames(boolean restrictConstraintNames) {
         this.restrictConstraintNames = restrictConstraintNames;
+    }
+
+    public void setAutodetectMaxLength(boolean autodetectMaxLength) {
+        this.autodetectMaxLength = autodetectMaxLength;
     }
 
     public static Builder builder() {
@@ -235,6 +245,11 @@ public class StrategyOptions {
             result.foreignKeyColumnPrefix = null;
             result.foreignKeyConstraintPrefix = null;
             result.uniqueKeyConstraintPrefix = null;
+            return this;
+        }
+
+        public Builder autodetectMaxLength() {
+            result.autodetectMaxLength = true;
             return this;
         }
 

@@ -1,5 +1,8 @@
 package com.github.fluent.hibernate.factory;
 
+import static com.github.fluent.hibernate.internal.util.InternalUtils.Asserts.fail;
+import static com.github.fluent.hibernate.internal.util.InternalUtils.Asserts.isTrue;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -11,6 +14,7 @@ import org.hibernate.boot.registry.BootstrapServiceRegistry;
 import org.hibernate.boot.registry.BootstrapServiceRegistryBuilder;
 import org.hibernate.boot.registry.classloading.spi.ClassLoaderService;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.Environment;
 
 import com.github.fluent.hibernate.cfg.scanner.EntityScanner;
 import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
@@ -89,7 +93,37 @@ class ConfigurationBuilder {
     }
 
     public void useNamingStrategy(StrategyOptions options) {
+        if (options.isAutodetectMaxLength()) {
+            options.setMaxLength(
+                    detectMaxLength(Environment.getProperties().getProperty(Environment.DIALECT)));
+        }
+
         result.setImplicitNamingStrategy(new Hibernate5NamingStrategy(options));
+    }
+
+    private int detectMaxLength(String dialect) {
+        isTrue(!InternalUtils.StringUtils.isEmpty(dialect), String.format(
+                "Can't autodetect a max length. Property %s is not set", Environment.DIALECT));
+        String dialectClass = InternalUtils.ClassUtils.getShortName(dialect);
+
+        if (dialectClass.contains("H2Dialect")) {
+            return 0; // no limitations
+        }
+
+        if (dialectClass.contains("MySQL")) {
+            return 64;
+        }
+
+        if (dialectClass.contains("Oracle")) {
+            return 30;
+        }
+
+        if (dialectClass.contains("PostgreSQL")) {
+            return 63;
+        }
+
+        fail("Can't autodetect a max length. Specify it with StrategyOptions.setMaxLength()");
+        return 0;
     }
 
     private BootstrapServiceRegistry createBootstrapServiceRegistry() {
