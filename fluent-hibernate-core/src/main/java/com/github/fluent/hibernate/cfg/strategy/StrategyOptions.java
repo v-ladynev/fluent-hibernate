@@ -248,6 +248,12 @@ public class StrategyOptions {
             return this;
         }
 
+        /**
+         * Autodetect a maximum name length for a database. Can be used only with a dialect in the
+         * hibernate.properties.
+         *
+         * TODO It shoul work with a dialect in the hibernate.cfg.xml.
+         */
         public Builder autodetectMaxLength() {
             result.autodetectMaxLength = true;
             return this;

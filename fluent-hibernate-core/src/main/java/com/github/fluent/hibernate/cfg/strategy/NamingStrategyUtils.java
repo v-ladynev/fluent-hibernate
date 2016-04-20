@@ -33,15 +33,15 @@ public final class NamingStrategyUtils {
     }
 
     /**
-     * Unqualify propety, add underscores and pluralize. An example: com.github.fluent.SomeName ->
-     * some_names
+     * Unqualify propety, add underscores and pluralize. An example: com.github.fluent.SomeName -
+     * some_names.
      */
     public static String propertyToPluralizedName(String property) {
         return pluralize(propertyToName(property));
     }
 
     /**
-     * Unqualify propety and add underscores. An example com.github.fluent.SomeName -> some_name
+     * Unqualify propety and add underscores. An example com.github.fluent.SomeName - some_name.
      */
     public static String propertyToName(String property) {
         return addUnderscores(unqualify(property));
