@@ -1,5 +1,7 @@
 package com.github.fluent.hibernate.cfg.strategy.hibernate5;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
@@ -7,12 +9,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import org.hibernate.boot.Metadata;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.mapping.PersistentClass;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.github.fluent.hibernate.annotations.FluentName;
 import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
-import com.github.fluent.hibernate.factory.HibernateSessionFactory;
 
 /**
  *
@@ -20,21 +25,28 @@ import com.github.fluent.hibernate.factory.HibernateSessionFactory;
  */
 public class EmbeddedMethodsStrategyTest {
 
+    private static Metadata metadata;
+
     @BeforeClass
-    public static void initSessionFactory() {
-        HibernateSessionFactory.Builder.configureWithoutHibernateCfgXml()
-                .useNamingStrategy(StrategyOptions.builder().autodetectMaxLength().build())
-                .annotatedClasses(User.class).createSessionFactory();
+    public static void initMetadata() {
+        metadata = new MetadataSources().addAnnotatedClass(User.class).getMetadataBuilder()
+                .applyImplicitNamingStrategy(new Hibernate5NamingStrategy(
+                        StrategyOptions.builder().autodetectMaxLength().build()))
+                .build();
     }
 
     @AfterClass
-    public static void closeSessionFactory() {
-        HibernateSessionFactory.closeSessionFactory();
+    public static void closeMetadata() {
+
     }
 
     @Test
     public void testStrategy() {
-
+        PersistentClass userBinding = metadata.getEntityBinding(User.class.getName());
+        assertThat(StrategyTestUtils.getComponentColumnNames(userBinding, "justName"))
+                .containsExactly("f_just_name_first_name", "f_just_name_last_name");
+        assertThat(StrategyTestUtils.getComponentColumnNames(userBinding, "prefixName"))
+                .containsExactly("f_prefix_first_name", "f_prefix_last_name");
     }
 
     @Entity
@@ -42,7 +54,9 @@ public class EmbeddedMethodsStrategyTest {
 
         private String pid;
 
-        private Name name;
+        private Name justName;
+
+        private Name prefixName;
 
         @Id
         @GeneratedValue
@@ -51,16 +65,26 @@ public class EmbeddedMethodsStrategyTest {
         }
 
         @Embedded
-        public Name getName() {
-            return name;
+        public Name getJustName() {
+            return justName;
+        }
+
+        @Embedded
+        @FluentName(prefix = "prefix")
+        public Name getPrefixName() {
+            return prefixName;
         }
 
         public void setPid(String pid) {
             this.pid = pid;
         }
 
-        public void setName(Name name) {
-            this.name = name;
+        public void setJustName(Name justName) {
+            this.justName = justName;
+        }
+
+        public void setPrefixName(Name prefixName) {
+            this.prefixName = prefixName;
         }
 
     }
