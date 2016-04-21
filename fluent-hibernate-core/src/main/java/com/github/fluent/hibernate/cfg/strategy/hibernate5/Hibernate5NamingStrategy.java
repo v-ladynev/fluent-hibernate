@@ -80,10 +80,10 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
         Ejb3Column column = getEjb3Column(source);
 
         if (isEmbedded(column)) {
-            String embeddedPrefix = getFluentNamePrefix(column, parentPropertyName);
+            String fluentNamePrefix = getFluentNamePrefix(column, parentPropertyName);
 
-            boolean hasEmbeddedPrefix = !InternalUtils.StringUtils.isEmpty(embeddedPrefix);
-            String prefix = hasEmbeddedPrefix ? embeddedPrefix : parentPropertyName;
+            boolean hasEmbeddedPrefix = !InternalUtils.StringUtils.isEmpty(fluentNamePrefix);
+            String prefix = hasEmbeddedPrefix ? fluentNamePrefix : parentPropertyName;
 
             boolean dontTouchPrefix = hasEmbeddedPrefix;
             return toIdentifier(

@@ -92,32 +92,34 @@ public class HibernateNamingStrategyTest {
     public void embeddedPropertyToColumnName() {
         final boolean dontTouchPrefix = false;
 
-        strategy.getOptions().setMaxLength(13);
-        assertThat(strategy.embeddedPropertyToColumnName("prefix", "property", dontTouchPrefix))
-                .isEqualTo("f_prfx_prprty");
+        strategy.getOptions().setMaxLength(19);
+        assertThat(strategy.embeddedPropertyToColumnName("preFix", "someProperty", dontTouchPrefix))
+                .isEqualTo("f_pre_fx_sme_prprty");
 
-        strategy.getOptions().setMaxLength(15);
-        assertThat(strategy.embeddedPropertyToColumnName("prefix", "property", dontTouchPrefix))
-                .isEqualTo("f_prfx_property");
+        strategy.getOptions().setMaxLength(22);
+        assertThat(strategy.embeddedPropertyToColumnName("preFix", "someProperty", dontTouchPrefix))
+                .isEqualTo("f_pre_fx_some_property");
 
-        strategy.getOptions().setMaxLength(13);
+        strategy.getOptions().setMaxLength(17);
         strategy.getOptions().setColumnPrefix(null);
-        assertThat(strategy.embeddedPropertyToColumnName("prefix", "property", dontTouchPrefix))
-                .isEqualTo("prfx_property");
+        assertThat(strategy.embeddedPropertyToColumnName("preFix", "someProperty", dontTouchPrefix))
+                .isEqualTo("pre_fx_sme_prprty");
     }
 
     @Test
     public void embeddedPropertyToColumnNameDontTouchPrefix() {
         final boolean dontTouchPrefix = true;
 
-        strategy.getOptions().setMaxLength(15);
-        assertThat(strategy.embeddedPropertyToColumnName("prefix", "property", dontTouchPrefix))
-                .isEqualTo("f_prefix_prprty");
+        strategy.getOptions().setMaxLength(20);
+        assertThat(
+                strategy.embeddedPropertyToColumnName("pre_fix", "someProperty", dontTouchPrefix))
+                        .isEqualTo("f_pre_fix_sme_prprty");
 
-        strategy.getOptions().setMaxLength(13);
+        strategy.getOptions().setMaxLength(18);
         strategy.getOptions().setColumnPrefix(null);
-        assertThat(strategy.embeddedPropertyToColumnName("prefix", "property", dontTouchPrefix))
-                .isEqualTo("prefix_prprty");
+        assertThat(
+                strategy.embeddedPropertyToColumnName("pre_fix", "someProperty", dontTouchPrefix))
+                        .isEqualTo("pre_fix_sme_prprty");
     }
 
     @Test

@@ -10,8 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import org.hibernate.boot.Metadata;
-import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.mapping.PersistentClass;
+import org.hibernate.service.ServiceRegistry;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,28 +26,57 @@ import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
  */
 public class EmbeddedMethodsStrategyTest {
 
-    private static Metadata metadata;
+    private static ServiceRegistry serviceRegistry;
 
     @BeforeClass
-    public static void initMetadata() {
-        metadata = new MetadataSources().addAnnotatedClass(User.class).getMetadataBuilder()
-                .applyImplicitNamingStrategy(new Hibernate5NamingStrategy(
-                        StrategyOptions.builder().autodetectMaxLength().build()))
-                .build();
+    public static void setUp() {
+        serviceRegistry = new StandardServiceRegistryBuilder().build();
     }
 
     @AfterClass
-    public static void closeMetadata() {
-
+    public static void tearDown() {
+        StandardServiceRegistryBuilder.destroy(serviceRegistry);
     }
 
     @Test
-    public void testStrategy() {
+    public void testWithPrefxes() {
+        Metadata metadata = StrategyTestUtils.createMetadata(serviceRegistry,
+                new Hibernate5NamingStrategy(), User.class);
+
         PersistentClass userBinding = metadata.getEntityBinding(User.class.getName());
         assertThat(StrategyTestUtils.getComponentColumnNames(userBinding, "justName"))
                 .containsExactly("f_just_name_first_name", "f_just_name_last_name");
         assertThat(StrategyTestUtils.getComponentColumnNames(userBinding, "prefixName"))
                 .containsExactly("f_prefix_first_name", "f_prefix_last_name");
+    }
+
+    @Test
+    public void testWithoutPrefxes() {
+        Metadata metadata = StrategyTestUtils.createMetadata(serviceRegistry,
+                new Hibernate5NamingStrategy(StrategyOptions.builder().withoutPrefixes().build()),
+                User.class);
+
+        PersistentClass userBinding = metadata.getEntityBinding(User.class.getName());
+        assertThat(StrategyTestUtils.getComponentColumnNames(userBinding, "justName"))
+                .containsExactly("just_name_first_name", "just_name_last_name");
+        assertThat(StrategyTestUtils.getComponentColumnNames(userBinding, "prefixName"))
+                .containsExactly("prefix_first_name", "prefix_last_name");
+    }
+
+    @Test
+    public void testRestrictLength() {
+        Metadata metadata = StrategyTestUtils.createMetadata(serviceRegistry,
+                new Hibernate5NamingStrategy(StrategyOptions.builder().restrictLength(20).build()),
+                User.class);
+
+        PersistentClass userBinding = metadata.getEntityBinding(User.class.getName());
+        assertThat(StrategyTestUtils.getComponentColumnNames(userBinding, "justName"))
+                .containsExactly("f_jst_nme_first_name", "f_just_nme_last_name");
+
+        /*
+        assertThat(StrategyTestUtils.getComponentColumnNames(userBinding, "prefixName"))
+                .containsExactly("f_prefix_first_name", "f_prefix_last_name");
+        */
     }
 
     @Entity

@@ -55,24 +55,23 @@ public class HibernateNamingStrategy {
 
     public String embeddedPropertyToColumnName(String prefix, String embeddedPropertyName,
             boolean dontTouchPrefix) {
-        String fullPrefix = join(options.getColumnPrefix(),
-                dontTouchPrefix ? prefix : propertyToName(prefix));
+        String columnPrefix = dontTouchPrefix ? prefix : propertyToName(prefix);
         String columnPostfix = propertyToName(embeddedPropertyName);
+        String fullColumnPrefix = join(options.getColumnPrefix(), columnPrefix);
 
         if (!needRestrict(options.isRestrictEmbeddedColumnNames())) {
-            return concat(fullPrefix, columnPostfix);
+            return concat(fullColumnPrefix, columnPostfix);
         }
 
         String result = null;
         if (dontTouchPrefix) {
             final boolean dontTouchFirst = false;
-            int maxPostfixLength = options.getMaxLength() - (fullPrefix.length() + 1);
-            result = concat(fullPrefix, new NameShorter(maxPostfixLength, dontTouchFirst)
+            int maxPostfixLength = options.getMaxLength() - (fullColumnPrefix.length() + 1);
+            result = concat(fullColumnPrefix, new NameShorter(maxPostfixLength, dontTouchFirst)
                     .embeddedColumnName(columnPostfix));
         } else {
-            result = join(options.getColumnPrefix(),
-                    embeddedColumnName(prefix, embeddedPropertyName,
-                            options.getMaxLength() - options.getColumnPrefixLength()));
+            result = join(options.getColumnPrefix(), embeddedColumnName(columnPrefix, columnPostfix,
+                    options.getMaxLength() - options.getColumnPrefixLength()));
         }
 
         return assertName(result, joinWithSpace(prefix, embeddedPropertyName),
