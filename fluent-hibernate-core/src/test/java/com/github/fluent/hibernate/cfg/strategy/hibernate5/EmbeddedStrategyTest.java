@@ -24,7 +24,7 @@ import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
  *
  * @author V.Ladynev
  */
-public class EmbeddedMethodsStrategyTest {
+public class EmbeddedStrategyTest {
 
     private static ServiceRegistry serviceRegistry;
 
@@ -40,43 +40,57 @@ public class EmbeddedMethodsStrategyTest {
 
     @Test
     public void testWithPrefxes() {
-        Metadata metadata = StrategyTestUtils.createMetadata(serviceRegistry,
-                new Hibernate5NamingStrategy(), User.class);
+        assertWithPrefixes(User.class);
+        assertWithPrefixes(UserField.class);
+    }
 
-        PersistentClass userBinding = metadata.getEntityBinding(User.class.getName());
-        assertThat(StrategyTestUtils.getComponentColumnNames(userBinding, "justName"))
+    private void assertWithPrefixes(Class<?> clazz) {
+        Metadata metadata = StrategyTestUtils.createMetadata(serviceRegistry,
+                new Hibernate5NamingStrategy(), clazz);
+
+        PersistentClass binding = metadata.getEntityBinding(clazz.getName());
+
+        assertThat(StrategyTestUtils.getComponentColumnNames(binding, "justName"))
                 .containsExactly("f_just_name_first_name", "f_just_name_last_name");
-        assertThat(StrategyTestUtils.getComponentColumnNames(userBinding, "prefixName"))
-                .containsExactly("f_prefix_first_name", "f_prefix_last_name");
+        assertThat(StrategyTestUtils.getComponentColumnNames(binding, "prefixName"))
+                .containsExactly("f_xx_prefix_first_name", "f_xx_prefix_last_name");
     }
 
     @Test
     public void testWithoutPrefxes() {
+        assertWithoutPrefixes(User.class);
+    }
+
+    private void assertWithoutPrefixes(Class<?> clazz) {
         Metadata metadata = StrategyTestUtils.createMetadata(serviceRegistry,
                 new Hibernate5NamingStrategy(StrategyOptions.builder().withoutPrefixes().build()),
-                User.class);
+                clazz);
 
-        PersistentClass userBinding = metadata.getEntityBinding(User.class.getName());
-        assertThat(StrategyTestUtils.getComponentColumnNames(userBinding, "justName"))
+        PersistentClass binding = metadata.getEntityBinding(clazz.getName());
+
+        assertThat(StrategyTestUtils.getComponentColumnNames(binding, "justName"))
                 .containsExactly("just_name_first_name", "just_name_last_name");
-        assertThat(StrategyTestUtils.getComponentColumnNames(userBinding, "prefixName"))
-                .containsExactly("prefix_first_name", "prefix_last_name");
+        assertThat(StrategyTestUtils.getComponentColumnNames(binding, "prefixName"))
+                .containsExactly("xx_prefix_first_name", "xx_prefix_last_name");
     }
 
     @Test
     public void testRestrictLength() {
+        assertRestrictLength(User.class);
+    }
+
+    private void assertRestrictLength(Class<?> clazz) {
         Metadata metadata = StrategyTestUtils.createMetadata(serviceRegistry,
                 new Hibernate5NamingStrategy(StrategyOptions.builder().restrictLength(20).build()),
-                User.class);
+                clazz);
 
-        PersistentClass userBinding = metadata.getEntityBinding(User.class.getName());
-        assertThat(StrategyTestUtils.getComponentColumnNames(userBinding, "justName"))
+        PersistentClass binding = metadata.getEntityBinding(clazz.getName());
+
+        assertThat(StrategyTestUtils.getComponentColumnNames(binding, "justName"))
                 .containsExactly("f_jst_nme_first_name", "f_just_nme_last_name");
 
-        /*
-        assertThat(StrategyTestUtils.getComponentColumnNames(userBinding, "prefixName"))
-                .containsExactly("f_prefix_first_name", "f_prefix_last_name");
-        */
+        assertThat(StrategyTestUtils.getComponentColumnNames(binding, "prefixName"))
+                .containsExactly("f_xx_prefix_frst_nme", "f_xx_prefix_last_nme");
     }
 
     @Entity
@@ -100,7 +114,7 @@ public class EmbeddedMethodsStrategyTest {
         }
 
         @Embedded
-        @FluentName(prefix = "prefix")
+        @FluentName(prefix = "xx_prefix")
         public Name getPrefixName() {
             return prefixName;
         }
@@ -143,6 +157,33 @@ public class EmbeddedMethodsStrategyTest {
         public void setLastName(String lastName) {
             this.lastName = lastName;
         }
+
+    }
+
+    @Entity
+    public static class UserField {
+
+        @Id
+        @GeneratedValue
+        private String pid;
+
+        @Embedded
+        private NameField justName;
+
+        @Embedded
+        @FluentName(prefix = "xx_prefix")
+        private Name prefixName;
+
+    }
+
+    @Embeddable
+    public static class NameField {
+
+        @Column
+        private String firstName;
+
+        @Column
+        private String lastName;
 
     }
 

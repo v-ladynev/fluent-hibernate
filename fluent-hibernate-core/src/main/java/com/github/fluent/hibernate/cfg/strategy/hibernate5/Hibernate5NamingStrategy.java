@@ -1,7 +1,7 @@
 package com.github.fluent.hibernate.cfg.strategy.hibernate5;
 
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.List;
 
 import org.hibernate.boot.model.naming.EntityNaming;
@@ -95,26 +95,45 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
         return toIdentifier(strategy.propertyToColumnName(propertyName), source);
     }
 
+    // TODO remove ReflectHelper
     private static String getFluentNamePrefix(Ejb3Column column, String propertyName) {
-        Method getter = getPropertyGetter(column, propertyName);
+        Class<?> mappedClass = column.getPropertyHolder().getPersistentClass().getMappedClass();
 
-        if (getter == null) {
-            return null;
-        }
-
-        FluentName annotation = getter.getAnnotation(FluentName.class);
-        return annotation == null ? null : annotation.prefix();
-    }
-
-    // TODO check a field annotation
-    private static Method getPropertyGetter(Ejb3Column column, String propertyName) {
         try {
-            Class<?> mappedClass = column.getPropertyHolder().getPersistentClass().getMappedClass();
-            return ReflectHelper.findGetterMethod(mappedClass, propertyName);
+            String result = getFluentNamePrefix(findGetterMethod(mappedClass, propertyName));
+            return result == null ? getFluentNamePrefix(findField(mappedClass, propertyName))
+                    : result;
         } catch (Exception ex) {
             ex.printStackTrace();
             return null;
         }
+    }
+
+    public static AccessibleObject findGetterMethod(Class<?> containerClass, String propertyName) {
+        try {
+            return ReflectHelper.findGetterMethod(containerClass, propertyName);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public static AccessibleObject findField(Class<?> containerClass, String propertyName) {
+        try {
+            return ReflectHelper.findField(containerClass, propertyName);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    private static String getFluentNamePrefix(AccessibleObject accessableObject) {
+        if (accessableObject == null) {
+            return null;
+        }
+
+        FluentName annotation = accessableObject.getAnnotation(FluentName.class);
+        return annotation == null ? null : annotation.prefix();
     }
 
     private static boolean isEmbedded(Ejb3Column column) {
