@@ -11,25 +11,46 @@ import org.junit.Test;
  */
 public class NestedSetterAccessorTest {
 
-    private Root root;
+    private RootLevel root;
 
     @Before
     public void setUp() {
-        root = new Root();
+        root = new RootLevel();
     }
 
     @Test
     public void testDirectLevel() {
-        NestedSetterAccessor.getSetter(Root.class, "rootName").set(root, "rootName");
-        NestedSetterAccessor.getSetter(Root.class, "levela.levelaName").set(root, "levelaName");
+        NestedSetterAccessor.getSetter(RootLevel.class, "rootName").set(root, "rootName");
+        NestedSetterAccessor.getSetter(RootLevel.class, "levela.levelaName").set(root,
+                "levelaName");
+        NestedSetterAccessor.getSetter(RootLevel.class, "levela.levelb.levelbName").set(root,
+                "levelbName");
 
         assertThat(root.getRootName()).isEqualTo("rootName");
 
         assertThat(root.getLevela()).isNotNull();
         assertThat(root.getLevela().getLevelaName()).isEqualTo("levelaName");
+        assertThat(root.getLevela().getLevelb()).isNotNull();
+        assertThat(root.getLevela().getLevelb().getLevelbName()).isEqualTo("levelbName");
     }
 
-    public static class Root {
+    @Test
+    public void testInheretedLevel() {
+        NestedSetterAccessor.getSetter(RootLevel.class, "baseName").set(root, "baseName");
+        NestedSetterAccessor.getSetter(RootLevel.class, "levela.baseName").set(root,
+                "levelaBaseName");
+        NestedSetterAccessor.getSetter(RootLevel.class, "levela.levelb.baseName").set(root,
+                "levelbBaseName");
+
+        assertThat(root.getBaseName()).isEqualTo("baseName");
+
+        assertThat(root.getLevela()).isNotNull();
+        assertThat(root.getLevela().getBaseName()).isEqualTo("levelaBaseName");
+        assertThat(root.getLevela().getLevelb()).isNotNull();
+        assertThat(root.getLevela().getLevelb().getBaseName()).isEqualTo("levelbBaseName");
+    }
+
+    public static class RootLevel extends LevelBase {
 
         private Levela levela;
 

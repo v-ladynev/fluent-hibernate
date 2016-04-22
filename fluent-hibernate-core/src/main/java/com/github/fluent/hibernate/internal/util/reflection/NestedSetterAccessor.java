@@ -3,9 +3,7 @@ package com.github.fluent.hibernate.internal.util.reflection;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 import org.hibernate.HibernateException;
 import org.hibernate.PropertyNotFoundException;
@@ -34,14 +32,13 @@ public class NestedSetterAccessor {
         return result;
     }
 
-    /*
     private static NestedSetter getSetterOrNull(Class<?> theClass, String propertyName) {
         if (theClass == Object.class || theClass == null || propertyName == null) {
             return null;
         }
-    
+
         String[] pNames = propertyName.split(SPLITTER_REG_EX);
-    
+
         Method[] getMethods = new Method[pNames.length - 1];
         Method[] setMethods = new Method[pNames.length - 1];
         Class<?> tmpClass = theClass;
@@ -54,7 +51,7 @@ public class NestedSetterAccessor {
             }
             tmpClass = getMethods[i].getReturnType();
         }
-    
+
         Method method = setterMethod(tmpClass, pNames[pNames.length - 1]);
         if (method != null) {
             ReflectionUtils.makePublic(method);
@@ -68,17 +65,17 @@ public class NestedSetterAccessor {
             }
         }
         return setter;
-    
+
     }
-    
+
     private static Method setterMethod(Class<?> theClass, String propertyName) {
         Method getter = ReflectionUtils.findGetterMethod(theClass, propertyName);
         Class<?> returnType = getter == null ? null : getter.getReturnType();
-    
+
         PropertyDescriptor[] descriptors = getPropertyDescriptors(theClass);
-    
+
         Method potentialSetter = null;
-    
+
         for (PropertyDescriptor descriptor : descriptors) {
             potentialSetter = descriptor.getWriteMethod();
             if (potentialSetter == null) {
@@ -96,7 +93,7 @@ public class NestedSetterAccessor {
         }
         return potentialSetter;
     }
-    
+
     private static PropertyDescriptor[] getPropertyDescriptors(Class<?> beanClass) {
         try {
             return Introspector.getBeanInfo(beanClass).getPropertyDescriptors();
@@ -104,16 +101,15 @@ public class NestedSetterAccessor {
             throw new RuntimeException(ex);
         }
     }
-    
-    */
 
+    /*
     private static NestedSetter getSetterOrNull(Class<?> theClass, String propertyName) {
         if (theClass == Object.class || theClass == null) {
             return null;
         }
-
+    
         String[] pNames = propertyName.split(SPLITTER_REG_EX);
-
+    
         Method[] getMethods = new Method[pNames.length - 1];
         Method[] setMethods = new Method[pNames.length - 1];
         Class<?> tmpClass = theClass;
@@ -126,7 +122,7 @@ public class NestedSetterAccessor {
             }
             tmpClass = getMethods[i].getReturnType();
         }
-
+    
         Method method = setterMethod(tmpClass, pNames[pNames.length - 1]);
         if (method != null) {
             makePublic(theClass, method);
@@ -140,17 +136,17 @@ public class NestedSetterAccessor {
             }
         }
         return setter;
-
+    
     }
-
+    
     private static Method setterMethod(Class<?> theClass, String propertyName) {
         Getter getter = getGetterOrNull(theClass, propertyName);
         Class<?> returnType = getter == null ? null : getter.getReturnType();
-
+    
         PropertyDescriptor[] descriptors = getPropertyDescriptors(theClass);
-
+    
         Method potentialSetter = null;
-
+    
         for (PropertyDescriptor descriptor : descriptors) {
             potentialSetter = descriptor.getWriteMethod();
             if (potentialSetter == null) {
@@ -168,19 +164,19 @@ public class NestedSetterAccessor {
         }
         return potentialSetter;
     }
-
+    
     private static Getter getGetterOrNull(Class<?> theClass, String propertyName) {
         if (theClass == Object.class || theClass == null) {
             return null;
         }
-
+    
         Method method = getterMethod(theClass, propertyName);
-
+    
         if (method != null) {
             makePublic(theClass, method);
             return new Getter(method);
         }
-
+    
         Getter getter = getGetterOrNull(theClass.getSuperclass(), propertyName);
         if (getter == null) {
             Class<?>[] interfaces = theClass.getInterfaces();
@@ -190,20 +186,20 @@ public class NestedSetterAccessor {
         }
         return getter;
     }
-
+    
     private static void makePublic(Class<?> clazz, Method method) {
         if (!isPublic(clazz, method)) {
             method.setAccessible(true);
         }
     }
-
+    
     private static boolean isPublic(Class<?> clazz, Member member) {
         return Modifier.isPublic(member.getModifiers()) && Modifier.isPublic(clazz.getModifiers());
     }
-
+    
     private static Method getterMethod(Class<?> theClass, String propertyName) {
         PropertyDescriptor[] descriptors = getPropertyDescriptors(theClass);
-
+    
         for (PropertyDescriptor descriptor : descriptors) {
             Method readMethod = descriptor.getReadMethod();
             if (readMethod == null) {
@@ -214,10 +210,10 @@ public class NestedSetterAccessor {
                 return readMethod;
             }
         }
-
+    
         return null;
     }
-
+    
     private static PropertyDescriptor[] getPropertyDescriptors(Class<?> beanClass) {
         try {
             return Introspector.getBeanInfo(beanClass).getPropertyDescriptors();
@@ -225,5 +221,6 @@ public class NestedSetterAccessor {
             throw new RuntimeException(ex);
         }
     }
+    */
 
 }
