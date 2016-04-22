@@ -45,7 +45,7 @@ public class FluentHibernateResultTransformer extends BasicTransformerAdapter {
         NestedSetter[] result = new NestedSetter[aliases.length];
         for (int i = 0; i < aliases.length; i++) {
             String alias = aliases[i];
-            result[i] = NestedSetterAccessor.getSetter(resultClass, alias);
+            result[i] = NestedSetterAccessor.createSetter(resultClass, alias);
         }
 
         return result;
