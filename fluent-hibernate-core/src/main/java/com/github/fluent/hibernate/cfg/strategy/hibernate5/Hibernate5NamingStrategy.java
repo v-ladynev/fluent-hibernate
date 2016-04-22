@@ -24,6 +24,7 @@ import com.github.fluent.hibernate.cfg.strategy.JoinTableNames.TableDescription;
 import com.github.fluent.hibernate.cfg.strategy.NamingStrategyUtils;
 import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
 import com.github.fluent.hibernate.internal.util.InternalUtils;
+import com.github.fluent.hibernate.internal.util.reflection.ReflectionUtils;
 
 /**
  * A naming strategy for Hibernate 5.
@@ -143,7 +144,7 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
     private static Ejb3Column getEjb3Column(ImplicitBasicColumnNameSource source) {
         try {
             Field ejb3ColumnField = source.getClass().getDeclaredField("this$0");
-            ejb3ColumnField.setAccessible(true);
+            ReflectionUtils.makePublic(ejb3ColumnField);
             return (Ejb3Column) ejb3ColumnField.get(source);
         } catch (Exception ex) {
             throw InternalUtils.toRuntimeException(ex);

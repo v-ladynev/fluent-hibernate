@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate.internal.transformer;
+package com.github.fluent.hibernate.internal.util.reflection;
 
 import java.lang.reflect.Method;
 
@@ -8,9 +8,11 @@ import org.hibernate.PropertyAccessException;
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 
 /**
+ * A nested setter.
+ *
  * @author DoubleF1re
  */
-/* package */final class Setter {
+public final class NestedSetter {
 
     private final Class<?> clazz;
     private final transient Method[] getMethods;
@@ -18,7 +20,7 @@ import com.github.fluent.hibernate.internal.util.InternalUtils;
     private final transient Method method;
     private final String propertyName;
 
-    public Setter(Class<?> clazz, Method[] getMethods, Method[] setMethods, Method method,
+    public NestedSetter(Class<?> clazz, Method[] getMethods, Method[] setMethods, Method method,
             String propertyName) {
         this.clazz = clazz;
         this.method = method;
@@ -30,13 +32,13 @@ import com.github.fluent.hibernate.internal.util.InternalUtils;
     public void set(Object target, Object value) {
         try {
             invokeSet(target, value);
-        } catch (Exception e) {
+        } catch (Exception ex) {
             checkForPrimitive(value);
             String errorMessage = String.format(
-                    "Setter information: expected type: %s, actual type: %s", method
-                    .getParameterTypes()[0].getName(), value == null ? null : value
-                            .getClass().getName());
-            throw new PropertyAccessException(e, errorMessage, true, clazz, propertyName);
+                    "Setter information: expected type: %s, actual type: %s",
+                    method.getParameterTypes()[0].getName(),
+                    value == null ? null : value.getClass().getName());
+            throw new PropertyAccessException(ex, errorMessage, true, clazz, propertyName);
         }
     }
 

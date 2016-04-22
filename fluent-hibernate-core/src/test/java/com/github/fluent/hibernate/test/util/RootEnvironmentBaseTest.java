@@ -3,20 +3,16 @@ package com.github.fluent.hibernate.test.util;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 
 import com.github.fluent.hibernate.H;
-import com.github.fluent.hibernate.factory.HibernateSessionFactory;
 import com.github.fluent.hibernate.test.persistent.Root;
 
 /**
  *
  * @author V.Ladynev
  */
-public class RootEnvironmentBaseTest extends FluentHibernateBaseTest
-{
+public class RootEnvironmentBaseTest extends FluentHibernateBaseTest {
 
     @Before
     public void beforeEachTest() {
