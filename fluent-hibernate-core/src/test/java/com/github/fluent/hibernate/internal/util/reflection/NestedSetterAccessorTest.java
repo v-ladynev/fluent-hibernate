@@ -1,14 +1,39 @@
 package com.github.fluent.hibernate.internal.util.reflection;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.Before;
+import org.junit.Test;
+
 /**
  *
  * @author V.Ladynev
  */
 public class NestedSetterAccessorTest {
 
-    private static class Root {
+    private Root root;
+
+    @Before
+    public void setUp() {
+        root = new Root();
+    }
+
+    @Test
+    public void testDirectLevel() {
+        NestedSetterAccessor.getSetter(Root.class, "rootName").set(root, "rootName");
+        NestedSetterAccessor.getSetter(Root.class, "levela.levelaName").set(root, "levelaName");
+
+        assertThat(root.getRootName()).isEqualTo("rootName");
+
+        assertThat(root.getLevela()).isNotNull();
+        assertThat(root.getLevela().getLevelaName()).isEqualTo("levelaName");
+    }
+
+    public static class Root {
 
         private Levela levela;
+
+        private String rootName;
 
         public Levela getLevela() {
             return levela;
@@ -18,9 +43,17 @@ public class NestedSetterAccessorTest {
             this.levela = levela;
         }
 
+        public String getRootName() {
+            return rootName;
+        }
+
+        public void setRootName(String rootName) {
+            this.rootName = rootName;
+        }
+
     }
 
-    private static class LevelBase {
+    public static class LevelBase {
 
         private String baseName;
 
@@ -34,9 +67,11 @@ public class NestedSetterAccessorTest {
 
     }
 
-    private static class Levela extends LevelBase {
+    public static class Levela extends LevelBase {
 
         private Levelb levelb;
+
+        private String levelaName;
 
         public Levelb getLevelb() {
             return levelb;
@@ -46,9 +81,17 @@ public class NestedSetterAccessorTest {
             this.levelb = levelb;
         }
 
+        public String getLevelaName() {
+            return levelaName;
+        }
+
+        public void setLevelaName(String levelaName) {
+            this.levelaName = levelaName;
+        }
+
     }
 
-    private static class Levelb extends LevelBase {
+    public static class Levelb extends LevelBase {
 
         private String levelbName;
 
