@@ -9,7 +9,7 @@ import org.junit.Test;
  *
  * @author V.Ladynev
  */
-public class NestedSetterAccessorTest {
+public class NestedSetterTest {
 
     private RootLevel root;
 
@@ -18,13 +18,11 @@ public class NestedSetterAccessorTest {
         root = new RootLevel();
     }
 
-    // @Test
+    @Test
     public void testDirectLevel() {
-        NestedSetterAccessor.createSetter(RootLevel.class, "rootName").set(root, "rootName");
-        NestedSetterAccessor.createSetter(RootLevel.class, "levela.levelaName").set(root,
-                "levelaName");
-        NestedSetterAccessor.createSetter(RootLevel.class, "levela.levelb.levelbName").set(root,
-                "levelbName");
+        NestedSetter.create(RootLevel.class, "rootName").set(root, "rootName");
+        NestedSetter.create(RootLevel.class, "levela.levelaName").set(root, "levelaName");
+        NestedSetter.create(RootLevel.class, "levela.levelb.levelbName").set(root, "levelbName");
 
         assertThat(root.getRootName()).isEqualTo("rootName");
 
@@ -36,11 +34,9 @@ public class NestedSetterAccessorTest {
 
     @Test
     public void testInheretedLevel() {
-        NestedSetterAccessor.createSetter(RootLevel.class, "baseName").set(root, "baseName");
-        NestedSetterAccessor.createSetter(RootLevel.class, "levela.baseName").set(root,
-                "levelaBaseName");
-        NestedSetterAccessor.createSetter(RootLevel.class, "levela.levelb.baseName").set(root,
-                "levelbBaseName");
+        NestedSetter.create(RootLevel.class, "baseName").set(root, "baseName");
+        NestedSetter.create(RootLevel.class, "levela.baseName").set(root, "levelaBaseName");
+        NestedSetter.create(RootLevel.class, "levela.levelb.baseName").set(root, "levelbBaseName");
 
         assertThat(root.getBaseName()).isEqualTo("baseName");
         assertThat(root.getLevela()).isNotNull();

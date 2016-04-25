@@ -3,7 +3,9 @@ package com.github.fluent.hibernate.internal.util.reflection;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import com.github.fluent.hibernate.internal.util.InternalUtils;
@@ -13,6 +15,8 @@ import com.github.fluent.hibernate.internal.util.InternalUtils;
  * @author V.Ladynev
  */
 public final class ReflectionUtils {
+
+    private static final String SPLIT_PROPERTY_REGEXP = "\\.";
 
     private ReflectionUtils() {
 
@@ -150,6 +154,35 @@ public final class ReflectionUtils {
         } catch (IntrospectionException ex) {
             throw InternalUtils.toRuntimeException(ex);
         }
+    }
+
+    public static Field findField(Class<?> classToCheck, String propertyName) {
+        if (classToCheck == null || Object.class.equals(classToCheck)) {
+            return null;
+        }
+
+        try {
+            return classToCheck.getDeclaredField(propertyName);
+        } catch (NoSuchFieldException nsfe) {
+            return findField(classToCheck.getSuperclass(), propertyName);
+        }
+
+    }
+
+    public static String[] getPropertyParts(String property) {
+        return property == null ? new String[0] : property.split(SPLIT_PROPERTY_REGEXP);
+    }
+
+    public static <T extends Annotation> T getAnnotation(Class<?> classToCheck, String propertyName,
+            Class<T> annotationClass) {
+        T result = getAnnotation(findGetterMethod(classToCheck, propertyName), annotationClass);
+        return result == null
+                ? getAnnotation(findField(classToCheck, propertyName), annotationClass) : result;
+    }
+
+    private static <T extends Annotation> T getAnnotation(AccessibleObject accessibleObject,
+            Class<T> annotationClass) {
+        return accessibleObject == null ? null : accessibleObject.getAnnotation(annotationClass);
     }
 
 }

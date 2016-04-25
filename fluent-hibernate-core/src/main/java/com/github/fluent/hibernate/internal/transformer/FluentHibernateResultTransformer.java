@@ -4,7 +4,6 @@ import org.hibernate.transform.BasicTransformerAdapter;
 
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 import com.github.fluent.hibernate.internal.util.reflection.NestedSetter;
-import com.github.fluent.hibernate.internal.util.reflection.NestedSetterAccessor;
 
 /**
  * @author DoubleF1re
@@ -45,7 +44,7 @@ public class FluentHibernateResultTransformer extends BasicTransformerAdapter {
         NestedSetter[] result = new NestedSetter[aliases.length];
         for (int i = 0; i < aliases.length; i++) {
             String alias = aliases[i];
-            result[i] = NestedSetterAccessor.createSetter(resultClass, alias);
+            result[i] = NestedSetter.create(resultClass, alias);
         }
 
         return result;

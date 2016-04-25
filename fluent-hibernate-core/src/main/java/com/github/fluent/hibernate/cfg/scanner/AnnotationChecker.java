@@ -5,8 +5,9 @@ import java.io.InputStream;
 import java.lang.annotation.Annotation;
 
 /**
- * Based on <a href="https://github.com/rmuller/infomas-asl/tree/master/annotation-detector">
- * annotation-detector</a> author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
+ * Based on
+ * <a href="https://github.com/rmuller/infomas-asl/tree/master/annotation-detector"> annotation-
+ * detector</a> author <a href="mailto:rmuller@xiam.nl">Ronald K. Muller</a>
  *
  * @author V.Ladynev
  */
@@ -55,6 +56,7 @@ public class AnnotationChecker {
     }
 
     /**
+     * Check an annotation in the class stream.
      *
      * @param classStream
      *            a class file stream, it is closed in this method
@@ -228,8 +230,8 @@ public class AnnotationChecker {
             }
             break;
         default:
-            throw new ClassFormatError("Not a valid annotation element type tag: 0x"
-                    + Integer.toHexString(tag));
+            throw new ClassFormatError(
+                    "Not a valid annotation element type tag: 0x" + Integer.toHexString(tag));
         }
     }
 
