@@ -12,7 +12,6 @@ import org.hibernate.mapping.Column;
 import org.hibernate.mapping.Component;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
-import org.hibernate.mapping.Selectable;
 import org.hibernate.service.ServiceRegistry;
 
 import com.github.fluent.hibernate.internal.util.InternalUtils;
@@ -29,16 +28,19 @@ public final class StrategyTestUtils {
 
     public static List<String> getComponentColumnNames(PersistentClass persistentClass,
             String propertyName) {
-        ArrayList<String> result = InternalUtils.CollectionUtils.newArrayList();
 
         Property componentBinding = persistentClass.getProperty(propertyName);
         assertThat(componentBinding).isNotNull();
 
         Component component = (Component) componentBinding.getValue();
-        Iterator<Selectable> selectables = component.getColumnIterator();
+        return getColumNames(component.getColumnIterator());
+    }
 
-        while (selectables.hasNext()) {
-            Column column = (Column) selectables.next();
+    public static List<String> getColumNames(Iterator<?> columnIterator) {
+        ArrayList<String> result = InternalUtils.CollectionUtils.newArrayList();
+
+        while (columnIterator.hasNext()) {
+            Column column = (Column) columnIterator.next();
             result.add(column.getQuotedName());
         }
 

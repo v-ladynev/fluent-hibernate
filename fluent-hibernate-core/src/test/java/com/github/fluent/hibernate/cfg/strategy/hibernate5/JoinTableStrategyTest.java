@@ -11,7 +11,6 @@ import javax.persistence.ManyToMany;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.mapping.Collection;
-import org.hibernate.mapping.Column;
 import org.hibernate.mapping.Table;
 import org.hibernate.service.ServiceRegistry;
 import org.junit.AfterClass;
@@ -46,8 +45,8 @@ public class JoinTableStrategyTest {
 
         assertThat(table.getName()).isEqualTo("table_users_roles");
         assertThat(table.getColumnSpan()).isEqualTo(2);
-        assertThat(table.getColumnIterator()).containsOnly(new Column("fk_user"),
-                new Column("fk_roles"));
+        assertThat(StrategyTestUtils.getColumNames(table.getColumnIterator()))
+                .containsOnly("fk_user", "fk_roles");
     }
 
     @Test
@@ -56,17 +55,19 @@ public class JoinTableStrategyTest {
 
         assertThat(table.getName()).isEqualTo("users_roles");
         assertThat(table.getColumnSpan()).isEqualTo(2);
-        assertThat(table.getColumnIterator()).containsOnly(new Column("user"), new Column("roles"));
+        assertThat(StrategyTestUtils.getColumNames(table.getColumnIterator())).containsOnly("user",
+                "roles");
     }
 
     @Test
     public void testRestrictLength() {
-        Table table = getUserRolesTable(StrategyOptions.builder().restrictLength(20).build());
+        Table table = getUserRolesTable(StrategyOptions.builder().restrictLength(6)
+                .restrictJoinTableNames(false).restrictConstraintNames(false).build());
 
         assertThat(table.getName()).isEqualTo("users_roles");
         assertThat(table.getColumnSpan()).isEqualTo(2);
-        assertThat(table.getColumnIterator()).containsOnly(new Column("fk_user"),
-                new Column("fk_roles"));
+        assertThat(StrategyTestUtils.getColumNames(table.getColumnIterator()))
+                .containsOnly("fk_usr", "fk_rls");
     }
 
     private static Table getUserRolesTable(StrategyOptions options) {

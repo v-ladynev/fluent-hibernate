@@ -66,11 +66,6 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
 
     @Override
     public Identifier determineBasicColumnName(ImplicitBasicColumnNameSource source) {
-        // don't know what it means
-        if (source.isCollectionElement()) {
-            return toIdentifier("elt", source);
-        }
-
         AttributePath attributePath = source.getAttributePath();
         String propertyName = getPropertyName(attributePath);
         String parentPropertyName = getPropertyName(attributePath.getParent());
@@ -87,6 +82,13 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
             return toIdentifier(
                     strategy.embeddedPropertyToColumnName(prefix, propertyName, dontTouchPrefix),
                     source);
+        }
+
+        // It is a strange behaviour for collection associations.
+        // For an example for a "roles" association Hibernate uses "roles.element".
+        if (!InternalUtils.StringUtils.isEmpty(parentPropertyName)
+                && propertyName.equals("element")) {
+            return toIdentifier(propertyName, source);
         }
 
         // Hibernate calls this method the first time for @Embedded column, but doesn't use a result
