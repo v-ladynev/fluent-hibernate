@@ -42,14 +42,14 @@ public class ForeignKeyConstraintStrategyTest {
     @Test
     public void testWithPrefixes() {
         Table table = getUserPhonesTable(StrategyOptions.builder().tablePrefix("table").build());
-        assertThat(StrategyTestUtils.getForeignKeyNames(table))
+        assertThat(StrategyTestUtils.getForeignKeyConstraintNames(table))
                 .containsOnly("F_table_users_phones_fk_phones", "F_table_users_phones_fk_user");
     }
 
     @Test
     public void testWithoutPrefixes() {
         Table table = getUserPhonesTable(StrategyOptions.builder().withoutPrefixes().build());
-        assertThat(StrategyTestUtils.getForeignKeyNames(table)).containsOnly("users_phones_phones",
+        assertThat(StrategyTestUtils.getForeignKeyConstraintNames(table)).containsOnly("users_phones_phones",
                 "users_phones_user");
     }
 
@@ -57,7 +57,7 @@ public class ForeignKeyConstraintStrategyTest {
     public void testRestrictLength() {
         Table table = getUserPhonesTable(
                 StrategyOptions.builder().restrictLength(19).restrictJoinTableNames(false).build());
-        assertThat(StrategyTestUtils.getForeignKeyNames(table)).containsOnly("F_usrs_phns_fk_phns",
+        assertThat(StrategyTestUtils.getForeignKeyConstraintNames(table)).containsOnly("F_usrs_phns_fk_phns",
                 "F_users_phns_fk_usr");
     }
 

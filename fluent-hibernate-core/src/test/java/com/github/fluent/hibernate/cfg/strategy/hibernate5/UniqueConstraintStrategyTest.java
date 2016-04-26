@@ -9,14 +9,14 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.mapping.Collection;
+import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Table;
 import org.hibernate.service.ServiceRegistry;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
-import com.github.fluent.hibernate.factory.HibernateSessionFactory;
 
 /**
  *
@@ -36,47 +36,37 @@ public class UniqueConstraintStrategyTest {
         StandardServiceRegistryBuilder.destroy(serviceRegistry);
     }
 
-    // @Test
+    @Test
     public void testWithPrefixes() {
         // @OneToMany unique, and @Column(unique = true) don't use a naming strategy
-
-        /*
-        Table table = getUserPhonesTable(StrategyOptions.builder().tablePrefix("table").build());
-        assertThat(StrategyTestUtils.getForeignKeyNames(table))
-                .containsOnly("F_table_users_phones_fk_phones", "F_table_users_phones_fk_user");
-        
-        */
-
-        HibernateSessionFactory.Builder.configureWithoutHibernateCfgXml().useNamingStrategy()
-                .annotatedClasses(UserWithPrefix.class).createSessionFactory();
-
+        Table table = getTable(UserWithPrefix.class,
+                StrategyOptions.builder().tablePrefix("table").build());
+        assertThat(StrategyTestUtils.getUniqueConstraintNames(table))
+                .containsOnly("U_table_user_with_prefixes_f_login");
     }
 
-    // @Test
+    @Test
     public void testWithoutPrefixes() {
-        Table table = getUserPhonesTable(StrategyOptions.builder().withoutPrefixes().build());
-        assertThat(StrategyTestUtils.getForeignKeyNames(table)).containsOnly("users_phones_phones",
-                "users_phones_user");
+        Table table = getTable(UserWithoutPrefix.class,
+                StrategyOptions.builder().withoutPrefixes().build());
+        assertThat(StrategyTestUtils.getUniqueConstraintNames(table))
+                .containsOnly("user_without_prefixes_login");
     }
 
-    // @Test
+    @Test
     public void testRestrictLength() {
-        Table table = getUserPhonesTable(StrategyOptions.builder().restrictLength(6)
-                .restrictJoinTableNames(false).restrictConstraintNames(false).build());
-
-        assertThat(table.getName()).isEqualTo("users_roles");
-        assertThat(table.getColumnSpan()).isEqualTo(2);
-        assertThat(StrategyTestUtils.getColumNames(table.getColumnIterator()))
-                .containsOnly("fk_usr", "fk_rls");
+        Table table = getTable(UserWithPrefix.class,
+                StrategyOptions.builder().restrictLength(21).build());
+        assertThat(StrategyTestUtils.getUniqueConstraintNames(table))
+                .containsOnly("U_usr_wth_prfxs_f_lgn");
     }
 
-    private static Table getUserPhonesTable(StrategyOptions options) {
+    private static Table getTable(Class<?> clazz, StrategyOptions options) {
         Metadata metadata = StrategyTestUtils.createMetadata(serviceRegistry,
-                new Hibernate5NamingStrategy(options), UserWithPrefix.class);
-        Collection binding = metadata
-                .getCollectionBinding(UserWithPrefix.class.getName() + ".phones");
+                new Hibernate5NamingStrategy(options), clazz);
+        PersistentClass binding = metadata.getEntityBinding(clazz.getName());
         assertThat(binding).isNotNull();
-        return binding.getCollectionTable();
+        return binding.getTable();
     }
 
     @Entity

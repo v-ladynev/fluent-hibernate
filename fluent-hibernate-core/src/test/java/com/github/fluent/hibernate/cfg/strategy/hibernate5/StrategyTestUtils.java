@@ -14,6 +14,7 @@ import org.hibernate.mapping.ForeignKey;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
 import org.hibernate.mapping.Table;
+import org.hibernate.mapping.UniqueKey;
 import org.hibernate.service.ServiceRegistry;
 
 import com.github.fluent.hibernate.internal.util.InternalUtils;
@@ -49,11 +50,24 @@ public final class StrategyTestUtils {
         return result;
     }
 
-    public static List<String> getForeignKeyNames(Table table) {
+    public static List<String> getForeignKeyConstraintNames(Table table) {
         ArrayList<String> result = InternalUtils.CollectionUtils.newArrayList();
 
         for (ForeignKey foreignKey : table.getForeignKeys().values()) {
             result.add(foreignKey.getName());
+        }
+
+        return result;
+    }
+
+    public static List<String> getUniqueConstraintNames(Table table) {
+        ArrayList<String> result = InternalUtils.CollectionUtils.newArrayList();
+
+        Iterator<UniqueKey> iterator = table.getUniqueKeyIterator();
+
+        while (iterator.hasNext()) {
+            UniqueKey uniqueKey = iterator.next();
+            result.add(uniqueKey.getName());
         }
 
         return result;
