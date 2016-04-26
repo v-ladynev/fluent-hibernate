@@ -1,8 +1,8 @@
 package com.github.fluent.hibernate.cfg.strategy;
 
+import static com.github.fluent.hibernate.cfg.strategy.NamingStrategyUtils.classToPluralizedName;
 import static com.github.fluent.hibernate.cfg.strategy.NamingStrategyUtils.concat;
 import static com.github.fluent.hibernate.cfg.strategy.NamingStrategyUtils.propertyToName;
-import static com.github.fluent.hibernate.cfg.strategy.NamingStrategyUtils.propertyToPluralizedName;
 import static com.github.fluent.hibernate.internal.util.InternalUtils.StringUtils.join;
 import static com.github.fluent.hibernate.internal.util.InternalUtils.StringUtils.joinWithSpace;
 
@@ -31,8 +31,7 @@ public class HibernateNamingStrategy {
     }
 
     public String classToTableName(String className) {
-        String result = join(options.getTablePrefix(),
-                propertyToPluralizedName(InternalUtils.ClassUtils.getShortName(className)));
+        String result = join(options.getTablePrefix(), classToPluralizedName(className));
 
         if (needRestrict(options.isRestrictTableNames())) {
             return assertName(new NameShorter(options.getMaxLength(), options.hasTablePrefix())
@@ -101,8 +100,8 @@ public class HibernateNamingStrategy {
 
     public String joinTableName(String ownerEntityTable, String associatedEntityTable,
             String ownerProperty) {
-        String ownerTable = propertyToPluralizedName(ownerEntityTable);
-        String associatedTable = propertyToPluralizedName(associatedEntityTable);
+        String ownerTable = classToPluralizedName(ownerEntityTable);
+        String associatedTable = classToPluralizedName(associatedEntityTable);
 
         String result = ownerProperty == null ? concat(ownerTable, associatedTable)
                 : concat(concat(ownerTable, propertyToName(ownerProperty)), associatedTable);
@@ -126,11 +125,11 @@ public class HibernateNamingStrategy {
     public String joinKeyColumnName(String joinedColumn, String joinedTable) {
         // TODO check
         // return propertyToColumnName(joinedColumn) + "_id";
-
         return NamingStrategyUtils.addUnderscores(joinedColumn) + "_id";
     }
 
     public String foreignKeyColumnName(String propertyName, String propertyTableName) {
+        // a property name is null for join tables for an owner table foreign key
         String header = propertyName != null ? NamingStrategyUtils.unqualify(propertyName)
                 : propertyTableName;
         String result = join(options.getForeignKeyColumnPrefix(),

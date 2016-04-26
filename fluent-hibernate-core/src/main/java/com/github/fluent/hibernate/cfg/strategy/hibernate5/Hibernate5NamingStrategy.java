@@ -19,7 +19,6 @@ import com.github.fluent.hibernate.annotations.FluentName;
 import com.github.fluent.hibernate.cfg.strategy.HibernateNamingStrategy;
 import com.github.fluent.hibernate.cfg.strategy.JoinTableNames;
 import com.github.fluent.hibernate.cfg.strategy.JoinTableNames.TableDescription;
-import com.github.fluent.hibernate.cfg.strategy.NamingStrategyUtils;
 import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 import com.github.fluent.hibernate.internal.util.reflection.ReflectionUtils;
@@ -117,8 +116,8 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
 
     @Override
     public Identifier determineJoinColumnName(ImplicitJoinColumnNameSource source) {
-        String propertyTableName = NamingStrategyUtils
-                .unqualify(source.getEntityNaming().getEntityName());
+        String propertyTableName = InternalUtils.ClassUtils
+                .getShortName(source.getEntityNaming().getEntityName());
         // a property name is null for join tables for an owner table foreign key
         String propertyName = getPropertyName(source.getAttributePath());
         String result = strategy.foreignKeyColumnName(propertyName, propertyTableName);

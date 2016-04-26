@@ -161,6 +161,19 @@ public final class InternalUtils {
             return result.length() == 0 ? EMPTY_ARRAY : result.split("\\s+");
         }
 
+        public static String getLastPart(String value, char separator) {
+            int index = value == null ? -1 : value.lastIndexOf(separator);
+            return index < 0 ? value : value.substring(index + 1);
+        }
+
+        public static String addSuffixIfNot(String value, char suffix) {
+            if (isEmpty(value)) {
+                return value;
+            }
+
+            return value.charAt(value.length() - 1) == suffix ? value : value + suffix;
+        }
+
     }
 
     public static final class CollectionUtils {
@@ -233,9 +246,8 @@ public final class InternalUtils {
         }
 
         public static String getShortName(String className) {
-            int lastDotIndex = className.lastIndexOf(PACKAGE_SEPARATOR);
-            String result = lastDotIndex < 0 ? className : className.substring(lastDotIndex + 1);
-            return result.replace(INNER_CLASS_SEPARATOR, PACKAGE_SEPARATOR);
+            return StringUtils.getLastPart(StringUtils.getLastPart(className, PACKAGE_SEPARATOR),
+                    INNER_CLASS_SEPARATOR);
         }
 
     }

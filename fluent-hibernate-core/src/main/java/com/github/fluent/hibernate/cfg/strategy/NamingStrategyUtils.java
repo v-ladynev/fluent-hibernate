@@ -12,7 +12,7 @@ import com.github.fluent.hibernate.internal.util.InternalUtils;
  */
 public final class NamingStrategyUtils {
 
-    private static final char NAME_PARTS_SEPARATOR = '_';
+    public static final char NAME_PARTS_SEPARATOR = '_';
 
     private static final String NAME_PARTS_SEPARATOR_AS_STRING = String
             .valueOf(NAME_PARTS_SEPARATOR);
@@ -40,11 +40,19 @@ public final class NamingStrategyUtils {
         return pluralize(propertyToName(property));
     }
 
+    public static String classToPluralizedName(String className) {
+        return pluralize(classToName(className));
+    }
+
     /**
      * Unqualify propety and add underscores. An example com.github.fluent.SomeName - some_name.
      */
     public static String propertyToName(String property) {
         return addUnderscores(unqualify(property));
+    }
+
+    public static String classToName(String className) {
+        return addUnderscores(InternalUtils.ClassUtils.getShortName(className));
     }
 
     public static String addUnderscores(String name) {

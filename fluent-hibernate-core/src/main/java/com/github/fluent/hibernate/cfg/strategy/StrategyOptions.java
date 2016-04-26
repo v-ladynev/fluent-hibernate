@@ -1,5 +1,6 @@
 package com.github.fluent.hibernate.cfg.strategy;
 
+import static com.github.fluent.hibernate.internal.util.InternalUtils.StringUtils.addSuffixIfNot;
 import static com.github.fluent.hibernate.internal.util.InternalUtils.StringUtils.isEmpty;
 import static com.github.fluent.hibernate.internal.util.InternalUtils.StringUtils.length;
 
@@ -116,7 +117,7 @@ public class StrategyOptions {
     }
 
     public void setTablePrefix(String tablePrefix) {
-        this.tablePrefix = tablePrefix;
+        this.tablePrefix = addSuffixIfNot(tablePrefix, NamingStrategyUtils.NAME_PARTS_SEPARATOR);
     }
 
     public void setColumnPrefix(String columnPrefix) {

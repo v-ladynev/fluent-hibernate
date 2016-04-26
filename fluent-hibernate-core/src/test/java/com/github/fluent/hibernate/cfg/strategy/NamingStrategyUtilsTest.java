@@ -27,4 +27,12 @@ public class NamingStrategyUtilsTest {
         assertThat(removeVowelsSmart("friends", 10)).isEqualTo("frnds");
     }
 
+    @Test
+    public void classToPluralizedName() {
+        assertThat(NamingStrategyUtils.classToPluralizedName("com.company.SomeUser"))
+                .isEqualTo("some_users");
+        assertThat(NamingStrategyUtils.classToPluralizedName("com.company.OuterClass$SomeUser"))
+                .isEqualTo("some_users");
+    }
+
 }

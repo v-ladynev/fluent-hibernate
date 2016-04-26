@@ -39,8 +39,8 @@ public class EmbeddedStrategyTest {
     }
 
     @Test
-    public void testWithPrefxes() {
-        // assertWithPrefixes(User.class);
+    public void testWithPrefixes() {
+        assertWithPrefixes(User.class);
         assertWithPrefixes(UserField.class);
     }
 
@@ -51,13 +51,13 @@ public class EmbeddedStrategyTest {
         PersistentClass binding = metadata.getEntityBinding(clazz.getName());
 
         assertThat(StrategyTestUtils.getComponentColumnNames(binding, "justName"))
-                .containsExactly("f_just_name_first_name", "f_just_name_last_name");
+                .containsOnly("f_just_name_first_name", "f_just_name_last_name");
         assertThat(StrategyTestUtils.getComponentColumnNames(binding, "prefixName"))
-                .containsExactly("f_xx_prefix_first_name", "f_xx_prefix_last_name");
+                .containsOnly("f_xx_prefix_first_name", "f_xx_prefix_last_name");
     }
 
-    // @Test
-    public void testWithoutPrefxes() {
+    @Test
+    public void testWithoutPrefixes() {
         assertWithoutPrefixes(User.class);
     }
 
@@ -69,9 +69,9 @@ public class EmbeddedStrategyTest {
         PersistentClass binding = metadata.getEntityBinding(clazz.getName());
 
         assertThat(StrategyTestUtils.getComponentColumnNames(binding, "justName"))
-                .containsExactly("just_name_first_name", "just_name_last_name");
+                .containsOnly("just_name_first_name", "just_name_last_name");
         assertThat(StrategyTestUtils.getComponentColumnNames(binding, "prefixName"))
-                .containsExactly("xx_prefix_first_name", "xx_prefix_last_name");
+                .containsOnly("xx_prefix_first_name", "xx_prefix_last_name");
     }
 
     @Test
@@ -87,10 +87,10 @@ public class EmbeddedStrategyTest {
         PersistentClass binding = metadata.getEntityBinding(clazz.getName());
 
         assertThat(StrategyTestUtils.getComponentColumnNames(binding, "justName"))
-                .containsExactly("f_jst_nme_first_name", "f_just_nme_last_name");
+                .containsOnly("f_jst_nme_first_name", "f_just_nme_last_name");
 
         assertThat(StrategyTestUtils.getComponentColumnNames(binding, "prefixName"))
-                .containsExactly("f_xx_prefix_frst_nme", "f_xx_prefix_last_nme");
+                .containsOnly("f_xx_prefix_frst_nme", "f_xx_prefix_last_nme");
     }
 
     @Entity

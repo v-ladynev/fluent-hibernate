@@ -22,7 +22,7 @@
       <bean class="com.github.fluent.hibernate.cfg.strategy.hibernate5.Hibernate5NamingStrategy">
         <property name="options">
           <bean class="com.github.fluent.hibernate.cfg.strategy.StrategyOptions">
-            <property name="tablePrefix" value="spring_" />
+            <property name="tablePrefix" value="spring" />
             <property name="maxLength" value="19" />
             <property name="restrictConstraintNames" value="false" />
             <property name="restrictEmbeddedColumnNames" value="false" />
