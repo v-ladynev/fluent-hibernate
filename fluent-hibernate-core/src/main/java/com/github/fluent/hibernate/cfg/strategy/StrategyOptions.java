@@ -16,9 +16,9 @@ public class StrategyOptions {
 
     private static final String FOREIGN_KEY_COLUMN_PREFIX = "fk_";
 
-    private static final String FOREIGN_KEY_CONSTRAINT_PREFIX = "fk_";
+    private static final String FOREIGN_KEY_CONSTRAINT_PREFIX = "F_";
 
-    private static final String UNIQUE_KEY_CONSTRAINT_PREFIX = "uk_";
+    private static final String UNIQUE_KEY_CONSTRAINT_PREFIX = "U_";
 
     private String tablePrefix;
 

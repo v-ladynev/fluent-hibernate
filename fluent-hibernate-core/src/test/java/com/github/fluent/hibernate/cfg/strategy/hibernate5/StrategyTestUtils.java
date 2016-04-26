@@ -10,8 +10,10 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.mapping.Column;
 import org.hibernate.mapping.Component;
+import org.hibernate.mapping.ForeignKey;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
+import org.hibernate.mapping.Table;
 import org.hibernate.service.ServiceRegistry;
 
 import com.github.fluent.hibernate.internal.util.InternalUtils;
@@ -42,6 +44,16 @@ public final class StrategyTestUtils {
         while (columnIterator.hasNext()) {
             Column column = (Column) columnIterator.next();
             result.add(column.getQuotedName());
+        }
+
+        return result;
+    }
+
+    public static List<String> getForeignKeyNames(Table table) {
+        ArrayList<String> result = InternalUtils.CollectionUtils.newArrayList();
+
+        for (ForeignKey foreignKey : table.getForeignKeys().values()) {
+            result.add(foreignKey.getName());
         }
 
         return result;
