@@ -125,7 +125,7 @@ public class HibernateNamingStrategyTest {
     @Test
     public void foreignKeyConstraintName() {
         assertThat(strategy.foreignKeyConstraintName("some_table", "some_field"))
-                .isEqualTo("fk_some_table_some_field");
+                .isEqualTo("F_some_table_some_field");
 
         strategy.getOptions().setForeignKeyConstraintPrefix(null);
         assertThat(strategy.foreignKeyConstraintName("some_table", "some_field"))
@@ -135,7 +135,7 @@ public class HibernateNamingStrategyTest {
     @Test
     public void uniqueKeyConstraintName() {
         assertThat(strategy.uniqueKeyConstraintName("some_table", "some_field"))
-                .isEqualTo("uk_some_table_some_field");
+                .isEqualTo("U_some_table_some_field");
 
         strategy.getOptions().setUniqueKeyConstraintPrefix(null);
         assertThat(strategy.uniqueKeyConstraintName("some_table", "some_field"))
