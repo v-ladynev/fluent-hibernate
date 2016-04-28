@@ -104,7 +104,7 @@ public class HibernateNamingStrategy {
         String associatedTable = classToPluralizedName(associatedEntityTable);
 
         String result = ownerProperty == null ? concat(ownerTable, associatedTable)
-                : concat(concat(ownerTable, propertyToName(ownerProperty)), associatedTable);
+                : concat(concat(ownerTable, associatedTable), propertyToName(ownerProperty));
 
         result = join(options.getTablePrefix(), result);
 

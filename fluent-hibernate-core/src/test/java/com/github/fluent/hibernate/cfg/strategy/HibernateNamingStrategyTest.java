@@ -79,9 +79,12 @@ public class HibernateNamingStrategyTest {
     }
 
     @Test
-    public void collectionTableName() {
+    public void joinTableName() {
         assertThat(strategy.joinTableName("ownerEntity", "associatedEntity"))
                 .isEqualTo("fluent_owner_entities_associated_entities");
+
+        assertThat(strategy.joinTableName("ownerEntity", "associatedEntity", "ownerProperty"))
+                .isEqualTo("fluent_owner_entities_associated_entities_owner_property");
 
         strategy.getOptions().setTablePrefix(null);
         assertThat(strategy.joinTableName("ownerEntity", "associatedEntity"))
