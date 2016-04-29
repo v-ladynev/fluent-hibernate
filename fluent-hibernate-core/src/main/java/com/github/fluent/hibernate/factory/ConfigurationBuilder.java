@@ -6,7 +6,6 @@ import static com.github.fluent.hibernate.internal.util.InternalUtils.Asserts.is
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Properties;
 
 import org.hibernate.SessionFactory;
@@ -82,10 +81,7 @@ class ConfigurationBuilder {
     }
 
     public void addPackagesToScan(String[] packagesToScan) {
-        List<Class<?>> classes = EntityScanner.scanPackages(packagesToScan);
-        for (Class<?> annotatedClass : classes) {
-            result.addAnnotatedClass(annotatedClass);
-        }
+        EntityScanner.scanPackages(packagesToScan).addTo(result);
     }
 
     public void useNamingStrategy() {

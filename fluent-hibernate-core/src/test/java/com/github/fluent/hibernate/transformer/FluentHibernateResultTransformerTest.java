@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate.internal.transformer;
+package com.github.fluent.hibernate.transformer;
 
 import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.ROOT_NAME_A;
 import static com.github.fluent.hibernate.test.util.FluentHibernateTestData.ROOT_NAME_B;

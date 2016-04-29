@@ -20,8 +20,8 @@ import com.github.fluent.hibernate.IRequest;
 import com.github.fluent.hibernate.Pagination;
 import com.github.fluent.hibernate.builder.IBuilder;
 import com.github.fluent.hibernate.factory.HibernateSessionFactory;
-import com.github.fluent.hibernate.internal.transformer.FluentHibernateResultTransformer;
 import com.github.fluent.hibernate.internal.util.InternalUtils.CollectionUtils;
+import com.github.fluent.hibernate.transformer.FluentHibernateResultTransformer;
 
 /**
  * @param <T>

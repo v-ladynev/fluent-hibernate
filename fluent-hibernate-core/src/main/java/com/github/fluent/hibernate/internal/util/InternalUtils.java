@@ -33,15 +33,6 @@ public final class InternalUtils {
         return a == b || a != null && a.equals(b);
     }
 
-    public static Object newInstance(Class<?> classToInstantiate) {
-        try {
-            return classToInstantiate.newInstance();
-        } catch (Exception ex) {
-            throw new RuntimeException(String.format("Could not instantiate a class: %s",
-                    classToInstantiate.getName()), ex);
-        }
-    }
-
     public static void closeQuietly(InputStream stream) {
         try {
             stream.close();
@@ -248,6 +239,21 @@ public final class InternalUtils {
         public static String getShortName(String className) {
             return StringUtils.getLastPart(StringUtils.getLastPart(className, PACKAGE_SEPARATOR),
                     INNER_CLASS_SEPARATOR);
+        }
+
+        /**
+         * Create a new object of a class.
+         *
+         * @param classToInstantiate
+         *            a class of an object
+         */
+        public static Object newInstance(Class<?> classToInstantiate) {
+            try {
+                return classToInstantiate.newInstance();
+            } catch (Exception ex) {
+                throw new RuntimeException(String.format("Could not instantiate a class: %s",
+                        classToInstantiate.getName()), ex);
+            }
         }
 
     }

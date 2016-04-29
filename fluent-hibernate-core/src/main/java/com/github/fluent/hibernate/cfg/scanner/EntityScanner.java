@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.persistence.Entity;
 
+import org.hibernate.cfg.Configuration;
+
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 
 /**
@@ -21,21 +23,23 @@ public final class EntityScanner {
 
     private final List<String> packagesToScan;
 
+    private List<Class<?>> result;
+
     private EntityScanner(String[] packagesToScan) {
-        this.packagesToScan = packagesToScan == null ? Collections.<String> emptyList() : Arrays
-                .asList(InternalUtils.CollectionUtils.correctOneNullToEmpty(packagesToScan));
+        this.packagesToScan = packagesToScan == null ? Collections.<String> emptyList()
+                : Arrays.asList(
+                        InternalUtils.CollectionUtils.correctOneNullToEmpty(packagesToScan));
     }
 
     /**
      * Scan packages for the @Entity annotation.
      *
-     *
      * @param packages
      *            one or more Java package names
      *
-     * @return entity classes
+     * @return EntityScanner for fluent calls
      */
-    public static List<Class<?>> scanPackages(String... packages) {
+    public static EntityScanner scanPackages(String... packages) {
         try {
             return scanPackages(packages, null, Entity.class);
         } catch (Exception ex) {
@@ -43,14 +47,15 @@ public final class EntityScanner {
         }
     }
 
-    static List<Class<?>> scanPackages(String[] packages, List<ClassLoader> loaders,
+    static EntityScanner scanPackages(String[] packages, List<ClassLoader> loaders,
             Class<? extends Annotation> annotation) throws Exception {
         EntityScanner scanner = new EntityScanner(packages);
         scanner.loaders = loaders;
-        return scanner.scan(annotation);
+        scanner.scan(annotation);
+        return scanner;
     }
 
-    private List<Class<?>> scan(Class<? extends Annotation> annotation) throws Exception {
+    private void scan(Class<? extends Annotation> annotation) throws Exception {
         checker = new AnnotationChecker(annotation);
 
         ClasspathScanner scanner = new ClasspathScanner(new ClasspathScanner.IClassAcceptor() {
@@ -63,7 +68,27 @@ public final class EntityScanner {
         scanner.setPackagesToScan(packagesToScan);
         scanner.setLoaders(loaders);
 
-        return scanner.scan();
+        result = scanner.scan();
+    }
+
+    /**
+     * Adds scanned persistents to the Hibernate configuration.
+     *
+     * @param configuration
+     *            a Hibernate configuration
+     *
+     * @return EntityScanner for fluent calls
+     */
+    public EntityScanner addTo(Configuration configuration) {
+        for (Class<?> annotatedClass : result) {
+            configuration.addAnnotatedClass(annotatedClass);
+        }
+
+        return this;
+    }
+
+    public List<Class<?>> result() {
+        return result;
     }
 
 }

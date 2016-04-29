@@ -1,8 +1,8 @@
-package com.github.fluent.hibernate.internal.transformer;
+package com.github.fluent.hibernate.transformer;
 
 import org.hibernate.transform.BasicTransformerAdapter;
 
-import com.github.fluent.hibernate.internal.util.InternalUtils;
+import com.github.fluent.hibernate.internal.util.InternalUtils.ClassUtils;
 import com.github.fluent.hibernate.internal.util.reflection.NestedSetter;
 
 /**
@@ -25,7 +25,7 @@ public class FluentHibernateResultTransformer extends BasicTransformerAdapter {
     public Object transformTuple(Object[] tuple, String[] aliases) {
         createCachedSetters(resultClass, aliases);
 
-        Object result = InternalUtils.newInstance(resultClass);
+        Object result = ClassUtils.newInstance(resultClass);
 
         for (int i = 0; i < aliases.length; i++) {
             setters[i].set(result, tuple[i]);
@@ -42,6 +42,7 @@ public class FluentHibernateResultTransformer extends BasicTransformerAdapter {
 
     private static NestedSetter[] createSetters(Class<?> resultClass, String[] aliases) {
         NestedSetter[] result = new NestedSetter[aliases.length];
+
         for (int i = 0; i < aliases.length; i++) {
             result[i] = NestedSetter.create(resultClass, aliases[i]);
         }

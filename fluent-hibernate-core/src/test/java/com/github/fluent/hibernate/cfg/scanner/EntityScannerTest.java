@@ -38,34 +38,35 @@ public class EntityScannerTest {
     private static final String JAR_PACKAGE = "com.github.fluent.hibernate.cfg.scanner.jar.persistent";
 
     private static final Class<?>[] ENTITY_CLASSES = new Class<?>[] { FirstRootEntity.class,
-            FirstRootEntity.NestedEntity.class, SecondRootEntity.class, FirstSubpackageEntity.class };
+            FirstRootEntity.NestedEntity.class, SecondRootEntity.class,
+            FirstSubpackageEntity.class };
 
     private static final Class<?>[] OTHER_ENTITY_CLASSES = new Class<?>[] { OtherRootEntity.class,
-        OtherRootEntity.OtherNestedEntity.class };
+            OtherRootEntity.OtherNestedEntity.class };
 
     private static final Class<?>[] JAR_ENTITY_CLASSES = new Class<?>[] { FirstRootEntityJar.class,
-        FirstRootEntityJar.NestedEntityJar.class, SecondRootEntityJar.class,
-        FirstSubpackageEntityJar.class };
+            FirstRootEntityJar.NestedEntityJar.class, SecondRootEntityJar.class,
+            FirstSubpackageEntityJar.class };
 
     @Test
     public void scanOnePackage() {
-        List<Class<?>> classes = EntityScanner.scanPackages(OTHER_PERSISTENT_PACKAGE);
+        List<Class<?>> classes = EntityScanner.scanPackages(OTHER_PERSISTENT_PACKAGE).result();
         assertThat(classes).containsOnlyOnce(OTHER_ENTITY_CLASSES).doesNotContain(ENTITY_CLASSES)
-        .doesNotContain(NotEntity.class);
+                .doesNotContain(NotEntity.class);
     }
 
     @Test
     public void scanAllPackages() {
-        List<Class<?>> classes = EntityScanner.scanPackages(PERSISTENT_PACKAGE,
-                OTHER_PERSISTENT_PACKAGE);
+        List<Class<?>> classes = EntityScanner
+                .scanPackages(PERSISTENT_PACKAGE, OTHER_PERSISTENT_PACKAGE).result();
         assertThat(classes).containsOnlyOnce(ENTITY_CLASSES).containsOnlyOnce(OTHER_ENTITY_CLASSES)
                 .doesNotContain(NotEntity.class);
     }
 
     @Test
     public void scanOverlappedPackages() {
-        List<Class<?>> classes = EntityScanner.scanPackages(PERSISTENT_PACKAGE,
-                PERSISTENT_SUBPACKAGE);
+        List<Class<?>> classes = EntityScanner
+                .scanPackages(PERSISTENT_PACKAGE, PERSISTENT_SUBPACKAGE).result();
         assertThat(classes).containsOnlyOnce(ENTITY_CLASSES).doesNotContain(NotEntity.class);
     }
 
@@ -78,10 +79,10 @@ public class EntityScannerTest {
         assertThat(entityAnnotation).isNotNull();
 
         List<Class<?>> classes = EntityScanner.scanPackages(new String[] { JAR_PACKAGE },
-                Arrays.<ClassLoader> asList(loader), entityAnnotation);
+                Arrays.<ClassLoader> asList(loader), entityAnnotation).result();
 
-        assertThat(classes).contains(reload(loader, JAR_ENTITY_CLASSES)).doesNotContain(
-                NotEntityJar.class);
+        assertThat(classes).contains(reload(loader, JAR_ENTITY_CLASSES))
+                .doesNotContain(NotEntityJar.class);
     }
 
     private static URLClassLoader createDynJarClassLoader(URL jarFile) throws Exception {

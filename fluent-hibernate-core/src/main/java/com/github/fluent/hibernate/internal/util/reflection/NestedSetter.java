@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 
 import org.hibernate.PropertyAccessException;
 
-import com.github.fluent.hibernate.internal.util.InternalUtils;
+import com.github.fluent.hibernate.internal.util.InternalUtils.ClassUtils;
 
 /**
  * A nested setter.
@@ -58,7 +58,7 @@ public final class NestedSetter {
         for (int i = 0; i < getMethods.length; i++) {
             Object tmpTarget2 = getMethods[i].invoke(tmpTarget, new Object[] {});
             if (tmpTarget2 == null) {
-                tmpTarget2 = InternalUtils.newInstance(getMethods[i].getReturnType());
+                tmpTarget2 = ClassUtils.newInstance(getMethods[i].getReturnType());
                 setMethods[i].invoke(tmpTarget, new Object[] { tmpTarget2 });
             }
             tmpTarget = tmpTarget2;
