@@ -1,5 +1,5 @@
 # fluent-hibernate
-A library to work with Hibernate by fluent API. This library hasn't dependencies, except Hibernate libraries. It requires Java 1.6 and above. Now it can be used with Hibernate 5 only. To use the library with Hibernate 4, it should be rebuilt, using Hibernate 4 as a dependency.
+A library to work with Hibernate by fluent API. This library hasn't dependencies, except Hibernate libraries. It requires Java 1.6 and above. Now it can be used with Hibernate 5 only. To use a library core functionalty with Hibernate 4, it should be rebuilt, using Hibernate 4 as a dependency (it doesn't need for a utility functionality: the naming startegy, the entity scanner and the transformer).
 
 [![Build Status](https://travis-ci.org/v-ladynev/fluent-hibernate.svg?branch=master)](https://travis-ci.org/v-ladynev/fluent-hibernate)
 
@@ -10,15 +10,15 @@ A library to work with Hibernate by fluent API. This library hasn't dependencies
 ##### Maven (`pom.xml`)
 ```XML
 <dependency>
-	<groupId>com.github.v-ladynev</groupId>
-	<artifactId>fluent-hibernate-core</artifactId>
-	<version>0.1.4</version>
+  <groupId>com.github.v-ladynev</groupId>
+  <artifactId>fluent-hibernate-core</artifactId>
+  <version>0.1.4</version>
 </dependency>
 ```
 
 ##### Gradle (`build.gradle`)
 ```Gradle
-'com.github.v-ladynev:fluent-hibernate-core:0.1.4'
+compile 'com.github.v-ladynev:fluent-hibernate-core:0.1.4'
 ```
 
 ## Examples
@@ -40,7 +40,7 @@ List<User> users = H.<User> request(User.class).proj("login").proj("id")
 ## Example Projects
 - [A console project with a lot of query examples](https://github.com/v-ladynev/fluent-hibernate/tree/master/fluent-hibernate-examples/simply-console/)
 - [A console project using Spring to configure fluent-hibernate](https://github.com/v-ladynev/fluent-hibernate/tree/master/fluent-hibernate-examples/spring-console/)
-- [A simply console Eclipse project](https://github.com/v-ladynev/fluent-hibernate-mysql). This project uses Hibernate 5 and MySQL. It has a very simply Eclipse structure (without Gradle stuff). 
+- [A simply console Eclipse project](https://github.com/v-ladynev/fluent-hibernate-mysql). This project uses Hibernate 5 and MySQL. It has a very simply Eclipse structure (without Gradle stuff).
 
 ## Contributors
 

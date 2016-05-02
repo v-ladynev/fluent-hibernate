@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.model.naming.ImplicitNamingStrategy;
 import org.hibernate.boot.registry.BootstrapServiceRegistry;
 import org.hibernate.boot.registry.BootstrapServiceRegistryBuilder;
 import org.hibernate.boot.registry.classloading.spi.ClassLoaderService;
@@ -95,6 +96,10 @@ class ConfigurationBuilder {
         }
 
         result.setImplicitNamingStrategy(new Hibernate5NamingStrategy(options));
+    }
+
+    public void useNamingStrategy(ImplicitNamingStrategy startegy) {
+        result.setImplicitNamingStrategy(startegy);
     }
 
     private int detectMaxLength(String dialect) {

@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
+import org.hibernate.boot.model.naming.ImplicitNamingStrategy;
 import org.hibernate.cfg.AvailableSettings;
 
 import com.github.fluent.hibernate.IRequest;
@@ -196,6 +197,11 @@ public final class HibernateSessionFactory {
 
         public Builder useNamingStrategy(StrategyOptions options) {
             configurationBuilder.useNamingStrategy(options);
+            return this;
+        }
+
+        public Builder useNamingStrategy(ImplicitNamingStrategy startegy) {
+            configurationBuilder.useNamingStrategy(startegy);
             return this;
         }
 
