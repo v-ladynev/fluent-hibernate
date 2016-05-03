@@ -4,7 +4,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 import com.github.fluent.hibernate.cfg.Fluent;
-import com.github.fluent.hibernate.cfg.FluentFactoryBuilder;
 
 /**
  *
@@ -14,7 +13,7 @@ public class FluentHibernateBaseTest {
 
     @BeforeClass
     public static void initSessionFactory() {
-        FluentFactoryBuilder.configureFromDefaultHibernateCfgXml().build();
+        Fluent.factory().build();
     }
 
     @AfterClass

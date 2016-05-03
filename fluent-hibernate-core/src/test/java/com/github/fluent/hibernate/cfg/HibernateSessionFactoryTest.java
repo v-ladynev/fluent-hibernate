@@ -23,7 +23,7 @@ public class HibernateSessionFactoryTest {
 
     @Test
     public void configureFromDefaultHibernateCfgXml() {
-        FluentFactoryBuilder.configureFromDefaultHibernateCfgXml().build();
+        Fluent.factory().build();
         assertSession();
         dealWithSimplyPersistent();
     }
@@ -31,9 +31,8 @@ public class HibernateSessionFactoryTest {
     @Test
     public void configureWithoutHibernateCfgXml() {
         // TODO hibernate.properties has the same
-        FluentFactoryBuilder.configureWithoutHibernateCfgXml()
-                .database(DatabaseOptions.H2_ORACLE_MODE).annotatedClasses(SimplyPersistent.class)
-                .build();
+        Fluent.factory().dontUseHibernateCfgXml().database(DatabaseOptions.H2_ORACLE_MODE)
+                .annotatedClasses(SimplyPersistent.class).build();
 
         assertSession();
         dealWithSimplyPersistent();

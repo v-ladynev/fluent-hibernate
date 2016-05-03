@@ -21,18 +21,29 @@ public class FluentFactoryBuilder {
 
     private final ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
 
-    public static FluentFactoryBuilder configureFromDefaultHibernateCfgXml() {
-        return configureFromHibernateCfgXml(null);
+    private boolean useHibernateCfgXml = true;
+
+    private String hibernateCfgXmlPath;
+
+    /**
+     * Specify a path to the xml configuration (like hibernate.cfg.xml). This method should be used
+     * only for a non standard path.
+     *
+     * @param hibernateCfgXmlPath
+     *            a path to the xml configuration. For an example, "config/hibernate.cfg.xml".
+     */
+    public FluentFactoryBuilder hibernateCfgXml(String hibernateCfgXmlPath) {
+        this.hibernateCfgXmlPath = hibernateCfgXmlPath;
+        return this;
     }
 
-    public static FluentFactoryBuilder configureFromHibernateCfgXml(String hibernateCfgXml) {
-        FluentFactoryBuilder result = new FluentFactoryBuilder();
-        result.configurationBuilder.configure(hibernateCfgXml);
-        return result;
-    }
-
-    public static FluentFactoryBuilder configureWithoutHibernateCfgXml() {
-        return new FluentFactoryBuilder();
+    /**
+     * Specify don't use the xml confriguration (like hibernate.cfg.xml).
+     *
+     */
+    public FluentFactoryBuilder dontUseHibernateCfgXml() {
+        this.useHibernateCfgXml = false;
+        return this;
     }
 
     public FluentFactoryBuilder database(DatabaseOptions options) {
@@ -45,8 +56,49 @@ public class FluentFactoryBuilder {
         return this;
     }
 
-    public FluentFactoryBuilder packagesToScan(String... packagesToScan) {
+    public FluentFactoryBuilder scanPackages(String... packagesToScan) {
         configurationBuilder.addPackagesToScan(packagesToScan);
+        return this;
+    }
+
+    public FluentFactoryBuilder hibernatePropertiesFromFile(File propertiesFilePath) {
+        configurationBuilder.addPropertiesFromFile(propertiesFilePath);
+        return this;
+    }
+
+    public FluentFactoryBuilder hibernatePropertiesFromClassPathResource(
+            String classPathResourcePath) {
+        configurationBuilder.addPropertiesFromClassPath(classPathResourcePath);
+        return this;
+    }
+
+    /**
+     * Use the default Hibernate5NamingStrategy.
+     */
+    public FluentFactoryBuilder useNamingStrategy() {
+        configurationBuilder.useNamingStrategy();
+        return this;
+    }
+
+    /**
+     * Use the default Hibernate5NamingStrategy with options.
+     *
+     * @param options
+     *            options, to specify a strategy behaviour
+     */
+    public FluentFactoryBuilder useNamingStrategy(StrategyOptions options) {
+        configurationBuilder.useNamingStrategy(options);
+        return this;
+    }
+
+    /**
+     * Use an implicit naming strategy.
+     *
+     * @param strategy
+     *            an implicit naming strategy
+     */
+    public FluentFactoryBuilder useNamingStrategy(ImplicitNamingStrategy strategy) {
+        configurationBuilder.useNamingStrategy(strategy);
         return this;
     }
 
@@ -54,35 +106,15 @@ public class FluentFactoryBuilder {
         HibernateSessionFactory.setExistingSessionFactory(sessionFactory);
     }
 
-    public FluentFactoryBuilder addHibernatePropertiesFromFile(File pathToPropertiesFile) {
-        configurationBuilder.addPropertiesFromFile(pathToPropertiesFile);
-        return this;
-    }
-
-    public FluentFactoryBuilder addHibernatePropertiesFromClassPathResource(
-            String classPathResourceName) {
-        configurationBuilder.addPropertiesFromClassPath(classPathResourceName);
-        return this;
-    }
-
-    public FluentFactoryBuilder useNamingStrategy() {
-        configurationBuilder.useNamingStrategy();
-        return this;
-    }
-
-    public FluentFactoryBuilder useNamingStrategy(StrategyOptions options) {
-        configurationBuilder.useNamingStrategy(options);
-        return this;
-    }
-
-    public FluentFactoryBuilder useNamingStrategy(ImplicitNamingStrategy startegy) {
-        configurationBuilder.useNamingStrategy(startegy);
-        return this;
-    }
-
+    /**
+     * Build a Hibernate session factory.
+     */
     public void build() {
-        HibernateSessionFactory
-                .setExistingSessionFactory(configurationBuilder.buildSessionFactory());
+        if (useHibernateCfgXml) {
+            configurationBuilder.configure(hibernateCfgXmlPath);
+        }
+
+        configureFromExistingSessionFactory(configurationBuilder.buildSessionFactory());
     }
 
     /**

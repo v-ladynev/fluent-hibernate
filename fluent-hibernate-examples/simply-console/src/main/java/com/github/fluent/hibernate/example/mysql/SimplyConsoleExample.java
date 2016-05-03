@@ -7,7 +7,6 @@ import org.jboss.logging.Logger;
 
 import com.github.fluent.hibernate.H;
 import com.github.fluent.hibernate.cfg.Fluent;
-import com.github.fluent.hibernate.cfg.FluentFactoryBuilder;
 import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
 import com.github.fluent.hibernate.example.mysql.persistent.User;
 import com.github.fluent.hibernate.example.mysql.persistent.UserAddress;
@@ -31,10 +30,8 @@ public class SimplyConsoleExample {
             StrategyOptions options = StrategyOptions.builder().withoutPrefixes()
                     .autodetectMaxLength().restrictConstraintNames(false).build();
 
-            FluentFactoryBuilder.configureWithoutHibernateCfgXml().packagesToScan(packageToScan)
+            Fluent.factory().dontUseHibernateCfgXml().scanPackages(packageToScan)
                     .useNamingStrategy(options).build();
-
-            // Fluent.factory().build();
 
             new SimplyConsoleExample().doSomeDatabaseStuff();
         } finally {

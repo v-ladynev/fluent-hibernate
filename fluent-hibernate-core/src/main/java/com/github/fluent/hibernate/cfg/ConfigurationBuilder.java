@@ -45,15 +45,15 @@ class ConfigurationBuilder {
         return result.buildSessionFactory();
     }
 
-    public void addPropertiesFromClassPath(String classPathResourceName) {
+    public void addPropertiesFromClassPath(String classPathResourcePath) {
         InputStream stream = createBootstrapServiceRegistry().getService(ClassLoaderService.class)
-                .locateResourceStream(classPathResourceName);
+                .locateResourceStream(classPathResourcePath);
         addProperties(loadProperties(stream));
     }
 
-    public void addPropertiesFromFile(File pathToPropertiesFile) {
+    public void addPropertiesFromFile(File propertiesFilePath) {
         try {
-            addProperties(loadProperties(new FileInputStream(pathToPropertiesFile)));
+            addProperties(loadProperties(new FileInputStream(propertiesFilePath)));
         } catch (Exception ex) {
             throw InternalUtils.toRuntimeException(ex);
         }
