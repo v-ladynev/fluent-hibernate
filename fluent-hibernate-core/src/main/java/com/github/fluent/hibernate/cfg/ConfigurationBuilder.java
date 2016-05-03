@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate.factory;
+package com.github.fluent.hibernate.cfg;
 
 import static com.github.fluent.hibernate.internal.util.InternalUtils.Asserts.fail;
 import static com.github.fluent.hibernate.internal.util.InternalUtils.Asserts.isTrue;
@@ -37,6 +37,10 @@ class ConfigurationBuilder {
         }
     }
 
+    public void addDatabaseOptions(DatabaseOptions options) {
+        addProperties(options.getOptionsAsProperties());
+    }
+
     public SessionFactory buildSessionFactory() {
         return result.buildSessionFactory();
     }
@@ -67,7 +71,7 @@ class ConfigurationBuilder {
         }
     }
 
-    public void addProperties(Properties properties) {
+    private void addProperties(Properties properties) {
         result.addProperties(properties);
     }
 

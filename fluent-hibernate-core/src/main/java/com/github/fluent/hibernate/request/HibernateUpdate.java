@@ -6,7 +6,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 import com.github.fluent.hibernate.IRequest;
-import com.github.fluent.hibernate.factory.HibernateSessionFactory;
+import com.github.fluent.hibernate.cfg.HibernateSessionFactory;
 
 /**
  *

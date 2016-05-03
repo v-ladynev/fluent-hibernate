@@ -6,11 +6,12 @@ import java.util.List;
 import org.jboss.logging.Logger;
 
 import com.github.fluent.hibernate.H;
+import com.github.fluent.hibernate.cfg.Fluent;
+import com.github.fluent.hibernate.cfg.FluentFactoryBuilder;
 import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
 import com.github.fluent.hibernate.example.mysql.persistent.User;
 import com.github.fluent.hibernate.example.mysql.persistent.UserAddress;
 import com.github.fluent.hibernate.example.mysql.persistent.UserFriend;
-import com.github.fluent.hibernate.factory.HibernateSessionFactory;
 
 /**
  *
@@ -30,13 +31,14 @@ public class SimplyConsoleExample {
             StrategyOptions options = StrategyOptions.builder().withoutPrefixes()
                     .autodetectMaxLength().restrictConstraintNames(false).build();
 
-            HibernateSessionFactory.Builder.configureWithoutHibernateCfgXml()
-                    .packagesToScan(packageToScan).useNamingStrategy(options)
-                    .createSessionFactory();
+            FluentFactoryBuilder.configureWithoutHibernateCfgXml().packagesToScan(packageToScan)
+                    .useNamingStrategy(options).build();
+
+            // Fluent.factory().build();
 
             new SimplyConsoleExample().doSomeDatabaseStuff();
         } finally {
-            HibernateSessionFactory.closeSessionFactory();
+            Fluent.factory().close();
         }
     }
 

@@ -8,10 +8,10 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.Assert;
 
 import com.github.fluent.hibernate.H;
+import com.github.fluent.hibernate.cfg.Fluent;
 import com.github.fluent.hibernate.example.spring.console.persistent.Customer;
 import com.github.fluent.hibernate.example.spring.console.persistent.Merchant;
 import com.github.fluent.hibernate.example.spring.console.persistent.Transaction;
-import com.github.fluent.hibernate.factory.HibernateSessionFactory;
 
 /**
  *
@@ -25,7 +25,7 @@ public class SpringConsoleExample {
                     .registerShutdownHook();
             new SpringConsoleExample().doSomeDatabaseStuff();
         } finally {
-            HibernateSessionFactory.closeSessionFactory();
+            Fluent.factory().close();
         }
     }
 

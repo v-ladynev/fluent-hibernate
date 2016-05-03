@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate.factory;
+package com.github.fluent.hibernate.cfg;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,22 +18,22 @@ public class HibernateSessionFactoryTest {
 
     @After
     public void afterEachTest() {
-        HibernateSessionFactory.closeSessionFactory();
+        Fluent.factory().close();
     }
 
     @Test
     public void configureFromDefaultHibernateCfgXml() {
-        HibernateSessionFactory.Builder.configureFromDefaultHibernateCfgXml()
-        .createSessionFactory();
+        FluentFactoryBuilder.configureFromDefaultHibernateCfgXml().build();
         assertSession();
         dealWithSimplyPersistent();
     }
 
     @Test
     public void configureWithoutHibernateCfgXml() {
-        HibernateSessionFactory.Builder.configureWithoutHibernateCfgXml().userName("user")
-        .password("").connectionUrl("jdbc:h2:mem:di;MODE=ORACLE")
-        .annotatedClasses(SimplyPersistent.class).createSessionFactory();
+        // TODO hibernate.properties has the same
+        FluentFactoryBuilder.configureWithoutHibernateCfgXml()
+                .database(DatabaseOptions.H2_ORACLE_MODE).annotatedClasses(SimplyPersistent.class)
+                .build();
 
         assertSession();
         dealWithSimplyPersistent();

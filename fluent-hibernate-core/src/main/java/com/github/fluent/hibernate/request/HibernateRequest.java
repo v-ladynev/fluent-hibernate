@@ -19,7 +19,7 @@ import org.hibernate.transform.ResultTransformer;
 import com.github.fluent.hibernate.IRequest;
 import com.github.fluent.hibernate.Pagination;
 import com.github.fluent.hibernate.builder.IBuilder;
-import com.github.fluent.hibernate.factory.HibernateSessionFactory;
+import com.github.fluent.hibernate.cfg.HibernateSessionFactory;
 import com.github.fluent.hibernate.internal.util.InternalUtils.CollectionUtils;
 import com.github.fluent.hibernate.transformer.FluentHibernateResultTransformer;
 

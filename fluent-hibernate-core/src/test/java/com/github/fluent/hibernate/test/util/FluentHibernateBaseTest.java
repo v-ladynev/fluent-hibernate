@@ -3,7 +3,8 @@ package com.github.fluent.hibernate.test.util;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
-import com.github.fluent.hibernate.factory.HibernateSessionFactory;
+import com.github.fluent.hibernate.cfg.Fluent;
+import com.github.fluent.hibernate.cfg.FluentFactoryBuilder;
 
 /**
  *
@@ -13,13 +14,12 @@ public class FluentHibernateBaseTest {
 
     @BeforeClass
     public static void initSessionFactory() {
-        HibernateSessionFactory.Builder.configureFromDefaultHibernateCfgXml()
-                .createSessionFactory();
+        FluentFactoryBuilder.configureFromDefaultHibernateCfgXml().build();
     }
 
     @AfterClass
     public static void closeSessionFactory() {
-        HibernateSessionFactory.closeSessionFactory();
+        Fluent.factory().close();
     }
 
 }

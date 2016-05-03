@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate.factory;
+package com.github.fluent.hibernate.cfg;
 
 import org.hibernate.SessionFactory;
 
@@ -15,7 +15,7 @@ public class SpringSessionFactory {
     }
 
     public void init() {
-        HibernateSessionFactory.Builder.configureFromExistingSessionFactory(sessionFactory);
+        FluentFactoryBuilder.configureFromExistingSessionFactory(sessionFactory);
         sessionFactory = null;
     }
 

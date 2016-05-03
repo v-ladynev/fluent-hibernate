@@ -61,6 +61,8 @@ public final class H {
         HibernateObjectQuery.deleteAll(entities);
     }
 
+    // public static ConfigurationBui
+
     // TODO add invoking IRequest
 
 }

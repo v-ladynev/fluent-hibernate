@@ -48,7 +48,7 @@
     </property>
   </bean>
  -->
-  <bean class="com.github.fluent.hibernate.factory.SpringSessionFactory" init-method="init">
+  <bean class="com.github.fluent.hibernate.cfg.SpringSessionFactory" init-method="init">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
