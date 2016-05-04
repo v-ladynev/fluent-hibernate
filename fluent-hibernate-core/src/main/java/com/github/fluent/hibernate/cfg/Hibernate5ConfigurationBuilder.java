@@ -25,7 +25,7 @@ import com.github.fluent.hibernate.internal.util.InternalUtils;
  *
  * @author V.Ladynev
  */
-class ConfigurationBuilder implements IConfigurationBuilder {
+class Hibernate5ConfigurationBuilder implements IConfigurationBuilder {
 
     private final Configuration result = new Configuration();
 
@@ -53,6 +53,7 @@ class ConfigurationBuilder implements IConfigurationBuilder {
         InputStream stream = createBootstrapServiceRegistry().getService(ClassLoaderService.class)
                 .locateResourceStream(classPathResourcePath);
         addProperties(loadProperties(stream));
+
     }
 
     @Override

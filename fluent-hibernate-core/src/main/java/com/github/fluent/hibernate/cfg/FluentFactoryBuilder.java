@@ -11,15 +11,16 @@ import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
  * Fluent API for a Hibernate session factory configuration and build. The simplest way to create a
  * session factory:
  *
- * <code>
- * HibernateSessionFactory.Builder.configureFromDefaultHibernateCfgXml().createSessionFactory();
- * </code>
+ * <code>Fluent.factory().build();</code> <br>
+ * Don't forget to destroy it with
+ *
+ * <code>Fluent.factory().close();</code>
  *
  * @author V.Ladynev
  */
 public class FluentFactoryBuilder {
 
-    private final ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+    private final IConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
 
     private boolean useHibernateCfgXml = true;
 
@@ -46,8 +47,8 @@ public class FluentFactoryBuilder {
         return this;
     }
 
-    public FluentFactoryBuilder database(DatabaseOptions options) {
-        configurationBuilder.addDatabaseOptions(options);
+    public FluentFactoryBuilder hibernateProperties(HibernateProperties options) {
+        configurationBuilder.addHibernateProperties(options);
         return this;
     }
 
@@ -92,6 +93,8 @@ public class FluentFactoryBuilder {
     }
 
     /**
+     * TODO Consider passing an Object to support Hibernate 4.
+     *
      * Use an implicit naming strategy.
      *
      * @param strategy

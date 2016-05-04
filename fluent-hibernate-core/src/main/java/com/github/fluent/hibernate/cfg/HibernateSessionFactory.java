@@ -10,8 +10,16 @@ import com.github.fluent.hibernate.IStatelessRequest;
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 
 /**
- * This class holds a Hibernate session factory. Use {@link FluentFactoryBuilder} to create a
- * session factory.
+ * This class holds a Hibernate session factory. The simplest way to create a session factory:
+ *
+ * <code>
+ * Fluent.factory().build();
+ * </code> <br>
+ * Don't forget to destroy it with
+ *
+ * <code>
+ * Fluent.factory().close();
+ * </code>
  *
  * @author V.Ladynev
  */
@@ -45,10 +53,10 @@ public final class HibernateSessionFactory {
             result = request.doInTransaction(session);
             txn.commit();
         } catch (Throwable th) {
-            InternalUtils.HibernateUtils.rollback(txn);
+            rollback(txn);
             throw InternalUtils.toRuntimeException(th);
         } finally {
-            InternalUtils.HibernateUtils.close(session);
+            close(session);
         }
 
         return result;
@@ -70,10 +78,10 @@ public final class HibernateSessionFactory {
             result = request.doInTransaction(session);
             txn.commit();
         } catch (Throwable th) {
-            InternalUtils.HibernateUtils.rollback(txn);
+            rollback(txn);
             throw new RuntimeException(th);
         } finally {
-            InternalUtils.HibernateUtils.close(session);
+            close(session);
         }
 
         return result;
@@ -102,14 +110,31 @@ public final class HibernateSessionFactory {
     private static void assertSessionFactory() {
         if (sessionFactory == null) {
             throw new IllegalStateException(
-                    "Firstly create a session factory with HibernateSessionFactory.Builder");
+                    "Firstly create a session factory with Fluent.factory().build()");
         }
     }
 
-    // TODO see it later
     static synchronized void setExistingSessionFactory(SessionFactory sessionFactory) {
         closeSessionFactory();
         HibernateSessionFactory.sessionFactory = sessionFactory;
+    }
+
+    private static void rollback(Transaction txn) {
+        if (txn != null) {
+            txn.rollback();
+        }
+    }
+
+    private static void close(Session session) {
+        if (session != null && session.isOpen()) {
+            session.close();
+        }
+    }
+
+    private static void close(StatelessSession session) {
+        if (session != null) {
+            session.close();
+        }
     }
 
 }

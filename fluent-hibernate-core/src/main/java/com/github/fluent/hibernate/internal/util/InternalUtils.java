@@ -10,10 +10,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import org.hibernate.Session;
-import org.hibernate.StatelessSession;
-import org.hibernate.Transaction;
-
 /**
  * Utils for this library. For internal use only.
  *
@@ -272,32 +268,6 @@ public final class InternalUtils {
 
         public static void fail(String message) {
             isTrue(false, message);
-        }
-
-    }
-
-    public static final class HibernateUtils {
-
-        private HibernateUtils() {
-
-        }
-
-        public static void rollback(Transaction txn) {
-            if (txn != null) {
-                txn.rollback();
-            }
-        }
-
-        public static void close(Session session) {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
-
-        public static void close(StatelessSession session) {
-            if (session != null) {
-                session.close();
-            }
         }
 
     }

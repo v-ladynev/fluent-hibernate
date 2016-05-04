@@ -31,7 +31,8 @@ public class HibernateSessionFactoryTest {
     @Test
     public void configureWithoutHibernateCfgXml() {
         // TODO hibernate.properties has the same
-        Fluent.factory().dontUseHibernateCfgXml().database(DatabaseOptions.H2_ORACLE_MODE)
+        Fluent.factory().dontUseHibernateCfgXml()
+                .hibernateProperties(HibernateProperties.forH2CreateDrop())
                 .annotatedClasses(SimplyPersistent.class).build();
 
         assertSession();
