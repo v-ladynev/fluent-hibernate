@@ -27,6 +27,6 @@ interface IConfigurationBuilder {
 
     void useNamingStrategy(StrategyOptions options);
 
-    void useNamingStrategy(ImplicitNamingStrategy startegy);
+    void useNamingStrategy(ImplicitNamingStrategy strategy);
 
 }

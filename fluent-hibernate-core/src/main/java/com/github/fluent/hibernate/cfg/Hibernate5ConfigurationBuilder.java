@@ -4,16 +4,14 @@ import static com.github.fluent.hibernate.internal.util.InternalUtils.Asserts.fa
 import static com.github.fluent.hibernate.internal.util.InternalUtils.Asserts.isTrue;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.Properties;
+import java.util.Arrays;
+import java.util.List;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.MetadataBuilder;
+import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.model.naming.ImplicitNamingStrategy;
-import org.hibernate.boot.registry.BootstrapServiceRegistry;
-import org.hibernate.boot.registry.BootstrapServiceRegistryBuilder;
-import org.hibernate.boot.registry.classloading.spi.ClassLoaderService;
-import org.hibernate.cfg.Configuration;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Environment;
 
 import com.github.fluent.hibernate.cfg.scanner.EntityScanner;
@@ -27,79 +25,68 @@ import com.github.fluent.hibernate.internal.util.InternalUtils;
  */
 class Hibernate5ConfigurationBuilder implements IConfigurationBuilder {
 
-    private final Configuration result = new Configuration();
+    private StandardServiceRegistryBuilder registryBuilder = new StandardServiceRegistryBuilder();
+
+    private MetadataSources metadataSourcesCached;
+
+    private ImplicitNamingStrategy implicitNamingStartegy;
 
     @Override
     public void configure(String hibernateCfgXml) {
         if (hibernateCfgXml == null) {
-            result.configure();
+            registryBuilder.configure();
         } else {
-            result.configure(hibernateCfgXml);
+            registryBuilder.configure(hibernateCfgXml);
         }
     }
 
     @Override
     public void addHibernateProperties(HibernateProperties options) {
-        addProperties(options.getOptionsAsProperties());
+        registryBuilder.applySettings(options.getOptionsAsProperties());
     }
 
     @Override
     public SessionFactory buildSessionFactory() {
-        return result.buildSessionFactory();
+        MetadataBuilder metadataBuilder = getMetadataSources().getMetadataBuilder();
+
+        if (implicitNamingStartegy != null) {
+            metadataBuilder.applyImplicitNamingStrategy(implicitNamingStartegy);
+        }
+
+        return metadataBuilder.build().buildSessionFactory();
     }
 
     @Override
     public void addPropertiesFromClassPath(String classPathResourcePath) {
-        InputStream stream = createBootstrapServiceRegistry().getService(ClassLoaderService.class)
-                .locateResourceStream(classPathResourcePath);
-        addProperties(loadProperties(stream));
-
+        registryBuilder.loadProperties(classPathResourcePath);
     }
 
     @Override
     public void addPropertiesFromFile(File propertiesFilePath) {
-        try {
-            addProperties(loadProperties(new FileInputStream(propertiesFilePath)));
-        } catch (Exception ex) {
-            throw InternalUtils.toRuntimeException(ex);
-        }
-    }
-
-    private Properties loadProperties(InputStream stream) {
-        Properties result = new Properties();
-        try {
-            result.load(stream);
-            return result;
-        } catch (Exception ex) {
-            throw InternalUtils.toRuntimeException(ex);
-        } finally {
-            InternalUtils.closeQuietly(stream);
-        }
-    }
-
-    private void addProperties(Properties properties) {
-        result.addProperties(properties);
+        registryBuilder.loadProperties(propertiesFilePath);
     }
 
     @Override
     public void addAnnotatedClasses(Class<?>[] annotatedClasses) {
-        if (annotatedClasses == null) {
-            return;
-        }
-
-        for (Class<?> annotatedClass : annotatedClasses) {
-            result.addAnnotatedClass(annotatedClass);
-        }
+        addAnnotatedClassesToMetadata(Arrays.asList(annotatedClasses));
     }
 
     @Override
     public void addPackagesToScan(String[] packagesToScan) {
-        EntityScanner.scanPackages(packagesToScan).addTo(result);
+        addAnnotatedClassesToMetadata(EntityScanner.scanPackages(packagesToScan).result());
+    }
+
+    private void addAnnotatedClassesToMetadata(List<Class<?>> annotatedClasses) {
+        MetadataSources metadataSources = getMetadataSources();
+
+        for (Class<?> annotatedClass : annotatedClasses) {
+            metadataSources.addAnnotatedClass(annotatedClass);
+        }
     }
 
     @Override
     public void useNamingStrategy() {
-        result.setImplicitNamingStrategy(new Hibernate5NamingStrategy());
+        useNamingStrategy(new StrategyOptions());
     }
 
     @Override
@@ -109,12 +96,12 @@ class Hibernate5ConfigurationBuilder implements IConfigurationBuilder {
                     detectMaxLength(Environment.getProperties().getProperty(Environment.DIALECT)));
         }
 
-        result.setImplicitNamingStrategy(new Hibernate5NamingStrategy(options));
+        useNamingStrategy(new Hibernate5NamingStrategy(options));
     }
 
     @Override
-    public void useNamingStrategy(ImplicitNamingStrategy startegy) {
-        result.setImplicitNamingStrategy(startegy);
+    public void useNamingStrategy(ImplicitNamingStrategy strategy) {
+        implicitNamingStartegy = strategy;
     }
 
     private int detectMaxLength(String dialect) {
@@ -142,8 +129,12 @@ class Hibernate5ConfigurationBuilder implements IConfigurationBuilder {
         return 0;
     }
 
-    private BootstrapServiceRegistry createBootstrapServiceRegistry() {
-        return new BootstrapServiceRegistryBuilder().enableAutoClose().build();
+    private MetadataSources getMetadataSources() {
+        if (metadataSourcesCached == null) {
+            metadataSourcesCached = new MetadataSources(registryBuilder.build());
+        }
+
+        return metadataSourcesCached;
     }
 
 }

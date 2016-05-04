@@ -112,8 +112,8 @@ class ConfigurationBuilder implements IConfigurationBuilder {
     }
 
     @Override
-    public void useNamingStrategy(ImplicitNamingStrategy startegy) {
-        result.setImplicitNamingStrategy(startegy);
+    public void useNamingStrategy(ImplicitNamingStrategy strategy) {
+        result.setImplicitNamingStrategy(strategy);
     }
 
     private int detectMaxLength(String dialect) {

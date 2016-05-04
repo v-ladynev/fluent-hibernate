@@ -20,11 +20,19 @@ import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
  */
 public class FluentFactoryBuilder {
 
-    private final IConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+    private final IConfigurationBuilder configurationBuilder = new Hibernate5ConfigurationBuilder();
 
     private boolean useHibernateCfgXml = true;
 
     private String hibernateCfgXmlPath;
+
+    private Class<?>[] annotatedClasses;
+
+    private String[] packagesToScan;
+
+    private StrategyOptions options;
+
+    private ImplicitNamingStrategy strategy;
 
     /**
      * Specify a path to the xml configuration (like hibernate.cfg.xml). This method should be used
@@ -52,16 +60,6 @@ public class FluentFactoryBuilder {
         return this;
     }
 
-    public FluentFactoryBuilder annotatedClasses(Class<?>... annotatedClasses) {
-        configurationBuilder.addAnnotatedClasses(annotatedClasses);
-        return this;
-    }
-
-    public FluentFactoryBuilder scanPackages(String... packagesToScan) {
-        configurationBuilder.addPackagesToScan(packagesToScan);
-        return this;
-    }
-
     public FluentFactoryBuilder hibernatePropertiesFromFile(File propertiesFilePath) {
         configurationBuilder.addPropertiesFromFile(propertiesFilePath);
         return this;
@@ -73,11 +71,21 @@ public class FluentFactoryBuilder {
         return this;
     }
 
+    public FluentFactoryBuilder annotatedClasses(Class<?>... annotatedClasses) {
+        this.annotatedClasses = annotatedClasses;
+        return this;
+    }
+
+    public FluentFactoryBuilder scanPackages(String... packagesToScan) {
+        this.packagesToScan = packagesToScan;
+        return this;
+    }
+
     /**
      * Use the default Hibernate5NamingStrategy.
      */
     public FluentFactoryBuilder useNamingStrategy() {
-        configurationBuilder.useNamingStrategy();
+        useNamingStrategy(new StrategyOptions());
         return this;
     }
 
@@ -88,7 +96,7 @@ public class FluentFactoryBuilder {
      *            options, to specify a strategy behaviour
      */
     public FluentFactoryBuilder useNamingStrategy(StrategyOptions options) {
-        configurationBuilder.useNamingStrategy(options);
+        this.options = options;
         return this;
     }
 
@@ -101,7 +109,7 @@ public class FluentFactoryBuilder {
      *            an implicit naming strategy
      */
     public FluentFactoryBuilder useNamingStrategy(ImplicitNamingStrategy strategy) {
-        configurationBuilder.useNamingStrategy(strategy);
+        this.strategy = strategy;
         return this;
     }
 
@@ -115,6 +123,22 @@ public class FluentFactoryBuilder {
     public void build() {
         if (useHibernateCfgXml) {
             configurationBuilder.configure(hibernateCfgXmlPath);
+        }
+
+        if (annotatedClasses != null) {
+            configurationBuilder.addAnnotatedClasses(annotatedClasses);
+        }
+
+        if (packagesToScan != null) {
+            configurationBuilder.addPackagesToScan(packagesToScan);
+        }
+
+        if (options != null) {
+            configurationBuilder.useNamingStrategy(options);
+        }
+
+        if (strategy != null) {
+            configurationBuilder.useNamingStrategy(strategy);
         }
 
         configureFromExistingSessionFactory(configurationBuilder.buildSessionFactory());
