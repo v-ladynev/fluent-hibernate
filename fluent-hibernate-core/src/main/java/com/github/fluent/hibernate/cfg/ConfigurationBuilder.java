@@ -10,6 +10,7 @@ import java.util.Properties;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.model.naming.ImplicitNamingStrategy;
+import org.hibernate.boot.model.naming.PhysicalNamingStrategy;
 import org.hibernate.boot.registry.BootstrapServiceRegistry;
 import org.hibernate.boot.registry.BootstrapServiceRegistryBuilder;
 import org.hibernate.boot.registry.classloading.spi.ClassLoaderService;
@@ -97,11 +98,6 @@ class ConfigurationBuilder implements IConfigurationBuilder {
     }
 
     @Override
-    public void useNamingStrategy() {
-        result.setImplicitNamingStrategy(new Hibernate5NamingStrategy());
-    }
-
-    @Override
     public void useNamingStrategy(StrategyOptions options) {
         if (options.isAutodetectMaxLength()) {
             options.setMaxLength(
@@ -113,7 +109,12 @@ class ConfigurationBuilder implements IConfigurationBuilder {
 
     @Override
     public void useNamingStrategy(ImplicitNamingStrategy strategy) {
-        result.setImplicitNamingStrategy(strategy);
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void useNamingStrategy(PhysicalNamingStrategy physicalStrategy) {
+        throw new UnsupportedOperationException();
     }
 
     private int detectMaxLength(String dialect) {

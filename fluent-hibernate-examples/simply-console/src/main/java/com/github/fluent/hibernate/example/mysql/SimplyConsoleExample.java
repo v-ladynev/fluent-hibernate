@@ -31,7 +31,7 @@ public class SimplyConsoleExample {
                     .autodetectMaxLength().restrictConstraintNames(false).build();
 
             Fluent.factory().dontUseHibernateCfgXml().scanPackages(packageToScan)
-                    .useNamingStrategy(options).build();
+                    .useNamingStrategy(new UnderscorePhysicalStartegy()).build();
 
             new SimplyConsoleExample().doSomeDatabaseStuff();
         } finally {

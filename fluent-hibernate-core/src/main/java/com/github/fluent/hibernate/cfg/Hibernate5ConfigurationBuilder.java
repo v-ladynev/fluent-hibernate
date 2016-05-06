@@ -11,6 +11,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataBuilder;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.model.naming.ImplicitNamingStrategy;
+import org.hibernate.boot.model.naming.PhysicalNamingStrategy;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Environment;
 
@@ -28,6 +29,8 @@ class Hibernate5ConfigurationBuilder implements IConfigurationBuilder {
     private StandardServiceRegistryBuilder registryBuilder = new StandardServiceRegistryBuilder();
 
     private MetadataSources metadataSourcesCached;
+
+    private PhysicalNamingStrategy physicalNamingStrategy;
 
     private ImplicitNamingStrategy implicitNamingStartegy;
 
@@ -48,6 +51,10 @@ class Hibernate5ConfigurationBuilder implements IConfigurationBuilder {
     @Override
     public SessionFactory buildSessionFactory() {
         MetadataBuilder metadataBuilder = getMetadataSources().getMetadataBuilder();
+
+        if (physicalNamingStrategy != null) {
+            metadataBuilder.applyPhysicalNamingStrategy(physicalNamingStrategy);
+        }
 
         if (implicitNamingStartegy != null) {
             metadataBuilder.applyImplicitNamingStrategy(implicitNamingStartegy);
@@ -85,11 +92,6 @@ class Hibernate5ConfigurationBuilder implements IConfigurationBuilder {
     }
 
     @Override
-    public void useNamingStrategy() {
-        useNamingStrategy(new StrategyOptions());
-    }
-
-    @Override
     public void useNamingStrategy(StrategyOptions options) {
         if (options.isAutodetectMaxLength()) {
             options.setMaxLength(
@@ -102,6 +104,11 @@ class Hibernate5ConfigurationBuilder implements IConfigurationBuilder {
     @Override
     public void useNamingStrategy(ImplicitNamingStrategy strategy) {
         implicitNamingStartegy = strategy;
+    }
+
+    @Override
+    public void useNamingStrategy(PhysicalNamingStrategy strategy) {
+        physicalNamingStrategy = strategy;
     }
 
     private int detectMaxLength(String dialect) {

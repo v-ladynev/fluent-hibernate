@@ -60,7 +60,6 @@ public class Merchant {
     }
 
     /**
-     *
      * TODO check primary customers problem.
      */
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

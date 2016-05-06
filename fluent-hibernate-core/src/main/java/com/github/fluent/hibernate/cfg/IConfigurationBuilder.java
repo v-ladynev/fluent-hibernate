@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.model.naming.ImplicitNamingStrategy;
+import org.hibernate.boot.model.naming.PhysicalNamingStrategy;
 
 import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
 
@@ -23,10 +24,10 @@ interface IConfigurationBuilder {
 
     void addPackagesToScan(String[] packagesToScan);
 
-    void useNamingStrategy();
-
     void useNamingStrategy(StrategyOptions options);
 
     void useNamingStrategy(ImplicitNamingStrategy strategy);
+
+    void useNamingStrategy(PhysicalNamingStrategy physicalStrategy);
 
 }

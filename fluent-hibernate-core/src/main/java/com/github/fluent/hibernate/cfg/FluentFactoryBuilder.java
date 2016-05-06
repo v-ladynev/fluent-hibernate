@@ -3,7 +3,9 @@ package com.github.fluent.hibernate.cfg;
 import java.io.File;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.Version;
 import org.hibernate.boot.model.naming.ImplicitNamingStrategy;
+import org.hibernate.boot.model.naming.PhysicalNamingStrategy;
 
 import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
 
@@ -30,9 +32,9 @@ public class FluentFactoryBuilder {
 
     private String[] packagesToScan;
 
-    private StrategyOptions options;
-
-    private ImplicitNamingStrategy strategy;
+    public FluentFactoryBuilder() {
+        System.out.println("rrrrrrrrrrrrrrrrrrrrr " + Version.getVersionString());
+    }
 
     /**
      * Specify a path to the xml configuration (like hibernate.cfg.xml). This method should be used
@@ -96,7 +98,7 @@ public class FluentFactoryBuilder {
      *            options, to specify a strategy behaviour
      */
     public FluentFactoryBuilder useNamingStrategy(StrategyOptions options) {
-        this.options = options;
+        configurationBuilder.useNamingStrategy(options);
         return this;
     }
 
@@ -109,7 +111,18 @@ public class FluentFactoryBuilder {
      *            an implicit naming strategy
      */
     public FluentFactoryBuilder useNamingStrategy(ImplicitNamingStrategy strategy) {
-        this.strategy = strategy;
+        configurationBuilder.useNamingStrategy(strategy);
+        return this;
+    }
+
+    /**
+     * Use a physical naming strategy.
+     *
+     * @param strategy
+     *            a physical naming strategy
+     */
+    public FluentFactoryBuilder useNamingStrategy(PhysicalNamingStrategy strategy) {
+        configurationBuilder.useNamingStrategy(strategy);
         return this;
     }
 
@@ -131,14 +144,6 @@ public class FluentFactoryBuilder {
 
         if (packagesToScan != null) {
             configurationBuilder.addPackagesToScan(packagesToScan);
-        }
-
-        if (options != null) {
-            configurationBuilder.useNamingStrategy(options);
-        }
-
-        if (strategy != null) {
-            configurationBuilder.useNamingStrategy(strategy);
         }
 
         configureFromExistingSessionFactory(configurationBuilder.buildSessionFactory());
