@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import org.hibernate.Version;
+
 /**
  * Utils for this library. For internal use only.
  *
@@ -40,6 +42,11 @@ public final class InternalUtils {
     public static RuntimeException toRuntimeException(Throwable throwable) {
         return throwable instanceof RuntimeException ? (RuntimeException) throwable
                 : new RuntimeException(throwable);
+    }
+
+    public static RuntimeException toRuntimeException(String message, Throwable throwable) {
+        return message == null ? toRuntimeException(throwable)
+                : new RuntimeException(message, throwable);
     }
 
     public static final class StringUtils {
@@ -143,9 +150,17 @@ public final class InternalUtils {
 
         }
 
+        public static String[] splitByDot(String value) {
+            return split(value, "\\.");
+        }
+
         public static String[] splitBySpace(String value) {
+            return split(value, "\\s+");
+        }
+
+        public static String[] split(String value, String regExpression) {
             String result = value == null ? EMPTY : value.trim();
-            return result.length() == 0 ? EMPTY_ARRAY : result.split("\\s+");
+            return result.length() == 0 ? EMPTY_ARRAY : result.split(regExpression);
         }
 
         public static String getLastPart(String value, char separator) {
@@ -159,6 +174,21 @@ public final class InternalUtils {
             }
 
             return value.charAt(value.length() - 1) == suffix ? value : value + suffix;
+        }
+
+        public static int toInt(final String str, final int defaultValue) {
+            return toInteger(str, defaultValue);
+        }
+
+        public static Integer toInteger(final String str, final Integer defaultValue) {
+            if (str == null) {
+                return defaultValue;
+            }
+            try {
+                return Integer.valueOf(str);
+            } catch (NumberFormatException nfe) {
+                return defaultValue;
+            }
         }
 
     }
@@ -252,6 +282,26 @@ public final class InternalUtils {
             }
         }
 
+        public static Class<?> classForNameFromContext(String className) {
+            return classForName(className, contextClassLoader());
+        }
+
+        public static Class<?> classForName(String className, ClassLoader loader) {
+            try {
+                return Class.forName(className, true, loader);
+            } catch (ClassNotFoundException ex) {
+                throw InternalUtils.toRuntimeException(ex);
+            }
+        }
+
+        public static ClassLoader contextClassLoader() {
+            return Thread.currentThread().getContextClassLoader();
+        }
+
+        public static ClassLoader staticClassLoader() {
+            return ClassUtils.class.getClassLoader();
+        }
+
     }
 
     public static final class Asserts {
@@ -268,6 +318,28 @@ public final class InternalUtils {
 
         public static void fail(String message) {
             isTrue(false, message);
+        }
+
+    }
+
+    public static final class HibernateUtils {
+
+        private static final int HIBERNATE_5_MAJOR_VERSION = 5;
+
+        private HibernateUtils() {
+
+        }
+
+        public static boolean isHibernate4Used() {
+            return HibernateUtils
+                    .getMajorVersion(HIBERNATE_5_MAJOR_VERSION) < HIBERNATE_5_MAJOR_VERSION;
+        }
+
+        public static int getMajorVersion(int returnOnError) {
+            String[] version = StringUtils.splitByDot(Version.getVersionString());
+
+            return CollectionUtils.isEmpty(version) ? returnOnError
+                    : StringUtils.toInt(version[0], returnOnError);
         }
 
     }

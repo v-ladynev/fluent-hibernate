@@ -35,13 +35,13 @@ project(':fluent-hibernate-core') {
     apply plugin: 'signing'
 
     group = "com.github.v-ladynev"
-    version = "0.1.4"
+    version = "0.2.0"
     description = "Library to work with Hibernate by fluent API"
     archivesBaseName = "fluent-hibernate-core"
 
     dependencies {
         compile group: 'org.hibernate', name: 'hibernate-core', version: '5.1.0.Final'
-        // compile group: 'org.hibernate', name: 'hibernate-core', version: '4.3.6.Final'
+        //compile group: 'org.hibernate', name: 'hibernate-core', version: '4.3.6.Final'
 
         testCompile 'com.h2database:h2:1.4.190'
         testCompile 'org.assertj:assertj-core:1.7.1'

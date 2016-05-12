@@ -3,8 +3,6 @@ package com.github.fluent.hibernate.cfg;
 import java.io.File;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.model.naming.ImplicitNamingStrategy;
-import org.hibernate.boot.model.naming.PhysicalNamingStrategy;
 
 import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
 
@@ -26,8 +24,8 @@ interface IConfigurationBuilder {
 
     void useNamingStrategy(StrategyOptions options);
 
-    void useNamingStrategy(ImplicitNamingStrategy strategy);
+    void useNamingStrategy(Object strategy);
 
-    void useNamingStrategy(PhysicalNamingStrategy physicalStrategy);
+    ISessionControl createSessionControl();
 
 }

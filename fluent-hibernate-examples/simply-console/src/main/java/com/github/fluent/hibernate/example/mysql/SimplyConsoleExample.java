@@ -31,7 +31,7 @@ public class SimplyConsoleExample {
                     .autodetectMaxLength().restrictConstraintNames(false).build();
 
             Fluent.factory().dontUseHibernateCfgXml().scanPackages(packageToScan)
-                    .useNamingStrategy(new UnderscorePhysicalStartegy()).build();
+                    .useNamingStrategy(options).build();
 
             new SimplyConsoleExample().doSomeDatabaseStuff();
         } finally {
@@ -40,19 +40,19 @@ public class SimplyConsoleExample {
     }
 
     private void doSomeDatabaseStuff() {
-        /*
+
         deleteAllUsers();
         insertUsers();
-        
+
         doSomeFriendsStuff();
-        
+
+        /*
         deleteFriend();
-        
         
         updateUserAge();
         countUsers();
         doSomeUserAddressStuff();
-         */
+        */
 
         // dealWithGoodFriends();
 

@@ -3,11 +3,9 @@ package com.github.fluent.hibernate.cfg;
 import java.io.File;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.Version;
-import org.hibernate.boot.model.naming.ImplicitNamingStrategy;
-import org.hibernate.boot.model.naming.PhysicalNamingStrategy;
 
 import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
+import com.github.fluent.hibernate.internal.util.InternalUtils.HibernateUtils;
 
 /**
  * Fluent API for a Hibernate session factory configuration and build. The simplest way to create a
@@ -22,7 +20,7 @@ import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
  */
 public class FluentFactoryBuilder {
 
-    private final IConfigurationBuilder configurationBuilder = new Hibernate5ConfigurationBuilder();
+    private final IConfigurationBuilder configurationBuilder;
 
     private boolean useHibernateCfgXml = true;
 
@@ -32,8 +30,12 @@ public class FluentFactoryBuilder {
 
     private String[] packagesToScan;
 
+    private boolean hibernate4Used;
+
     public FluentFactoryBuilder() {
-        System.out.println("rrrrrrrrrrrrrrrrrrrrr " + Version.getVersionString());
+        hibernate4Used = HibernateUtils.isHibernate4Used();
+        configurationBuilder = hibernate4Used ? new ConfigurationBuilderHibernate4()
+                : new ConfigurationBuilderHibernate5();
     }
 
     /**
@@ -102,32 +104,9 @@ public class FluentFactoryBuilder {
         return this;
     }
 
-    /**
-     * TODO Consider passing an Object to support Hibernate 4.
-     *
-     * Use an implicit naming strategy.
-     *
-     * @param strategy
-     *            an implicit naming strategy
-     */
-    public FluentFactoryBuilder useNamingStrategy(ImplicitNamingStrategy strategy) {
+    public FluentFactoryBuilder useNamingStrategy(Object strategy) {
         configurationBuilder.useNamingStrategy(strategy);
         return this;
-    }
-
-    /**
-     * Use a physical naming strategy.
-     *
-     * @param strategy
-     *            a physical naming strategy
-     */
-    public FluentFactoryBuilder useNamingStrategy(PhysicalNamingStrategy strategy) {
-        configurationBuilder.useNamingStrategy(strategy);
-        return this;
-    }
-
-    public static void configureFromExistingSessionFactory(SessionFactory sessionFactory) {
-        HibernateSessionFactory.setExistingSessionFactory(sessionFactory);
     }
 
     /**
@@ -146,7 +125,8 @@ public class FluentFactoryBuilder {
             configurationBuilder.addPackagesToScan(packagesToScan);
         }
 
-        configureFromExistingSessionFactory(configurationBuilder.buildSessionFactory());
+        configureFromExistingSessionFactory(configurationBuilder.buildSessionFactory(),
+                hibernate4Used);
     }
 
     /**
@@ -154,6 +134,16 @@ public class FluentFactoryBuilder {
      */
     public void close() {
         HibernateSessionFactory.closeSessionFactory();
+    }
+
+    static void configureFromExistingSessionFactory(SessionFactory sessionFactory) {
+        configureFromExistingSessionFactory(sessionFactory, HibernateUtils.isHibernate4Used());
+    }
+
+    private static void configureFromExistingSessionFactory(SessionFactory sessionFactory,
+            boolean hibernate4Used) {
+        HibernateSessionFactory.setExistingSessionFactory(sessionFactory,
+                hibernate4Used ? new SessionControlHibernate4() : new SessionControlHibernate5());
     }
 
 }

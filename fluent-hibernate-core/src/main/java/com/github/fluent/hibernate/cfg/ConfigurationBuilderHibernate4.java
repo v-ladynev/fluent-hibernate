@@ -6,27 +6,31 @@ import static com.github.fluent.hibernate.internal.util.InternalUtils.Asserts.is
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.util.Properties;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.model.naming.ImplicitNamingStrategy;
-import org.hibernate.boot.model.naming.PhysicalNamingStrategy;
-import org.hibernate.boot.registry.BootstrapServiceRegistry;
-import org.hibernate.boot.registry.BootstrapServiceRegistryBuilder;
-import org.hibernate.boot.registry.classloading.spi.ClassLoaderService;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 
 import com.github.fluent.hibernate.cfg.scanner.EntityScanner;
 import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
-import com.github.fluent.hibernate.cfg.strategy.hibernate5.Hibernate5NamingStrategy;
+import com.github.fluent.hibernate.cfg.strategy.hibernate4.Hibernate4NamingStrategy;
 import com.github.fluent.hibernate.internal.util.InternalUtils;
+import com.github.fluent.hibernate.internal.util.InternalUtils.Asserts;
+import com.github.fluent.hibernate.internal.util.InternalUtils.ClassUtils;
+import com.github.fluent.hibernate.internal.util.reflection.ReflectionUtils;
 
 /**
  *
  * @author V.Ladynev
  */
-class ConfigurationBuilder implements IConfigurationBuilder {
+class ConfigurationBuilderHibernate4 implements IConfigurationBuilder {
+
+    private static final String HIBERNATE4_NAMING_STRATEGY_INTERFACE = "org.hibernate.cfg.NamingStrategy";
+
+    private StandardServiceRegistryBuilder registryBuilder = new StandardServiceRegistryBuilder();
 
     private final Configuration result = new Configuration();
 
@@ -46,14 +50,13 @@ class ConfigurationBuilder implements IConfigurationBuilder {
 
     @Override
     public SessionFactory buildSessionFactory() {
-        return result.buildSessionFactory();
+        return result
+                .buildSessionFactory(registryBuilder.applySettings(result.getProperties()).build());
     }
 
     @Override
     public void addPropertiesFromClassPath(String classPathResourcePath) {
-        InputStream stream = createBootstrapServiceRegistry().getService(ClassLoaderService.class)
-                .locateResourceStream(classPathResourcePath);
-        addProperties(loadProperties(stream));
+        registryBuilder.loadProperties(classPathResourcePath);
     }
 
     @Override
@@ -78,7 +81,7 @@ class ConfigurationBuilder implements IConfigurationBuilder {
     }
 
     private void addProperties(Properties properties) {
-        result.addProperties(properties);
+        registryBuilder.applySettings(properties);
     }
 
     @Override
@@ -104,22 +107,42 @@ class ConfigurationBuilder implements IConfigurationBuilder {
                     detectMaxLength(Environment.getProperties().getProperty(Environment.DIALECT)));
         }
 
-        result.setImplicitNamingStrategy(new Hibernate5NamingStrategy(options));
+        useNamingStrategy(new Hibernate4NamingStrategy(options));
     }
 
     @Override
-    public void useNamingStrategy(ImplicitNamingStrategy strategy) {
-        throw new UnsupportedOperationException();
+    public void useNamingStrategy(Object strategy) {
+        Class<?> namingStartegyInterface = ClassUtils
+                .classForNameFromContext(HIBERNATE4_NAMING_STRATEGY_INTERFACE);
+
+        if (strategy != null && !(namingStartegyInterface.isInstance(strategy))) {
+            Asserts.fail(String.format(
+                    "Incorrect naming strategy `%s`. It should be an instance of NamingStrategy",
+                    strategy.getClass().getSimpleName()));
+        }
+
+        try {
+            ReflectionUtils.invoke(result, getSetNamingStrategyMethod(namingStartegyInterface),
+                    strategy);
+        } catch (Exception ex) {
+            throw InternalUtils.toRuntimeException(
+                    "Can't invoke setNamingStrategy() method by reflection", ex);
+        }
     }
 
-    @Override
-    public void useNamingStrategy(PhysicalNamingStrategy physicalStrategy) {
-        throw new UnsupportedOperationException();
+    private static Method getSetNamingStrategyMethod(Class<?> namingStartegyInterface) {
+        try {
+            return ReflectionUtils.extractMethod(Configuration.class, "setNamingStrategy",
+                    namingStartegyInterface);
+        } catch (Exception ex) {
+            throw InternalUtils.toRuntimeException(
+                    "Can't get setNamingStrategy() method from Configuration by a reflection.", ex);
+        }
     }
 
     private int detectMaxLength(String dialect) {
         isTrue(!InternalUtils.StringUtils.isEmpty(dialect), String.format(
-                "Can't autodetect a max length. Property %s is not set", Environment.DIALECT));
+                "Can't autodetect the max length. Property %s is not set", Environment.DIALECT));
         String dialectClass = InternalUtils.ClassUtils.getShortName(dialect);
 
         if (dialectClass.contains("H2Dialect")) {
@@ -138,12 +161,13 @@ class ConfigurationBuilder implements IConfigurationBuilder {
             return 63;
         }
 
-        fail("Can't autodetect a max length. Specify it with StrategyOptions.setMaxLength()");
+        fail("Can't autodetect the max length. Specify it with StrategyOptions.setMaxLength()");
         return 0;
     }
 
-    private BootstrapServiceRegistry createBootstrapServiceRegistry() {
-        return new BootstrapServiceRegistryBuilder().enableAutoClose().build();
+    @Override
+    public ISessionControl createSessionControl() {
+        return new SessionControlHibernate4();
     }
 
 }

@@ -19,12 +19,13 @@ import com.github.fluent.hibernate.cfg.scanner.EntityScanner;
 import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
 import com.github.fluent.hibernate.cfg.strategy.hibernate5.Hibernate5NamingStrategy;
 import com.github.fluent.hibernate.internal.util.InternalUtils;
+import com.github.fluent.hibernate.internal.util.InternalUtils.Asserts;
 
 /**
  *
  * @author V.Ladynev
  */
-class Hibernate5ConfigurationBuilder implements IConfigurationBuilder {
+class ConfigurationBuilderHibernate5 implements IConfigurationBuilder {
 
     private StandardServiceRegistryBuilder registryBuilder = new StandardServiceRegistryBuilder();
 
@@ -102,13 +103,27 @@ class Hibernate5ConfigurationBuilder implements IConfigurationBuilder {
     }
 
     @Override
-    public void useNamingStrategy(ImplicitNamingStrategy strategy) {
-        implicitNamingStartegy = strategy;
-    }
+    public void useNamingStrategy(Object strategy) {
+        if (strategy == null) {
+            implicitNamingStartegy = null;
+            physicalNamingStrategy = null;
+            return;
+        }
 
-    @Override
-    public void useNamingStrategy(PhysicalNamingStrategy strategy) {
-        physicalNamingStrategy = strategy;
+        if (strategy instanceof ImplicitNamingStrategy) {
+            implicitNamingStartegy = (ImplicitNamingStrategy) strategy;
+            return;
+        }
+
+        if (strategy instanceof PhysicalNamingStrategy) {
+            physicalNamingStrategy = (PhysicalNamingStrategy) strategy;
+            return;
+        }
+
+        Asserts.fail(String.format(
+                "Incorrect naming strategy `%s`. "
+                        + "It should be an instance of ImplicitNamingStrategy or PhysicalNamingStrategy",
+                strategy.getClass().getSimpleName()));
     }
 
     private int detectMaxLength(String dialect) {
@@ -142,6 +157,11 @@ class Hibernate5ConfigurationBuilder implements IConfigurationBuilder {
         }
 
         return metadataSourcesCached;
+    }
+
+    @Override
+    public ISessionControl createSessionControl() {
+        return new SessionControlHibernate5();
     }
 
 }

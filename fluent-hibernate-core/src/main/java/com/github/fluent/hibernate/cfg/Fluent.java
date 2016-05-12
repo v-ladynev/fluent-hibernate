@@ -1,5 +1,7 @@
 package com.github.fluent.hibernate.cfg;
 
+import org.hibernate.SessionFactory;
+
 /**
  * The entry point for a fluent-hibernate configuration.
  *
@@ -18,6 +20,10 @@ public final class Fluent {
      */
     public static FluentFactoryBuilder factory() {
         return new FluentFactoryBuilder();
+    }
+
+    public static void configureFromExistingSessionFactory(SessionFactory sessionFactory) {
+        FluentFactoryBuilder.configureFromExistingSessionFactory(sessionFactory);
     }
 
 }

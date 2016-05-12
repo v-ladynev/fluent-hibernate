@@ -6,9 +6,11 @@ import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import com.github.fluent.hibernate.internal.util.InternalUtils;
+import com.github.fluent.hibernate.internal.util.InternalUtils.StringUtils;
 
 /**
  *
@@ -16,7 +18,9 @@ import com.github.fluent.hibernate.internal.util.InternalUtils;
  */
 public final class ReflectionUtils {
 
-    private static final String SPLIT_PROPERTY_REGEXP = "\\.";
+    public static final Class<?>[] NO_PARAM_SIGNATURE = new Class<?>[0];
+
+    public static final Class<?>[] SINGLE_OBJECT_PARAM_SIGNATURE = new Class[] { Object.class };
 
     private ReflectionUtils() {
 
@@ -170,7 +174,7 @@ public final class ReflectionUtils {
     }
 
     public static String[] getPropertyParts(String property) {
-        return property == null ? new String[0] : property.split(SPLIT_PROPERTY_REGEXP);
+        return StringUtils.splitByDot(property);
     }
 
     public static <T extends Annotation> T getAnnotation(Class<?> classToCheck, String propertyName,
@@ -183,6 +187,26 @@ public final class ReflectionUtils {
     private static <T extends Annotation> T getAnnotation(AccessibleObject accessibleObject,
             Class<T> annotationClass) {
         return accessibleObject == null ? null : accessibleObject.getAnnotation(annotationClass);
+    }
+
+    public static Method extractMethod(Class<?> clazz, String methodName)
+            throws NoSuchMethodException {
+        return clazz.getMethod(methodName, NO_PARAM_SIGNATURE);
+    }
+
+    public static <T> T invoke(Object thisObject, Method method)
+            throws IllegalAccessException, InvocationTargetException {
+        return (T) method.invoke(thisObject, NO_PARAM_SIGNATURE);
+    }
+
+    public static Method extractMethod(Class<?> clazz, String methodName, Class<?> parameterType)
+            throws NoSuchMethodException {
+        return clazz.getMethod(methodName, parameterType);
+    }
+
+    public static <T> T invoke(Object thisObject, Method method, Object parameter)
+            throws IllegalAccessException, InvocationTargetException {
+        return (T) method.invoke(thisObject, parameter);
     }
 
 }

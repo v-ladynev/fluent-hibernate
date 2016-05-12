@@ -28,6 +28,8 @@ public final class HibernateSessionFactory {
     /** Session factory. */
     private static volatile SessionFactory sessionFactory;
 
+    private static ISessionControl sessionControl;
+
     private HibernateSessionFactory() {
 
     }
@@ -56,7 +58,7 @@ public final class HibernateSessionFactory {
             rollback(txn);
             throw InternalUtils.toRuntimeException(th);
         } finally {
-            close(session);
+            sessionControl.close(session);
         }
 
         return result;
@@ -81,7 +83,7 @@ public final class HibernateSessionFactory {
             rollback(txn);
             throw new RuntimeException(th);
         } finally {
-            close(session);
+            sessionControl.close(session);
         }
 
         return result;
@@ -114,7 +116,9 @@ public final class HibernateSessionFactory {
         }
     }
 
-    static synchronized void setExistingSessionFactory(SessionFactory sessionFactory) {
+    static synchronized void setExistingSessionFactory(SessionFactory sessionFactory,
+            ISessionControl sessionControl) {
+        HibernateSessionFactory.sessionControl = sessionControl;
         closeSessionFactory();
         HibernateSessionFactory.sessionFactory = sessionFactory;
     }
@@ -122,18 +126,6 @@ public final class HibernateSessionFactory {
     private static void rollback(Transaction txn) {
         if (txn != null) {
             txn.rollback();
-        }
-    }
-
-    private static void close(Session session) {
-        if (session != null && session.isOpen()) {
-            session.close();
-        }
-    }
-
-    private static void close(StatelessSession session) {
-        if (session != null) {
-            session.close();
         }
     }
 

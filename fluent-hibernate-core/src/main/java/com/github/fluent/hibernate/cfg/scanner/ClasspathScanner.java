@@ -16,6 +16,7 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 import com.github.fluent.hibernate.internal.util.InternalUtils;
+import com.github.fluent.hibernate.internal.util.InternalUtils.ClassUtils;
 
 /**
  *
@@ -180,7 +181,7 @@ public class ClasspathScanner {
         }
 
         if (canAddToResult(classResource) && acceptor.accept(classResource, loader)) {
-            Class<?> clazz = ClassLoaderUtils.classForName(
+            Class<?> clazz = ClassUtils.classForName(
                     ResourceUtils.getClassNameFromPath(classResource), loader);
             result.add(clazz);
         }

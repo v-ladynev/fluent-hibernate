@@ -3,6 +3,7 @@ package com.github.fluent.hibernate.cfg.scanner;
 import java.util.List;
 
 import com.github.fluent.hibernate.internal.util.InternalUtils;
+import com.github.fluent.hibernate.internal.util.InternalUtils.ClassUtils;
 
 /**
  *
@@ -14,19 +15,11 @@ final class ClassLoaderUtils {
 
     }
 
-    public static Class<?> classForName(String className, ClassLoader loader) {
-        try {
-            return Class.forName(className, true, loader);
-        } catch (ClassNotFoundException ex) {
-            throw InternalUtils.toRuntimeException(ex);
-        }
-    }
-
     public static List<ClassLoader> defaultClassLoaders() {
         List<ClassLoader> result = InternalUtils.CollectionUtils.newArrayList();
 
-        ClassLoader contextClassLoader = contextClassLoader();
-        ClassLoader staticClassLoader = staticClassLoader();
+        ClassLoader contextClassLoader = ClassUtils.contextClassLoader();
+        ClassLoader staticClassLoader = ClassUtils.staticClassLoader();
 
         add(result, contextClassLoader);
         if (contextClassLoader != staticClassLoader) {
@@ -40,14 +33,6 @@ final class ClassLoaderUtils {
         if (loader != null) {
             result.add(loader);
         }
-    }
-
-    private static ClassLoader contextClassLoader() {
-        return Thread.currentThread().getContextClassLoader();
-    }
-
-    private static ClassLoader staticClassLoader() {
-        return ResourceUtils.class.getClassLoader();
     }
 
 }
