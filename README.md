@@ -1,24 +1,27 @@
 # fluent-hibernate
-A library to work with Hibernate by fluent API. This library hasn't dependencies, except Hibernate libraries. It requires Java 1.6 and above. Now it can be used with Hibernate 5 only. To use a library core functionalty with Hibernate 4, it should be rebuilt, using Hibernate 4 as a dependency (it doesn't need for a utility functionality: the naming startegy, the entity scanner and the transformer).
+A library to work with Hibernate by fluent API. This library hasn't dependencies, except Hibernate libraries. It requires Java 1.6 and above. 
+
+This library can be used with Hibernate 5 and Hibernate 4.
 
 [![Build Status](https://travis-ci.org/v-ladynev/fluent-hibernate.svg?branch=master)](https://travis-ci.org/v-ladynev/fluent-hibernate)
 
 ## Download
 ##### Direct link
-[![Release 0.1.4](https://img.shields.io/badge/release-0.1.4-blue.svg)](https://github.com/v-ladynev/fluent-hibernate/releases/download/0.1.4/fluent-hibernate-core-0.1.4.jar)
+[![Release 0.2.0](https://img.shields.io/badge/release-0.2.0-blue.svg)](https://github.com/v-ladynev/fluent-hibernate/releases/download/0.2.0/fluent-hibernate-core-0.2.0.jar)
 
 ##### Maven (`pom.xml`)
 ```XML
 <dependency>
   <groupId>com.github.v-ladynev</groupId>
   <artifactId>fluent-hibernate-core</artifactId>
-  <version>0.1.4</version>
+  <version>0.2.0</version>
 </dependency>
 ```
+All versions in the Maven repository: [fluent-hibernate-core](http://repo1.maven.org/maven2/com/github/v-ladynev/fluent-hibernate-core/)
 
 ##### Gradle (`build.gradle`)
 ```Gradle
-compile 'com.github.v-ladynev:fluent-hibernate-core:0.1.4'
+compile 'com.github.v-ladynev:fluent-hibernate-core:0.2.0'
 ```
 
 ## Examples
