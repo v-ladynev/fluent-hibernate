@@ -211,6 +211,10 @@ public final class InternalUtils {
             return array == null || array.length == 0;
         }
 
+        public static boolean isEmptyEllipsis(Object[] array) {
+            return isEmpty(array) || isOneNull(array);
+        }
+
         public static <T> List<T> correctToEmpty(List<T> list) {
             return list == null ? Collections.<T> emptyList() : list;
         }
@@ -240,7 +244,11 @@ public final class InternalUtils {
         }
 
         public static <T> T[] correctOneNullToEmpty(T[] array) {
-            return size(array) == 1 && array[0] == null ? newArray(array, 0) : array;
+            return isOneNull(array) ? newArray(array, 0) : array;
+        }
+
+        public static boolean isOneNull(Object[] array) {
+            return size(array) == 1 && array[0] == null;
         }
 
         public static <T> T[] newArray(T[] reference, int length) {

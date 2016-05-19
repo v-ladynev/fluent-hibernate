@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -15,8 +14,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-import com.github.fluent.hibernate.internal.util.InternalUtils;
-import com.github.fluent.hibernate.internal.util.InternalUtils.ClassUtils;
+import com.github.fluent.hibernate.internal.util.InternalUtils.CollectionUtils;
+import com.github.fluent.hibernate.internal.util.InternalUtils.StringUtils;
 
 /**
  *
@@ -24,9 +23,7 @@ import com.github.fluent.hibernate.internal.util.InternalUtils.ClassUtils;
  */
 public class ClasspathScanner {
 
-    private final List<Class<?>> result = new ArrayList<Class<?>>();
-
-    private final Set<UrlWrapper> scanned = InternalUtils.CollectionUtils.newHashSet();
+    private final Set<UrlWrapper> scanned = CollectionUtils.newHashSet();
 
     private final Set<String> scannedResources = new HashSet<String>();
 
@@ -34,9 +31,11 @@ public class ClasspathScanner {
 
     private List<ClassLoader> loaders;
 
-    private final IClassAcceptor acceptor;
+    private final IResourceAcceptor acceptor;
 
-    public ClasspathScanner(IClassAcceptor acceptor) {
+    private boolean scanAllPackages;
+
+    public ClasspathScanner(IResourceAcceptor acceptor) {
         this.acceptor = acceptor;
     }
 
@@ -44,24 +43,25 @@ public class ClasspathScanner {
         this.resourcesToScan = ResourceUtils.packagesAsResourcePath(packagesToScan);
     }
 
+    public void allPackagesToScan() {
+        setPackagesToScan(Collections.<String> emptyList());
+        scanAllPackages = true;
+    }
+
     public void setLoaders(List<ClassLoader> loaders) {
         this.loaders = loaders;
     }
 
-    public List<Class<?>> scan() throws Exception {
+    public void scan() throws Exception {
         for (UrlWrapper url : getUrls()) {
             scan(url);
         }
-
-        return result;
     }
 
     private Set<UrlWrapper> getUrls() {
-        return UrlExtractor
-                .createForResources(resourcesToScan)
-                .usingLoaders(
-                        InternalUtils.CollectionUtils.isEmpty(loaders) ? ClassLoaderUtils
-                                .defaultClassLoaders() : loaders).extract();
+        return UrlExtractor.createForResources(resourcesToScan).usingLoaders(
+                CollectionUtils.isEmpty(loaders) ? ClassLoaderUtils.defaultClassLoaders() : loaders)
+                .extract();
     }
 
     private void scan(UrlWrapper url) throws Exception {
@@ -103,10 +103,7 @@ public class ClasspathScanner {
             }
             scanJarFile(jarFile, url.getLoader());
         } finally {
-            try {
-                jarFile.close();
-            } catch (IOException ignored) {
-            }
+            ResourceUtils.closeQuietly(jarFile);
         }
     }
 
@@ -118,12 +115,12 @@ public class ClasspathScanner {
                 continue;
             }
 
-            addClass(entry.getName(), loader);
+            addResource(entry.getName(), loader);
         }
     }
 
     private void scanDirectory(ClassLoader loader, File directory) throws Exception {
-        scanDirectory(directory, loader, InternalUtils.StringUtils.EMPTY);
+        scanDirectory(directory, loader, StringUtils.EMPTY);
     }
 
     private void scanDirectory(File directory, ClassLoader classloader, String packagePrefix)
@@ -140,7 +137,7 @@ public class ClasspathScanner {
             } else {
                 String resourceName = packagePrefix + name;
                 if (!resourceName.equals(JarFile.MANIFEST_NAME)) {
-                    addClass(resourceName, classloader);
+                    addResource(resourceName, classloader);
                 }
             }
         }
@@ -154,14 +151,14 @@ public class ClasspathScanner {
             return Collections.emptySet();
         }
 
-        Set<UrlWrapper> result = InternalUtils.CollectionUtils.newHashSet();
-        String classpathAttribute = manifest.getMainAttributes().getValue(
-                Attributes.Name.CLASS_PATH.toString());
+        Set<UrlWrapper> result = CollectionUtils.newHashSet();
+        String classpathAttribute = manifest.getMainAttributes()
+                .getValue(Attributes.Name.CLASS_PATH.toString());
         if (classpathAttribute == null) {
             return result;
         }
 
-        for (String path : InternalUtils.StringUtils.splitBySpace(classpathAttribute)) {
+        for (String path : StringUtils.splitBySpace(classpathAttribute)) {
             URL url;
             try {
                 url = getClassPathEntry(jarFile, path);
@@ -175,21 +172,23 @@ public class ClasspathScanner {
         return result;
     }
 
-    private void addClass(String classResource, ClassLoader loader) throws Exception {
-        if (!scannedResources.add(classResource)) {
+    private void addResource(String resource, ClassLoader loader) throws Exception {
+        if (!scannedResources.add(resource)) {
             return;
         }
 
-        if (canAddToResult(classResource) && acceptor.accept(classResource, loader)) {
-            Class<?> clazz = ClassUtils.classForName(
-                    ResourceUtils.getClassNameFromPath(classResource), loader);
-            result.add(clazz);
+        if (canAddToResult(resource)) {
+            acceptor.accept(resource, loader);
         }
     }
 
-    private boolean canAddToResult(String classResource) throws IOException {
+    private boolean canAddToResult(String resource) throws IOException {
+        if (scanAllPackages) {
+            return true;
+        }
+
         for (String resourceToScan : resourcesToScan) {
-            if (classResource.startsWith(resourceToScan)) {
+            if (resource.startsWith(resourceToScan)) {
                 return true;
             }
         }
@@ -197,13 +196,15 @@ public class ClasspathScanner {
         return false;
     }
 
-    private static URL getClassPathEntry(JarFile jarFile, String path) throws MalformedURLException {
+    private static URL getClassPathEntry(JarFile jarFile, String path)
+            throws MalformedURLException {
         return new URL(new File(jarFile.getName()).toURI().toURL(), path);
     }
 
-    public interface IClassAcceptor {
+    public interface IResourceAcceptor {
 
-        boolean accept(String classResource, ClassLoader loader) throws Exception;
+        void accept(String resource, ClassLoader loader) throws Exception;
+
     }
 
 }

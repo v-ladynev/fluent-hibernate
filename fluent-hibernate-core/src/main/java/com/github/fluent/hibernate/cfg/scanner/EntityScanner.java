@@ -1,8 +1,8 @@
 package com.github.fluent.hibernate.cfg.scanner;
 
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -10,6 +10,9 @@ import javax.persistence.Entity;
 import org.hibernate.cfg.Configuration;
 
 import com.github.fluent.hibernate.internal.util.InternalUtils;
+import com.github.fluent.hibernate.internal.util.InternalUtils.Asserts;
+import com.github.fluent.hibernate.internal.util.InternalUtils.ClassUtils;
+import com.github.fluent.hibernate.internal.util.InternalUtils.CollectionUtils;
 
 /**
  *
@@ -21,14 +24,22 @@ public final class EntityScanner {
 
     private List<ClassLoader> loaders;
 
-    private final List<String> packagesToScan;
+    private final String[] packagesToScan;
 
-    private List<Class<?>> result;
+    private List<Class<?>> result = CollectionUtils.newArrayList();
 
     private EntityScanner(String[] packagesToScan) {
-        this.packagesToScan = packagesToScan == null ? Collections.<String> emptyList()
-                : Arrays.asList(
-                        InternalUtils.CollectionUtils.correctOneNullToEmpty(packagesToScan));
+        this.packagesToScan = packagesToScan;
+    }
+
+    /**
+     * Scan all the class path for the @Entity annotation. It scans JRE libraries too, so this
+     * method recommended to use only for the test purposes.
+     *
+     * @return EntityScanner for fluent calls
+     */
+    public static EntityScanner scanAllPackages() {
+        return scanPackages(null, null, Entity.class);
     }
 
     /**
@@ -40,14 +51,21 @@ public final class EntityScanner {
      * @return EntityScanner for fluent calls
      */
     public static EntityScanner scanPackages(String... packages) {
+        Asserts.isTrue(!CollectionUtils.isEmptyEllipsis(packages),
+                "You should to specify almost one package to scan.");
+        return scanPackages(packages, null, Entity.class);
+    }
+
+    private static EntityScanner scanPackages(String[] packages, List<ClassLoader> loaders,
+            Class<? extends Annotation> annotation) {
         try {
-            return scanPackages(packages, null, Entity.class);
+            return scanPackagesInternal(packages, null, Entity.class);
         } catch (Exception ex) {
             throw InternalUtils.toRuntimeException(ex);
         }
     }
 
-    static EntityScanner scanPackages(String[] packages, List<ClassLoader> loaders,
+    static EntityScanner scanPackagesInternal(String[] packages, List<ClassLoader> loaders,
             Class<? extends Annotation> annotation) throws Exception {
         EntityScanner scanner = new EntityScanner(packages);
         scanner.loaders = loaders;
@@ -58,17 +76,37 @@ public final class EntityScanner {
     private void scan(Class<? extends Annotation> annotation) throws Exception {
         checker = new AnnotationChecker(annotation);
 
-        ClasspathScanner scanner = new ClasspathScanner(new ClasspathScanner.IClassAcceptor() {
+        ClasspathScanner scanner = new ClasspathScanner(new ClasspathScanner.IResourceAcceptor() {
             @Override
-            public boolean accept(String classResource, ClassLoader loader) throws Exception {
-                return checker.hasAnnotation(loader.getResourceAsStream(classResource));
+            public void accept(String resource, ClassLoader loader) throws Exception {
+                addClassToResult(resource, loader);
             }
         });
 
-        scanner.setPackagesToScan(packagesToScan);
+        if (packagesToScan == null) {
+            scanner.allPackagesToScan();
+        } else {
+            scanner.setPackagesToScan(Arrays.asList(packagesToScan));
+        }
+
         scanner.setLoaders(loaders);
 
-        result = scanner.scan();
+        scanner.scan();
+    }
+
+    private void addClassToResult(String resource, ClassLoader loader) throws IOException {
+        if (!ResourceUtils.hasClassExtension(resource)) {
+            return;
+        }
+
+        // in JDK 8 getResourceAsStream() returns null for version.rc
+        if (!checker.hasAnnotation(loader.getResourceAsStream(resource))) {
+            return;
+        }
+
+        Class<?> clazz = ClassUtils.classForName(ResourceUtils.getClassNameFromPath(resource),
+                loader);
+        result.add(clazz);
     }
 
     /**

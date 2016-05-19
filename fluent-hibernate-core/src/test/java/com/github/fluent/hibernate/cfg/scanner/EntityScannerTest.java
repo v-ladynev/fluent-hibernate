@@ -48,6 +48,11 @@ public class EntityScannerTest {
             FirstRootEntityJar.NestedEntityJar.class, SecondRootEntityJar.class,
             FirstSubpackageEntityJar.class };
 
+    @Test(expected = IllegalArgumentException.class)
+    public void withoutPackages() {
+        EntityScanner.scanPackages().result();
+    }
+
     @Test
     public void scanOnePackage() {
         List<Class<?>> classes = EntityScanner.scanPackages(OTHER_PERSISTENT_PACKAGE).result();
@@ -78,7 +83,7 @@ public class EntityScannerTest {
                 .loadClass(Entity.class.getName());
         assertThat(entityAnnotation).isNotNull();
 
-        List<Class<?>> classes = EntityScanner.scanPackages(new String[] { JAR_PACKAGE },
+        List<Class<?>> classes = EntityScanner.scanPackagesInternal(new String[] { JAR_PACKAGE },
                 Arrays.<ClassLoader> asList(loader), entityAnnotation).result();
 
         assertThat(classes).contains(reload(loader, JAR_ENTITY_CLASSES))
