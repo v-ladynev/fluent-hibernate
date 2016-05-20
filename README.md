@@ -24,15 +24,13 @@ compile 'com.github.v-ladynev:fluent-hibernate-core:0.2.0'
 
 ## The Most Useful Features
 
-fluent-hibrnate libary has the features wich can be used with plain Hibernate or Spring code
+_fluent-hibrnate_ has the features wich can be used with plain Hibernate or Spring code
 without a library infrastructure.
 
 ### Scan the class path for Hibernate entities
 
-fluent-hibernate can be used for a quick scanning entites without additional
-dependencies (you will not need to have other jars, except the library).
-
-Just download the library using [Download](#download) section and use [EntityScanner](https://github.com/v-ladynev/fluent-hibernate/blob/master/fluent-hibernate-core/src/main/java/com/github/fluent/hibernate/cfg/scanner/EntityScanner.java):
+_fluent-hibernate_ can be used for a quick entites scanning. You will need just the library jar,
+without additional dependencies. Just download the library using [Download](#download) section and use [EntityScanner](https://github.com/v-ladynev/fluent-hibernate/blob/master/fluent-hibernate-core/src/main/java/com/github/fluent/hibernate/cfg/scanner/EntityScanner.java):
 
 _For Hibernate 4 and Hibernate 5:_
 ```Java
