@@ -1,7 +1,5 @@
 # fluent-hibernate
-A library to work with Hibernate by fluent API. This library hasn't dependencies, except Hibernate libraries. It requires Java 1.6 and above. 
-
-This library can be used with Hibernate 5 and Hibernate 4.
+A library to work with Hibernate by fluent API. This library hasn't dependencies, except Hibernate libraries. It requires Java 1.6 and above. It can be used with Hibernate 5 and Hibernate 4.
 
 [![Build Status](https://travis-ci.org/v-ladynev/fluent-hibernate.svg?branch=master)](https://travis-ci.org/v-ladynev/fluent-hibernate)
 
@@ -22,6 +20,40 @@ All versions in the Maven repository: [fluent-hibernate-core](http://repo1.maven
 ##### Gradle (`build.gradle`)
 ```Gradle
 compile 'com.github.v-ladynev:fluent-hibernate-core:0.2.0'
+```
+
+## The Most Useful Features
+
+fluent-hibrnate libary has the features wich can be used with plain Hibernate or Spring code
+without a library infrastructure.
+
+### Scan the class path for Hibernate entities
+
+fluent-hibernate can be used for a quick scanning entites without additional
+dependencies (you will not need to have other jars, except the library).
+
+Just download the library using [Download](#download) section and use [EntityScanner](https://github.com/v-ladynev/fluent-hibernate/blob/master/fluent-hibernate-core/src/main/java/com/github/fluent/hibernate/cfg/scanner/EntityScanner.java):
+
+_For Hibernate 4 and Hibernate 5:_
+```Java
+    Configuration configuration = new Configuration();
+    EntityScanner.scanPackages("my.com.entities", "my.com.other.entities")
+        .addTo(configuration);
+    SessionFactory sessionFactory = configuration.buildSessionFactory();
+```
+
+_Using a new Hibernate 5 bootstrapping API:_
+```Java
+    List<Class<?>> classes = EntityScanner
+            .scanPackages("my.com.entities", "my.com.other.entities").result();
+
+    MetadataSources metadataSources = new MetadataSources();
+    for (Class<?> annotatedClass : classes) {
+        metadataSources.addAnnotatedClass(annotatedClass);
+    }
+
+    SessionFactory sessionFactory = metadataSources.buildMetadata()
+        .buildSessionFactory();
 ```
 
 ## Examples
