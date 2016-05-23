@@ -39,10 +39,15 @@ public final class HibernateRequest<T> {
     private final Aliases aliases = Aliases.aliasList();
 
     private final List<Order> orders = CollectionUtils.newArrayList();
+
     private final Class<?> persistentClass;
+
     private String[] fetchJoinPaths;
+
     private boolean distinct;
+
     private ResultTransformer transformer;
+
     private Pagination pagination;
 
     private Integer maxResults;
@@ -178,7 +183,8 @@ public final class HibernateRequest<T> {
         return this;
     }
 
-    public HibernateRequest<T> innerJoin(String associationPath, String alias, Criterion withClause) {
+    public HibernateRequest<T> innerJoin(String associationPath, String alias,
+            Criterion withClause) {
         aliases.add(associationPath, alias, JoinType.INNER, withClause);
         return this;
     }
@@ -193,7 +199,8 @@ public final class HibernateRequest<T> {
         return this;
     }
 
-    public HibernateRequest<T> leftJoin(String associationPath, String alias, Criterion withClause) {
+    public HibernateRequest<T> leftJoin(String associationPath, String alias,
+            Criterion withClause) {
         aliases.add(associationPath, alias, JoinType.LEFT, withClause);
         return this;
     }
@@ -208,7 +215,8 @@ public final class HibernateRequest<T> {
         return this;
     }
 
-    public HibernateRequest<T> rightJoin(String associationPath, String alias, Criterion withClause) {
+    public HibernateRequest<T> rightJoin(String associationPath, String alias,
+            Criterion withClause) {
         aliases.add(associationPath, alias, JoinType.RIGHT, withClause);
         return this;
     }

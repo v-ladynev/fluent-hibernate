@@ -109,6 +109,16 @@ public class FluentFactoryBuilder {
         return this;
     }
 
+    public FluentFactoryBuilder h2ConfigForTests() {
+        return dontUseHibernateCfgXml().hibernateProperties(HibernateProperties.forH2CreateDrop())
+                .useNamingStrategy();
+    }
+
+    public FluentFactoryBuilder showSql() {
+        return hibernateProperties(
+                HibernateProperties.create().showSql(true).formatSql(true).useSqlComments(true));
+    }
+
     /**
      * Build a Hibernate session factory.
      */

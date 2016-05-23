@@ -7,93 +7,95 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.assertj.core.api.ListAssert;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.github.fluent.hibernate.H;
+import com.github.fluent.hibernate.cfg.Fluent;
 import com.github.fluent.hibernate.test.persistent.SimplyPersistent;
-import com.github.fluent.hibernate.test.util.FluentHibernateBaseTest;
 
 /**
  *
  * @author alexey.pchelnikov
  */
-public class EqOperatorTest extends FluentHibernateBaseTest {
+public class EqOperatorTest {
 
-    private final List<SimplyPersistent> persistents = new ArrayList<SimplyPersistent>();
+    private static final List<SimplyPersistent> PERSISTENTS = new ArrayList<SimplyPersistent>();
 
-    @Before
-    public void beforeEachTest() {
-        dropAll();
-        generateModels();
+    @BeforeClass
+    public static void initSessionFactory() {
+        Fluent.factory().h2ConfigForTests().annotatedClasses(SimplyPersistent.class).build();
+        createTestData();
     }
 
-    private void dropAll() {
-        H.update("delete from SimplyPersistent").execute();
+    @AfterClass
+    public static void closeSessionFactory() {
+        Fluent.factory().close();
     }
 
-    private void generateModels() {
-        persistents.add(new SimplyPersistent("just_name"));
-        persistents.add(new SimplyPersistent("two_objects"));
-        persistents.add(new SimplyPersistent("two_objects"));
-        persistents.add(new SimplyPersistent(null));
-        H.saveAll(persistents);
+    private static void createTestData() {
+        PERSISTENTS.add(new SimplyPersistent("just_name"));
+        PERSISTENTS.add(new SimplyPersistent("two_objects"));
+        PERSISTENTS.add(new SimplyPersistent("two_objects"));
+        PERSISTENTS.add(new SimplyPersistent(null));
+        H.saveAll(PERSISTENTS);
     }
 
     @Test
     public void restrictionTest() {
-        List<SimplyPersistent> list = getRequest().eq("name", "two_objects").list();
+        List<SimplyPersistent> list = request().eq("name", "two_objects").list();
 
-        Long[] expectedResult = new Long[] { persistents.get(1).getPid(),
-                persistents.get(2).getPid() };
+        Long[] expectedResult = new Long[] { PERSISTENTS.get(1).getPid(),
+                PERSISTENTS.get(2).getPid() };
         check(list, expectedResult);
     }
 
     @Test
     public void restrictionNullTest() {
-        List<SimplyPersistent> list = getRequest().eq("name", null).list();
+        List<SimplyPersistent> list = request().eq("name", null).list();
         check(list, new Long[0]);
     }
 
     @Test
     public void restrictionOrIsNullTest() {
-        List<SimplyPersistent> list = getRequest().eqOrIsNull("name", null).list();
+        List<SimplyPersistent> list = request().eqOrIsNull("name", null).list();
 
-        Long[] expectedResult = new Long[] { persistents.get(3).getPid() };
+        Long[] expectedResult = new Long[] { PERSISTENTS.get(3).getPid() };
         check(list, expectedResult);
     }
 
     @Test
     public void restrictionBuilderTest() {
-        List<SimplyPersistent> list = getRequest().add(eq("name", "two_objects")).list();
+        List<SimplyPersistent> list = request().add(eq("name", "two_objects")).list();
 
-        Long[] expectedResult = new Long[] { persistents.get(1).getPid(),
-                persistents.get(2).getPid() };
+        Long[] expectedResult = new Long[] { PERSISTENTS.get(1).getPid(),
+                PERSISTENTS.get(2).getPid() };
         check(list, expectedResult);
     }
 
     @Test
     public void restrictionBuilderNullTest() {
-        List<SimplyPersistent> list = getRequest().add(eq("name", null)).list();
+        List<SimplyPersistent> list = request().add(eq("name", null)).list();
         check(list, new Long[0]);
     }
 
     @Test
     public void restrictionBuilderIfNotNullTest() {
-        List<SimplyPersistent> list = getRequest().add(eq("name", null).ifNotNull()).list();
+        List<SimplyPersistent> list = request().add(eq("name", null).ifNotNull()).list();
 
-        Long[] expectedResult = new Long[] { persistents.get(0).getPid(),
-                persistents.get(1).getPid(), persistents.get(2).getPid(),
-                persistents.get(3).getPid() };
+        Long[] expectedResult = new Long[] { PERSISTENTS.get(0).getPid(),
+                PERSISTENTS.get(1).getPid(), PERSISTENTS.get(2).getPid(),
+                PERSISTENTS.get(3).getPid() };
         check(list, expectedResult);
 
     }
 
     @Test
     public void restrictionBuilderOrIsNullTest() {
-        List<SimplyPersistent> list = getRequest().add(eq("name", null).orIsNull()).list();
+        List<SimplyPersistent> list = request().add(eq("name", null).orIsNull()).list();
 
-        Long[] expectedResult = new Long[] { persistents.get(3).getPid() };
+        Long[] expectedResult = new Long[] { PERSISTENTS.get(3).getPid() };
         check(list, expectedResult);
 
     }
@@ -103,7 +105,7 @@ public class EqOperatorTest extends FluentHibernateBaseTest {
                 .containsOnly(expectedResult);
     }
 
-    private HibernateRequest<SimplyPersistent> getRequest() {
+    private HibernateRequest<SimplyPersistent> request() {
         return H.request(SimplyPersistent.class);
     }
 

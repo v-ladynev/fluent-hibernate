@@ -3,6 +3,7 @@ package com.github.fluent.hibernate;
 import com.github.fluent.hibernate.request.HibernateHqlRequest;
 import com.github.fluent.hibernate.request.HibernateObjectQuery;
 import com.github.fluent.hibernate.request.HibernateRequest;
+import com.github.fluent.hibernate.request.HibernateSqlRequest;
 import com.github.fluent.hibernate.request.HibernateUpdate;
 
 /**
@@ -23,6 +24,10 @@ public final class H {
 
     public static <T> HibernateHqlRequest<T> request(String query) {
         return HibernateHqlRequest.<T> create(query);
+    }
+
+    public static <T> HibernateSqlRequest<T> sqlRequest(String query) {
+        return HibernateSqlRequest.<T> create(query);
     }
 
     public static HibernateUpdate update(String updateQuery) {
@@ -60,8 +65,6 @@ public final class H {
     public static <T> void deleteAll(Iterable<T> entities) {
         HibernateObjectQuery.deleteAll(entities);
     }
-
-    // public static ConfigurationBui
 
     // TODO add invoking IRequest
 

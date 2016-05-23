@@ -16,7 +16,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
- * An user.
+ * A user.
  *
  * @author V.Ladynev
  */

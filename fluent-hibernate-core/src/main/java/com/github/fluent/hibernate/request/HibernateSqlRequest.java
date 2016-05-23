@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 
 import com.github.fluent.hibernate.IRequest;
@@ -18,7 +19,7 @@ import com.github.fluent.hibernate.transformer.FluentHibernateResultTransformer;
  * @author DoubleF1re
  * @author V.Ladynev
  */
-public final class HibernateHqlRequest<T> {
+public final class HibernateSqlRequest<T> {
 
     private final String query;
 
@@ -28,7 +29,7 @@ public final class HibernateHqlRequest<T> {
 
     private Class<?> transformToClass;
 
-    private HibernateHqlRequest(String query) {
+    private HibernateSqlRequest(String query) {
         this.query = query;
     }
 
@@ -40,23 +41,23 @@ public final class HibernateHqlRequest<T> {
      * @param val
      *            parameter value
      */
-    public HibernateHqlRequest<T> p(String name, Object val) {
+    public HibernateSqlRequest<T> p(String name, Object val) {
         params.add(name, val);
         return this;
     }
 
-    public HibernateHqlRequest<T> p(String name, Object... vals) {
+    public HibernateSqlRequest<T> p(String name, Object... vals) {
         params.add(name, Arrays.asList(vals));
         return this;
     }
 
-    public HibernateHqlRequest<T> maxResults(int maxResults) {
+    public HibernateSqlRequest<T> maxResults(int maxResults) {
         this.maxResults = maxResults;
         return this;
     }
 
     // TODO transformer not works for pid a nested fields
-    public HibernateHqlRequest<T> transform(Class<?> clazz) {
+    public HibernateSqlRequest<T> transform(Class<?> clazz) {
         transformToClass = clazz;
         return this;
     }
@@ -100,13 +101,13 @@ public final class HibernateHqlRequest<T> {
     }
 
     private Query createHibernateQuery(Session session) {
-        Query result = session.createQuery(query);
+        SQLQuery result = session.createSQLQuery(query);
         params.setParametersToQuery(result);
         return result;
     }
 
-    public static <T> HibernateHqlRequest<T> create(String query) {
-        return new HibernateHqlRequest<T>(query);
+    public static <T> HibernateSqlRequest<T> create(String query) {
+        return new HibernateSqlRequest<T>(query);
     }
 
 }
