@@ -6,31 +6,41 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.transform.ResultTransformer;
 
-import com.github.fluent.hibernate.IRequest;
-import com.github.fluent.hibernate.cfg.HibernateSessionFactory;
-import com.github.fluent.hibernate.internal.util.InternalUtils;
-import com.github.fluent.hibernate.transformer.FluentHibernateResultTransformer;
+import com.github.fluent.hibernate.internal.util.InternalUtils.CollectionUtils;
+import com.github.fluent.hibernate.request.HibernateQuery.IQueryFactory;
 
 /**
  * @param <T>
  *            type of return value.
  *
- * @author DoubleF1re
  * @author V.Ladynev
  */
 public final class HibernateSqlRequest<T> {
 
-    private final String query;
+    private final HibernateQuery<T> query;
 
-    private final HibernateQueryParameters params = new HibernateQueryParameters();
-
-    private int maxResults;
-
-    private Class<?> transformToClass;
+    private List<IToAddToSQLQuery> toAddToSQLQuery = CollectionUtils.newArrayList();
 
     private HibernateSqlRequest(String query) {
-        this.query = query;
+        this.query = createQuery(query);
+    }
+
+    private HibernateQuery<T> createQuery(final String query) {
+        return new HibernateQuery<T>(new IQueryFactory() {
+            @Override
+            public Query create(Session session) {
+                SQLQuery result = session.createSQLQuery(query);
+
+                for (IToAddToSQLQuery toAdd : toAddToSQLQuery) {
+                    toAdd.addToQuery(result);
+                }
+
+                return result;
+
+            }
+        });
     }
 
     /**
@@ -41,69 +51,62 @@ public final class HibernateSqlRequest<T> {
      * @param val
      *            parameter value
      */
+
     public HibernateSqlRequest<T> p(String name, Object val) {
-        params.add(name, val);
+        query.p(name, val);
         return this;
     }
 
     public HibernateSqlRequest<T> p(String name, Object... vals) {
-        params.add(name, Arrays.asList(vals));
+        query.p(name, Arrays.asList(vals));
         return this;
     }
 
     public HibernateSqlRequest<T> maxResults(int maxResults) {
-        this.maxResults = maxResults;
+        query.maxResults(maxResults);
         return this;
     }
 
-    // TODO transformer not works for pid a nested fields
     public HibernateSqlRequest<T> transform(Class<?> clazz) {
-        transformToClass = clazz;
+        query.transform(clazz);
+        return this;
+    }
+
+    public HibernateSqlRequest<T> useTransformer(ResultTransformer transformer) {
+        query.useTransformer(transformer);
         return this;
     }
 
     public T first() {
-        return InternalUtils.CollectionUtils.first(list());
+        return query.first();
     }
 
     public List<T> list() {
-        return HibernateSessionFactory.doInTransaction(new IRequest<List<T>>() {
-            @Override
-            public List<T> doInTransaction(Session session) {
-                return tuneForSelect(createHibernateQuery(session)).list();
-            }
-        });
-    }
-
-    private Query tuneForSelect(Query hibernateQuery) {
-        if (maxResults != 0) {
-            hibernateQuery.setMaxResults(maxResults);
-        }
-
-        if (transformToClass != null) {
-            hibernateQuery
-                    .setResultTransformer(new FluentHibernateResultTransformer(transformToClass));
-        }
-
-        return hibernateQuery;
+        return query.list();
     }
 
     // TODO may be return long?
     public int count() {
-        Number result = HibernateSessionFactory.doInTransaction(new IRequest<Number>() {
-            @Override
-            public Number doInTransaction(Session session) {
-                return (Number) createHibernateQuery(session).uniqueResult();
-            }
-        });
-
-        return result == null ? 0 : result.intValue();
+        return query.count();
     }
 
-    private Query createHibernateQuery(Session session) {
-        SQLQuery result = session.createSQLQuery(query);
-        params.setParametersToQuery(result);
-        return result;
+    public HibernateSqlRequest<T> addEntity(Class<?> entityType) {
+        return addEntity(null, entityType);
+    }
+
+    public HibernateSqlRequest<T> addEntity(String tableAlias, Class<?> entityType) {
+        toAddToSQLQuery.add(new SQLEntityToAdd(tableAlias, entityType));
+        return this;
+    }
+
+    public HibernateSqlRequest<T> addJoin(String tableAlias, String path) {
+        return addJoin(tableAlias, path, null);
+    }
+
+    public HibernateSqlRequest<T> addJoin(String tableAlias, String ownerTableAlias,
+            String joinPropertyName) {
+        toAddToSQLQuery.add(new SQLJoinToAdd(tableAlias, ownerTableAlias, joinPropertyName));
+        return this;
     }
 
     public static <T> HibernateSqlRequest<T> create(String query) {

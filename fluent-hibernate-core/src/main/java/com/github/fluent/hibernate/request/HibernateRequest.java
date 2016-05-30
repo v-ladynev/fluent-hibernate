@@ -231,6 +231,11 @@ public final class HibernateRequest<T> {
         return this;
     }
 
+    public HibernateRequest<T> useTransformer(ResultTransformer transformer) {
+        this.transformer = transformer;
+        return this;
+    }
+
     public HibernateRequest<T> pagination(Pagination pagination) {
         this.pagination = pagination;
         return this;

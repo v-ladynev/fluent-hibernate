@@ -10,7 +10,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 
 /**
- * Aliases for SQL request.
+ * Aliases for HQL request.
  *
  * @author V.Ladynev
  */
@@ -38,7 +38,8 @@ import org.hibernate.criterion.DetachedCriteria;
         return this;
     }
 
-    public Aliases add(String associationPath, String alias, JoinType joinType, Criterion withClause) {
+    public Aliases add(String associationPath, String alias, JoinType joinType,
+            Criterion withClause) {
         aliases.add(new Alias(associationPath, alias, joinType, withClause));
         return this;
     }

@@ -12,7 +12,6 @@ import com.github.fluent.hibernate.H;
 import com.github.fluent.hibernate.cfg.Fluent;
 import com.github.fluent.hibernate.internal.util.InternalUtils.CollectionUtils;
 import com.github.fluent.hibernate.request.persistent.Department;
-import com.github.fluent.hibernate.request.persistent.Role;
 import com.github.fluent.hibernate.request.persistent.User;
 import com.github.fluent.hibernate.request.persistent.UserDto;
 
@@ -33,10 +32,8 @@ public class HibernateHqlRequestTest {
     private static void createTestData() {
         List<User> users = CollectionUtils.newArrayList();
 
-        users.add(User.create("login_a", H.save(Department.create("department_a")),
-                Role.create("role_a_first")));
-        users.add(User.create("login_b", H.save(Department.create("department_b")),
-                Role.create("role_b_first"), Role.create("role_b_second")));
+        users.add(User.create("login_a", H.save(Department.create("department_a"))));
+        users.add(User.create("login_b", H.save(Department.create("department_b"))));
 
         H.saveAll(users);
     }

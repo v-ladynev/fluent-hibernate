@@ -9,7 +9,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import com.github.fluent.hibernate.internal.util.InternalUtils;
 
 /**
- * Field alias for SQL request.
+ * An alias for HQL request.
  *
  * @author V.Ladynev
  */
@@ -23,21 +23,20 @@ import com.github.fluent.hibernate.internal.util.InternalUtils;
 
     private Criterion withClause;
 
-    public Alias(final String associationPath, final String alias, final JoinType joinType) {
+    public Alias(String associationPath, String alias, JoinType joinType) {
         this.associationPath = associationPath;
         this.alias = alias;
         this.joinType = joinType;
     }
 
-    public Alias(final String associationPath, final String alias, final JoinType joinType,
-            Criterion withClause) {
+    public Alias(String associationPath, String alias, JoinType joinType, Criterion withClause) {
         this.associationPath = associationPath;
         this.alias = alias;
         this.joinType = joinType;
         this.withClause = withClause;
     }
 
-    public void addToCriteria(final Criteria criteria) {
+    public void addToCriteria(Criteria criteria) {
         if (withClause == null) {
             criteria.createAlias(associationPath, alias, joinType.ordinal());
         } else {
@@ -45,7 +44,7 @@ import com.github.fluent.hibernate.internal.util.InternalUtils;
         }
     }
 
-    public void addToCriteria(final DetachedCriteria criteria) {
+    public void addToCriteria(DetachedCriteria criteria) {
         if (joinType == null) {
             criteria.createAlias(associationPath, alias);
         } else if (withClause == null) {

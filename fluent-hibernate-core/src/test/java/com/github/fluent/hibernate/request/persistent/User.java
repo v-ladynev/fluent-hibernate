@@ -1,17 +1,10 @@
 package com.github.fluent.hibernate.request.persistent;
 
-import java.util.Arrays;
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-
-import com.github.fluent.hibernate.internal.util.InternalUtils.CollectionUtils;
 
 /**
  * A user.
@@ -28,9 +21,6 @@ public class User {
     @Column
     private String login;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<Role> roles = CollectionUtils.newArrayList();
-
     @ManyToOne
     private Department department;
 
@@ -40,10 +30,6 @@ public class User {
 
     public String getLogin() {
         return login;
-    }
-
-    public List<Role> getRoles() {
-        return roles;
     }
 
     public Department getDepartment() {
@@ -58,22 +44,13 @@ public class User {
         this.login = login;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
-
     public void setDepartment(Department department) {
         this.department = department;
     }
 
-    public static User create(String login, Role... roles) {
-        return create(login, null, roles);
-    }
-
-    public static User create(String login, Department department, Role... roles) {
+    public static User create(String login, Department department) {
         User result = new User();
         result.setLogin(login);
-        result.getRoles().addAll(Arrays.asList(roles));
         result.setDepartment(department);
         return result;
     }

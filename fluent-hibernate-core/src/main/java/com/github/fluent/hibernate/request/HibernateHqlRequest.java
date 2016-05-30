@@ -5,11 +5,9 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.transform.ResultTransformer;
 
-import com.github.fluent.hibernate.IRequest;
-import com.github.fluent.hibernate.cfg.HibernateSessionFactory;
-import com.github.fluent.hibernate.internal.util.InternalUtils;
-import com.github.fluent.hibernate.transformer.FluentHibernateResultTransformer;
+import com.github.fluent.hibernate.request.HibernateQuery.IQueryFactory;
 
 /**
  * @param <T>
@@ -20,16 +18,19 @@ import com.github.fluent.hibernate.transformer.FluentHibernateResultTransformer;
  */
 public final class HibernateHqlRequest<T> {
 
-    private final String query;
-
-    private final HibernateQueryParameters params = new HibernateQueryParameters();
-
-    private int maxResults;
-
-    private Class<?> transformToClass;
+    private final HibernateQuery<T> query;
 
     private HibernateHqlRequest(String query) {
-        this.query = query;
+        this.query = createQuery(query);
+    }
+
+    private HibernateQuery<T> createQuery(final String query) {
+        return new HibernateQuery<T>(new IQueryFactory() {
+            @Override
+            public Query create(Session session) {
+                return session.createQuery(query);
+            }
+        });
     }
 
     /**
@@ -41,68 +42,42 @@ public final class HibernateHqlRequest<T> {
      *            parameter value
      */
     public HibernateHqlRequest<T> p(String name, Object val) {
-        params.add(name, val);
+        query.p(name, val);
         return this;
     }
 
     public HibernateHqlRequest<T> p(String name, Object... vals) {
-        params.add(name, Arrays.asList(vals));
+        query.p(name, Arrays.asList(vals));
         return this;
     }
 
     public HibernateHqlRequest<T> maxResults(int maxResults) {
-        this.maxResults = maxResults;
+        query.maxResults(maxResults);
         return this;
     }
 
     // TODO transformer not works for pid a nested fields
     public HibernateHqlRequest<T> transform(Class<?> clazz) {
-        transformToClass = clazz;
+        query.transform(clazz);
+        return this;
+    }
+
+    public HibernateHqlRequest<T> useTransformer(ResultTransformer transformer) {
+        query.useTransformer(transformer);
         return this;
     }
 
     public T first() {
-        return InternalUtils.CollectionUtils.first(list());
+        return query.first();
     }
 
     public List<T> list() {
-        return HibernateSessionFactory.doInTransaction(new IRequest<List<T>>() {
-            @Override
-            public List<T> doInTransaction(Session session) {
-                return tuneForSelect(createHibernateQuery(session)).list();
-            }
-        });
-    }
-
-    private Query tuneForSelect(Query hibernateQuery) {
-        if (maxResults != 0) {
-            hibernateQuery.setMaxResults(maxResults);
-        }
-
-        if (transformToClass != null) {
-            hibernateQuery
-                    .setResultTransformer(new FluentHibernateResultTransformer(transformToClass));
-        }
-
-        return hibernateQuery;
+        return query.list();
     }
 
     // TODO may be return long?
     public int count() {
-        Number result = HibernateSessionFactory.doInTransaction(new IRequest<Number>() {
-            @Override
-            public Number doInTransaction(Session session) {
-                return (Number) createHibernateQuery(session).uniqueResult();
-            }
-        });
-
-        return result == null ? 0 : result.intValue();
-    }
-
-    private Query createHibernateQuery(Session session) {
-        Query result = session.createQuery(query);
-        params.setParametersToQuery(result);
-        return result;
+        return query.count();
     }
 
     public static <T> HibernateHqlRequest<T> create(String query) {
