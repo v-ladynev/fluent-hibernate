@@ -111,20 +111,31 @@ Just download the library using [Download](#download) section and use [FluentHib
 _Load `User` only with `login` and `department.name` fields_
 ```Java
 @Entity
+@Table(name = "users")
 public class User {
 
-    @Column
+    @Id
+    @Column(name = "pid")
+    private Long pid;
+
+    @Column(name = "login")
     private String login;
 
     @ManyToOne
+    @JoinColumn(name = "fk_department")
     private Department department;
 
 }
 
 @Entity
+@Table(name = "departments")
 public class Department {
 
-    @Column
+    @Id
+    @Column(name = "pid")
+    private Long pid;
+
+    @Column(name = "name")
     private String name;
 
 }
@@ -142,11 +153,23 @@ List<User> users = criteria
 #### Using with the native SQL
 
 It is impossible with Hibernate 5 to use `Transformers.aliasToBean(SomeDto.class)` the same way as
-it is used with Hibernate 3 — without the aliases with the quotes ([a more deep explanation](http://stackoverflow.com/a/37423885/3405171)).
-
-
-
+it is used with Hibernate 3 — without the aliases with the quotes ([a more deep explanation](http://stackoverflow.com/a/37423885/3405171)), but  it is possible using `FluentHibernateResultTransformer`. This code works pretty well:
+```Java
+List<User> users = session.createSQLQuery("select login from users")
+        .setResultTransformer(new FluentHibernateResultTransformer(User.class))
+        .list();
+```
+The transformer can be used for a native SQL with the nested projections (opposite HQL). 
+It is need to use the aliases with the quotes in this case:
+```Java
+String sql = "select u.login, d.name as \"department.name\" "
+        + "from users u left outer join departments d on u.fk_department = d.pid";
+List<User> users = session.createSQLQuery(sql)
+        .setResultTransformer(new FluentHibernateResultTransformer(User.class))
+        .list();
+```
 ## Examples
+
 Get all users
 ```Java
 List<User> users = H.<User> request(User.class).list();
