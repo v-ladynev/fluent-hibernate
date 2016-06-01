@@ -41,25 +41,25 @@ without a library infrastructure.
 The library can be used for a quick entites scanning. You will need just the library jar,
 without additional dependencies. Just download the library using [Download](#download) section and use [EntityScanner](https://github.com/v-ladynev/fluent-hibernate/blob/master/fluent-hibernate-core/src/main/java/com/github/fluent/hibernate/cfg/scanner/EntityScanner.java):
 
-_For Hibernate 4 and Hibernate_
+_For Hibernate 4 and Hibernate 5_
 ```Java
-    Configuration configuration = new Configuration();
-    EntityScanner.scanPackages("my.com.entities", "my.com.other.entities")
-        .addTo(configuration);
-    SessionFactory sessionFactory = configuration.buildSessionFactory();
+Configuration configuration = new Configuration();
+EntityScanner.scanPackages("my.com.entities", "my.com.other.entities")
+    .addTo(configuration);
+SessionFactory sessionFactory = configuration.buildSessionFactory();
 ```
 _Using a new Hibernate 5 bootstrapping API_
 ```Java
-    List<Class<?>> classes = EntityScanner
-            .scanPackages("my.com.entities", "my.com.other.entities").result();
+List<Class<?>> classes = EntityScanner
+        .scanPackages("my.com.entities", "my.com.other.entities").result();
 
-    MetadataSources metadataSources = new MetadataSources();
-    for (Class<?> annotatedClass : classes) {
-        metadataSources.addAnnotatedClass(annotatedClass);
-    }
+MetadataSources metadataSources = new MetadataSources();
+for (Class<?> annotatedClass : classes) {
+    metadataSources.addAnnotatedClass(annotatedClass);
+}
 
-    SessionFactory sessionFactory = metadataSources.buildMetadata()
-        .buildSessionFactory();
+SessionFactory sessionFactory = metadataSources.buildMetadata()
+    .buildSessionFactory();
 ```
 
 ### A Hibernate 5 Implicit Naming Strategy
@@ -102,6 +102,50 @@ _Using Spring_
   </property>
 </bean>
 ```
+### A Nested Transformer
+
+It is a custom transformer like `Transformers.aliasToBean(SomeDto.class)` but with nested projections support.
+
+Just download the library using [Download](#download) section and use [FluentHibernateResultTransformer](https://github.com/v-ladynev/fluent-hibernate/blob/master/fluent-hibernate-core/src/main/java/com/github/fluent/hibernate/transformer/FluentHibernateResultTransformer.java).
+
+_Load `User` only with `login` and `department.name` fields_
+```Java
+@Entity
+public class User {
+
+    @Column
+    private String login;
+
+    @ManyToOne
+    private Department department;
+
+}
+
+@Entity
+public class Department {
+
+    @Column
+    private String name;
+
+}
+
+Criteria criteria = session.createCriteria(User.class, "u");
+criteria.createAlias("u.department", "d", JoinType.LEFT_OUTER_JOIN);
+criteria.setProjection(Projections.projectionList()
+        .add(Projections.property("u.login").as("login"))
+        .add(Projections.property("d.name").as("department.name")));
+
+List<User> users = criteria
+        .setResultTransformer(new FluentHibernateResultTransformer(User.class))
+        .list();
+```
+#### Using with the native SQL
+
+It is impossible with Hibernate 5 to use `Transformers.aliasToBean(SomeDto.class)` the same way as
+it is used with Hibernate 3 — without the aliases with the quotes ([a more deep explanation](http://stackoverflow.com/a/37423885/3405171)).
+
+
+
 ## Examples
 Get all users
 ```Java
