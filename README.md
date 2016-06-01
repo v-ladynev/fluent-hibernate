@@ -104,7 +104,7 @@ _Using Spring_
 ```
 ### A Nested Transformer
 
-It is a custom transformer like `Transformers.aliasToBean(SomeDto.class)` but with nested projections support.
+It is a custom transformer like `Transformers.aliasToBean(SomeDto.class)`, but with nested projections support.
 
 Just download the library using [Download](#download) section and use [FluentHibernateResultTransformer](https://github.com/v-ladynev/fluent-hibernate/blob/master/fluent-hibernate-core/src/main/java/com/github/fluent/hibernate/transformer/FluentHibernateResultTransformer.java).
 
@@ -150,6 +150,7 @@ List<User> users = criteria
         .setResultTransformer(new FluentHibernateResultTransformer(User.class))
         .list();
 ```
+Please, don't forget to specify projection aliases. 
 #### Using with the native SQL
 
 It is impossible with Hibernate 5 to use `Transformers.aliasToBean(SomeDto.class)` the same way as
