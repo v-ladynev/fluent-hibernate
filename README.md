@@ -41,14 +41,14 @@ without a library infrastructure.
 The library can be used for a quick entites scanning. You will need just the library jar,
 without additional dependencies. Just download the library using [Download](#download) section and use [EntityScanner](https://github.com/v-ladynev/fluent-hibernate/blob/master/fluent-hibernate-core/src/main/java/com/github/fluent/hibernate/cfg/scanner/EntityScanner.java):
 
-_For Hibernate 4 and Hibernate 5:_
+_For Hibernate 4 and Hibernate_
 ```Java
     Configuration configuration = new Configuration();
     EntityScanner.scanPackages("my.com.entities", "my.com.other.entities")
         .addTo(configuration);
     SessionFactory sessionFactory = configuration.buildSessionFactory();
 ```
-_Using a new Hibernate 5 bootstrapping API:_
+_Using a new Hibernate 5 bootstrapping API_
 ```Java
     List<Class<?>> classes = EntityScanner
             .scanPackages("my.com.entities", "my.com.other.entities").result();
@@ -70,6 +70,38 @@ like: plural table names, the table and column prefixes, the embedded column pre
 
 Just download the library using [Download](#download) section and use [Hibernate5NamingStrategy](https://github.com/v-ladynev/fluent-hibernate/blob/master/fluent-hibernate-core/src/main/java/com/github/fluent/hibernate/cfg/strategy/hibernate5/Hibernate5NamingStrategy.java):
 
+```Java
+Configuration configuration = new Configuration();
+configuration.setImplicitNamingStrategy(new Hibernate5NamingStrategy());
+SessionFactory sessionFactory = configuration.configure().buildSessionFactory();
+```
+_Using strategy options for a tables prefix and a names restriction except the join table names_
+
+```Java
+Configuration configuration = new Configuration();
+configuration.setImplicitNamingStrategy(
+        new Hibernate5NamingStrategy(StrategyOptions.builder().tablePrefix("acps")
+                .restrictLength(50).restrictJoinTableNames(false).build()));
+SessionFactory sessionFactory = configuration.configure().buildSessionFactory();
+```
+
+_Using Spring_
+
+```XML
+<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+  <property name="implicitNamingStrategy">
+    <bean class="com.github.fluent.hibernate.cfg.strategy.hibernate5.Hibernate5NamingStrategy">
+      <property name="options">
+        <bean class="com.github.fluent.hibernate.cfg.strategy.StrategyOptions">
+          <property name="tablePrefix" value="acps" />
+          <property name="maxLength" value="50" />
+          <property name="restrictJoinTableNames" value="false" />
+        </bean>
+      </property>
+    </bean>
+  </property>
+</bean>
+```
 ## Examples
 Get all users
 ```Java
