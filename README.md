@@ -22,6 +22,15 @@ All versions in the Maven repository: [fluent-hibernate-core](http://repo1.maven
 compile 'com.github.v-ladynev:fluent-hibernate-core:0.2.0'
 ```
 
+## Hibernate 4 Notes
+
+If you want to use the library with Hibernate 4, you can consider to exclude a transitive dependency to Hibernate 5.
+For an example using Gradle:
+```Gradle
+    compile('com.github.v-ladynev:fluent-hibernate-core:0.2.0') {
+        exclude group: 'org.hibernate'
+    }
+```
 ## The Most Useful Features
 
 _fluent-hibrnate_ has the features wich can be used with plain Hibernate or Spring code
@@ -29,7 +38,7 @@ without a library infrastructure.
 
 ### Scan the class path for Hibernate entities
 
-_fluent-hibernate_ can be used for a quick entites scanning. You will need just the library jar,
+The library can be used for a quick entites scanning. You will need just the library jar,
 without additional dependencies. Just download the library using [Download](#download) section and use [EntityScanner](https://github.com/v-ladynev/fluent-hibernate/blob/master/fluent-hibernate-core/src/main/java/com/github/fluent/hibernate/cfg/scanner/EntityScanner.java):
 
 _For Hibernate 4 and Hibernate 5:_
@@ -39,7 +48,6 @@ _For Hibernate 4 and Hibernate 5:_
         .addTo(configuration);
     SessionFactory sessionFactory = configuration.buildSessionFactory();
 ```
-
 _Using a new Hibernate 5 bootstrapping API:_
 ```Java
     List<Class<?>> classes = EntityScanner
@@ -53,6 +61,14 @@ _Using a new Hibernate 5 bootstrapping API:_
     SessionFactory sessionFactory = metadataSources.buildMetadata()
         .buildSessionFactory();
 ```
+
+### A Hibernate 5 Implicit Naming Strategy
+
+It generates table and column names with underscores, like [ImprovedNamingStrategy](https://docs.jboss.org/hibernate/orm/4.3/javadocs/index.html?org/hibernate/cfg/ImprovedNamingStrategy.html) from Hibernate 4 and Hibernate 3, and constraint names 
+(unique, foreign key) as well. Apart those, it has a lot of configurable interesting features
+like: plural table names, the table and column prefixes, the embedded column prefixes via the custom `@FluentName` annotation, automatic name restriction (removing the vowels) and others.
+
+Just download the library using [Download](#download) section and use [Hibernate5NamingStrategy](https://github.com/v-ladynev/fluent-hibernate/blob/master/fluent-hibernate-core/src/main/java/com/github/fluent/hibernate/cfg/strategy/hibernate5/Hibernate5NamingStrategy.java):
 
 ## Examples
 Get all users
