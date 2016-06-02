@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.transform.Transformers;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -82,15 +81,6 @@ public class HibernateSqlRequestTest {
         assertThat(users).extracting("pid").containsOnly((Long) null);
         assertThat(users).extracting("department.name").containsOnly("department_a",
                 "department_b");
-    }
-
-    @Test
-    public void requestWithDtoTransformA() {
-        String sql = "select f_login as \"login\" from users u";
-        List<UserDto> users = H.<UserDto> sqlRequest(sql)
-                .useTransformer(Transformers.aliasToBean(UserDto.class)).list();
-
-        System.out.println(users);
     }
 
     @Test

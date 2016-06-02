@@ -110,8 +110,11 @@ public class FluentFactoryBuilder {
     }
 
     public FluentFactoryBuilder h2ConfigForTests() {
-        return dontUseHibernateCfgXml().hibernateProperties(HibernateProperties.forH2CreateDrop())
-                .useNamingStrategy();
+        return configForTests().hibernateProperties(HibernateProperties.forH2CreateDrop());
+    }
+
+    public FluentFactoryBuilder configForTests() {
+        return dontUseHibernateCfgXml().useNamingStrategy();
     }
 
     public FluentFactoryBuilder showSql() {

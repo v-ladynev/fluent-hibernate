@@ -1,5 +1,6 @@
 package com.github.fluent.hibernate;
 
+import com.github.fluent.hibernate.request.HibernateDoInTransaction;
 import com.github.fluent.hibernate.request.HibernateHqlRequest;
 import com.github.fluent.hibernate.request.HibernateObjectQuery;
 import com.github.fluent.hibernate.request.HibernateRequest;
@@ -66,6 +67,8 @@ public final class H {
         HibernateObjectQuery.deleteAll(entities);
     }
 
-    // TODO add invoking IRequest
+    public static <T> T request(IRequest<T> request) {
+        return HibernateDoInTransaction.execute(request);
+    }
 
 }

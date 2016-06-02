@@ -57,13 +57,16 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
     }
 
     /**
-     * Get a name of a table for a persistent.
+     * Generates a name for a dataabse table.
      */
     @Override
     protected String transformEntityName(EntityNaming entityNaming) {
         return strategy.classToTableName(entityNaming.getEntityName());
     }
 
+    /**
+     * Generates a name for a table column.
+     */
     @Override
     public Identifier determineBasicColumnName(ImplicitBasicColumnNameSource source) {
         AttributePath attributePath = source.getAttributePath();
@@ -72,6 +75,7 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
 
         Ejb3Column column = getEjb3Column(source);
 
+        // generate a name for an embedded column
         if (isEmbedded(column)) {
             String fluentNamePrefix = getFluentNamePrefix(column, parentPropertyName);
 
@@ -126,6 +130,9 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
         return toIdentifier(result, source);
     }
 
+    /**
+     * Geneates a name for a join table.
+     */
     @Override
     public Identifier determineJoinTableName(ImplicitJoinTableNameSource source) {
         String ownerEntityTable = source.getOwningEntityNaming().getEntityName();
@@ -165,6 +172,9 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
         return toIdentifier(result, source);
     }
 
+    /**
+     * Generates a name for a unique constraint.
+     */
     @Override
     public Identifier determineUniqueKeyName(ImplicitUniqueKeyNameSource source) {
         List<Identifier> columnNames = source.getColumnNames();
