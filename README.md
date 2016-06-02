@@ -33,12 +33,12 @@ For an example using Gradle:
 ```
 ## The Most Useful Features
 
-_fluent-hibrnate_ has the features wich can be used with plain Hibernate or Spring code
+_fluent-hibrnate_ has the features which can be used with plain Hibernate or Spring code
 without a library infrastructure.
 
 ### Scan the class path for Hibernate entities
 
-The library can be used for a quick entites scanning. You will need just the library jar,
+The library can be used for a quick entities scanning. You will need just the library jar,
 without additional dependencies. Just download the library using [Download](#download) section and use [EntityScanner](https://github.com/v-ladynev/fluent-hibernate/blob/master/fluent-hibernate-core/src/main/java/com/github/fluent/hibernate/cfg/scanner/EntityScanner.java):
 
 _For Hibernate 4 and Hibernate 5_
@@ -66,7 +66,7 @@ SessionFactory sessionFactory = metadataSources.buildMetadata()
 
 It generates table and column names with underscores, like [ImprovedNamingStrategy](https://docs.jboss.org/hibernate/orm/4.3/javadocs/index.html?org/hibernate/cfg/ImprovedNamingStrategy.html) from Hibernate 4 and Hibernate 3, and constraint names 
 (unique, foreign key) as well. Apart those, it has a lot of configurable interesting features
-like: plural table names, the table and column prefixes, the embedded column prefixes via the custom `@FluentName` annotation, automatic name restriction (removing the vowels) and others.
+like: plural table names, the table and column prefixes, the embedded column prefixes via the custom `@FluentName` annotation, automatic name restriction (by removing the vowels) and others.
 
 Just download the library using [Download](#download) section and use [Hibernate5NamingStrategy](https://github.com/v-ladynev/fluent-hibernate/blob/master/fluent-hibernate-core/src/main/java/com/github/fluent/hibernate/cfg/strategy/hibernate5/Hibernate5NamingStrategy.java):
 
@@ -104,7 +104,7 @@ _Using Spring_
 ```
 ### A Nested Transformer
 
-It is a custom transformer like `Transformers.aliasToBean(SomeDto.class)`, but with nested projections support.
+It is a custom transformer like `Transformers.aliasToBean(SomeDto.class)`, but with the nested projections support.
 
 Just download the library using [Download](#download) section and use [FluentHibernateResultTransformer](https://github.com/v-ladynev/fluent-hibernate/blob/master/fluent-hibernate-core/src/main/java/com/github/fluent/hibernate/transformer/FluentHibernateResultTransformer.java).
 
