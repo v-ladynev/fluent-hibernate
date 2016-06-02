@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate.request;
+package com.github.fluent.hibernate.request.aliases;
 
 import javax.persistence.criteria.JoinType;
 

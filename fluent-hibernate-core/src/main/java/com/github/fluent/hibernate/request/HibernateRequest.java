@@ -18,9 +18,10 @@ import org.hibernate.transform.ResultTransformer;
 
 import com.github.fluent.hibernate.IRequest;
 import com.github.fluent.hibernate.Pagination;
-import com.github.fluent.hibernate.builder.IBuilder;
 import com.github.fluent.hibernate.cfg.HibernateSessionFactory;
 import com.github.fluent.hibernate.internal.util.InternalUtils.CollectionUtils;
+import com.github.fluent.hibernate.request.aliases.Aliases;
+import com.github.fluent.hibernate.request.builder.IBuilder;
 import com.github.fluent.hibernate.transformer.FluentHibernateResultTransformer;
 
 /**
@@ -36,7 +37,7 @@ public final class HibernateRequest<T> {
 
     private final ProjectionList projections = Projections.projectionList();
 
-    private final Aliases aliases = Aliases.aliasList();
+    private final Aliases aliases = Aliases.create();
 
     private final List<Order> orders = CollectionUtils.newArrayList();
 

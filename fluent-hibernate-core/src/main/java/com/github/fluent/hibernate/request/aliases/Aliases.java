@@ -1,6 +1,5 @@
-package com.github.fluent.hibernate.request;
+package com.github.fluent.hibernate.request.aliases;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.criteria.JoinType;
@@ -9,14 +8,16 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 
+import com.github.fluent.hibernate.internal.util.InternalUtils.CollectionUtils;
+
 /**
- * Aliases for HQL request.
+ * The aliases for HQL request.
  *
  * @author V.Ladynev
  */
-/* package */final class Aliases {
+public class Aliases {
 
-    private final Set<Alias> aliases = new HashSet<Alias>();
+    private final Set<Alias> aliases = CollectionUtils.newHashSet();
 
     private Aliases() {
 
@@ -56,7 +57,7 @@ import org.hibernate.criterion.DetachedCriteria;
         }
     }
 
-    public static Aliases aliasList() {
+    public static Aliases create() {
         return new Aliases();
     }
 

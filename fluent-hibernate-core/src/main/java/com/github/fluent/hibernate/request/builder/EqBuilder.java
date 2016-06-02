@@ -1,9 +1,9 @@
-package com.github.fluent.hibernate.builder;
+package com.github.fluent.hibernate.request.builder;
 
 import com.github.fluent.hibernate.request.HibernateRequest;
 
 /**
- * @author by alexey.pchelnikov.
+ * @author alexey.pchelnikov.
  */
 public class EqBuilder implements IBuilder {
 
@@ -13,9 +13,10 @@ public class EqBuilder implements IBuilder {
 
     // TODO mutually exclusive
     private boolean ifNotNull;
+
     private boolean orIsNull;
 
-    /*package*/EqBuilder(String propertyName, Object value) {
+    /*package*/ EqBuilder(String propertyName, Object value) {
         this.propertyName = propertyName;
         this.value = value;
     }

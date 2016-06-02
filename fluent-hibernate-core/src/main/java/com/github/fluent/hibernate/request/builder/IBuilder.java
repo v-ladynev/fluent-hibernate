@@ -1,4 +1,4 @@
-package com.github.fluent.hibernate.builder;
+package com.github.fluent.hibernate.request.builder;
 
 import com.github.fluent.hibernate.request.HibernateRequest;
 

@@ -1,6 +1,6 @@
 package com.github.fluent.hibernate.request;
 
-import static com.github.fluent.hibernate.builder.Builders.in;
+import static com.github.fluent.hibernate.request.builder.Builders.in;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
