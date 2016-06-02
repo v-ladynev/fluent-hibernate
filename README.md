@@ -169,6 +169,21 @@ List<User> users = session.createSQLQuery(sql)
         .setResultTransformer(new FluentHibernateResultTransformer(User.class))
         .list();
 ```
+
+### Ignore alias duplicates
+
+Sometimes it is convenient with the complex search criteries add an alias multiple times. In such situations Hibernate generates the `org.hibernate.QueryException: duplicate alias` exception . There is a utility class to solve this problem: [Aliases](https://github.com/v-ladynev/fluent-hibernate/blob/master/fluent-hibernate-core/src/main/java/com/github/fluent/hibernate/request/aliases/Aliases.java). This code with alias duplicates working without errors:
+```Java
+Criteria criteria = session.createCriteria(User.class, "u");
+Aliases aliases = Aliases.create()
+        .add("u.department", "d", JoinType.LEFT_OUTER_JOIN)
+        .add("u.department", "d", JoinType.LEFT_OUTER_JOIN);
+
+criteria.add(Restrictions.isNotNull("d.name"));
+aliases.addToCriteria(criteria);
+List<User> users = criteria.list();
+```
+
 ## Examples
 
 Get all users
