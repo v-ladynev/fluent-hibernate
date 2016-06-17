@@ -31,7 +31,15 @@
         </property>
       </bean>
     </property>
+
+    <!--
+    <property name="hibernateProperties">
+      <props>
+        <prop key="hibernate.dialect">com.github.fluent.hibernate.example.spring.console.CustomOracle10gDialect</prop>
+      </props>
+    </property>
   </bean>
+   -->
 
     <!--
     <property name="physicalNamingStrategy">

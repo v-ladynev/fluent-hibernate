@@ -76,6 +76,7 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
         Ejb3Column column = getEjb3Column(source);
 
         // generate a name for an embedded column
+        // TODO check embeddable logic at ImplicitNamingStrategyComponentPathImpl
         if (isEmbedded(column)) {
             String fluentNamePrefix = getFluentNamePrefix(column, parentPropertyName);
 
@@ -131,10 +132,12 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
     }
 
     /**
-     * Geneates a name for a join table.
+     * Generates a name for a join table.
      */
     @Override
     public Identifier determineJoinTableName(ImplicitJoinTableNameSource source) {
+        // TODO check String ownerEntityTable = source.getOwningPhysicalTableName();
+
         String ownerEntityTable = source.getOwningEntityNaming().getEntityName();
         String associatedEntityTable = source.getNonOwningEntityNaming().getEntityName();
 

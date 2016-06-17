@@ -10,7 +10,6 @@ import javax.persistence.Id;
 
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.mapping.Collection;
 import org.hibernate.mapping.Table;
 import org.hibernate.service.ServiceRegistry;
 import org.junit.AfterClass;
@@ -25,7 +24,7 @@ import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
  */
 public class ElementCollectionStrategyTest {
 
-    private static final Class<?>[] PERISTENTS = new Class<?>[] { Author.class };
+    private static final Class<?>[] ENTITIES = new Class<?>[] { Author.class };
 
     private static ServiceRegistry serviceRegistry;
 
@@ -44,8 +43,7 @@ public class ElementCollectionStrategyTest {
         Table table = getJoinTable(StrategyOptions.builder().tablePrefix("table").build());
 
         assertThat(table.getName()).isEqualTo("table_authors_books");
-        assertThat(StrategyTestUtils.getColumNames(table.getColumnIterator()))
-                .containsOnly("fk_author", "f_books");
+        assertThat(StrategyTestUtils.getColumNames(table)).containsOnly("fk_author", "f_books");
     }
 
     @Test
@@ -53,8 +51,7 @@ public class ElementCollectionStrategyTest {
         Table table = getJoinTable(StrategyOptions.builder().withoutPrefixes().build());
 
         assertThat(table.getName()).isEqualTo("authors_books");
-        assertThat(StrategyTestUtils.getColumNames(table.getColumnIterator()))
-                .containsOnly("author", "books");
+        assertThat(StrategyTestUtils.getColumNames(table)).containsOnly("author", "books");
     }
 
     @Test
@@ -63,16 +60,13 @@ public class ElementCollectionStrategyTest {
                 .restrictTableNames(false).restrictConstraintNames(false).build());
 
         assertThat(table.getName()).isEqualTo("authors_books");
-        assertThat(StrategyTestUtils.getColumNames(table.getColumnIterator()))
-                .containsOnly("fk_athr", "f_books");
+        assertThat(StrategyTestUtils.getColumNames(table)).containsOnly("fk_athr", "f_books");
     }
 
     private static Table getJoinTable(StrategyOptions options) {
         Metadata metadata = StrategyTestUtils.createMetadata(serviceRegistry,
-                new Hibernate5NamingStrategy(options), PERISTENTS);
-        Collection binding = metadata.getCollectionBinding(Author.class.getName() + ".books");
-        assertThat(binding).isNotNull();
-        return binding.getCollectionTable();
+                new Hibernate5NamingStrategy(options), ENTITIES);
+        return StrategyTestUtils.getCollectionTable(metadata, Author.class, "books");
     }
 
     @Entity

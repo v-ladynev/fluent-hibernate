@@ -11,7 +11,6 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Table;
 import org.hibernate.service.ServiceRegistry;
 import org.junit.AfterClass;
@@ -26,7 +25,7 @@ import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
  */
 public class JoinColumnStrategyTest {
 
-    private static final Class<?>[] PERISTENTS = new Class<?>[] { Author.class, Book.class };
+    private static final Class<?>[] ENTITIES = new Class<?>[] { Author.class, Book.class };
 
     private static ServiceRegistry serviceRegistry;
 
@@ -45,8 +44,7 @@ public class JoinColumnStrategyTest {
         Table table = getBooksTable(StrategyOptions.builder().tablePrefix("table").build());
 
         assertThat(table.getName()).isEqualTo("table_books");
-        assertThat(StrategyTestUtils.getColumNames(table.getColumnIterator())).containsOnly("f_pid",
-                "fk_books");
+        assertThat(StrategyTestUtils.getColumNames(table)).containsOnly("f_pid", "fk_books");
     }
 
     @Test
@@ -54,8 +52,7 @@ public class JoinColumnStrategyTest {
         Table table = getBooksTable(StrategyOptions.builder().withoutPrefixes().build());
 
         assertThat(table.getName()).isEqualTo("books");
-        assertThat(StrategyTestUtils.getColumNames(table.getColumnIterator())).containsOnly("pid",
-                "books");
+        assertThat(StrategyTestUtils.getColumNames(table)).containsOnly("pid", "books");
     }
 
     @Test
@@ -64,16 +61,13 @@ public class JoinColumnStrategyTest {
                 .restrictTableNames(false).restrictConstraintNames(false).build());
 
         assertThat(table.getName()).isEqualTo("books");
-        assertThat(StrategyTestUtils.getColumNames(table.getColumnIterator())).containsOnly("f_pid",
-                "fk_bks");
+        assertThat(StrategyTestUtils.getColumNames(table)).containsOnly("f_pid", "fk_bks");
     }
 
     private static Table getBooksTable(StrategyOptions options) {
         Metadata metadata = StrategyTestUtils.createMetadata(serviceRegistry,
-                new Hibernate5NamingStrategy(options), PERISTENTS);
-        PersistentClass binding = metadata.getEntityBinding(Book.class.getName());
-        assertThat(binding).isNotNull();
-        return binding.getTable();
+                new Hibernate5NamingStrategy(options), ENTITIES);
+        return StrategyTestUtils.getTable(metadata, Book.class);
     }
 
     @Entity

@@ -25,7 +25,7 @@ import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
  */
 public class ForeignKeyConstraintStrategyTest {
 
-    private static final Class<?>[] PERISTENTS = new Class<?>[] { User.class, Phone.class };
+    private static final Class<?>[] ENTITIES = new Class<?>[] { User.class, Phone.class };
 
     private static ServiceRegistry serviceRegistry;
 
@@ -63,7 +63,7 @@ public class ForeignKeyConstraintStrategyTest {
 
     private static Table getUserPhonesTable(StrategyOptions options) {
         Metadata metadata = StrategyTestUtils.createMetadata(serviceRegistry,
-                new Hibernate5NamingStrategy(options), PERISTENTS);
+                new Hibernate5NamingStrategy(options), ENTITIES);
         Collection binding = metadata.getCollectionBinding(User.class.getName() + ".phones");
         assertThat(binding).isNotNull();
         return binding.getCollectionTable();

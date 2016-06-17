@@ -11,7 +11,6 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.mapping.Collection;
 import org.hibernate.mapping.Table;
 import org.hibernate.service.ServiceRegistry;
 import org.junit.AfterClass;
@@ -26,7 +25,7 @@ import com.github.fluent.hibernate.cfg.strategy.StrategyOptions;
  */
 public class JoinTableSamePersistentStrategyTest {
 
-    private static final Class<?>[] PERISTENTS = new Class<?>[] { Author.class, Book.class };
+    private static final Class<?>[] ENTITIES = new Class<?>[] { Author.class, Book.class };
 
     private static ServiceRegistry serviceRegistry;
 
@@ -46,7 +45,7 @@ public class JoinTableSamePersistentStrategyTest {
                 .createMetadata(serviceRegistry,
                         new Hibernate5NamingStrategy(
                                 StrategyOptions.builder().tablePrefix("table").build()),
-                        PERISTENTS);
+                        ENTITIES);
 
         Table books = getJoinTable(metadata, "ownBooks");
         Table coauthorBooks = getJoinTable(metadata, "coauthorBooks");
@@ -55,16 +54,16 @@ public class JoinTableSamePersistentStrategyTest {
         assertThat(coauthorBooks.getName()).isIn("table_authors_books",
                 "table_authors_books_coauthor_books");
 
-        assertThat(StrategyTestUtils.getColumNames(books.getColumnIterator()))
-                .containsOnly("fk_author", "fk_own_books");
-        assertThat(StrategyTestUtils.getColumNames(coauthorBooks.getColumnIterator()))
-                .containsOnly("fk_author", "fk_coauthor_books");
+        assertThat(StrategyTestUtils.getColumNames(books)).containsOnly("fk_author",
+                "fk_own_books");
+        assertThat(StrategyTestUtils.getColumNames(coauthorBooks)).containsOnly("fk_author",
+                "fk_coauthor_books");
     }
 
     @Test
     public void testWithoutPrefixes() {
         Metadata metadata = StrategyTestUtils.createMetadata(serviceRegistry,
-                new Hibernate5NamingStrategy(), PERISTENTS);
+                new Hibernate5NamingStrategy(), ENTITIES);
 
         Table books = getJoinTable(metadata, "ownBooks");
         Table coauthorBooks = getJoinTable(metadata, "coauthorBooks");
@@ -72,10 +71,10 @@ public class JoinTableSamePersistentStrategyTest {
         assertThat(books.getName()).isIn("authors_books", "authors_books_own_books");
         assertThat(coauthorBooks.getName()).isIn("authors_books", "authors_books_coauthor_books");
 
-        assertThat(StrategyTestUtils.getColumNames(books.getColumnIterator()))
-                .containsOnly("fk_author", "fk_own_books");
-        assertThat(StrategyTestUtils.getColumNames(coauthorBooks.getColumnIterator()))
-                .containsOnly("fk_author", "fk_coauthor_books");
+        assertThat(StrategyTestUtils.getColumNames(books)).containsOnly("fk_author",
+                "fk_own_books");
+        assertThat(StrategyTestUtils.getColumNames(coauthorBooks)).containsOnly("fk_author",
+                "fk_coauthor_books");
     }
 
     @Test
@@ -84,7 +83,7 @@ public class JoinTableSamePersistentStrategyTest {
                 .restrictColumnNames(false).restrictConstraintNames(false).build();
 
         Metadata metadata = StrategyTestUtils.createMetadata(serviceRegistry,
-                new Hibernate5NamingStrategy(options), PERISTENTS);
+                new Hibernate5NamingStrategy(options), ENTITIES);
 
         Table books = getJoinTable(metadata, "ownBooks");
         Table coauthorBooks = getJoinTable(metadata, "coauthorBooks");
@@ -93,10 +92,8 @@ public class JoinTableSamePersistentStrategyTest {
         assertThat(coauthorBooks.getName()).isIn("table_authors_books", "table_athrs_bks_cthr_bks");
     }
 
-    private static Table getJoinTable(Metadata metadata, String property) {
-        Collection binding = metadata.getCollectionBinding(Author.class.getName() + "." + property);
-        assertThat(binding).isNotNull();
-        return binding.getCollectionTable();
+    private static Table getJoinTable(Metadata metadata, String propertyName) {
+        return StrategyTestUtils.getCollectionTable(metadata, Author.class, propertyName);
     }
 
     @Entity

@@ -67,6 +67,15 @@ public final class NamingStrategyUtils {
         return result.toString().toLowerCase(Locale.ROOT);
     }
 
+    public static String unqualifyEntityName(String entityName) {
+        String result = unqualify(entityName);
+        int slashPos = result.indexOf('/');
+        if (slashPos > 0) {
+            result = result.substring(0, slashPos - 1);
+        }
+        return result;
+    }
+
     public static String unqualify(String qualifiedName) {
         int loc = qualifiedName.lastIndexOf(".");
         return loc < 0 ? qualifiedName : qualifiedName.substring(loc + 1);
