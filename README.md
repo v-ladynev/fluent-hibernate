@@ -33,7 +33,7 @@ For an example using Gradle:
 ```
 ## The Most Useful Features
 
-_fluent-hibrnate_ has the features which can be used with plain Hibernate or Spring code
+_fluent-hibrnate_ has features which can be used with plain Hibernate or Spring code
 without a library infrastructure.
 
 ### Scan the class path for Hibernate entities
@@ -62,11 +62,11 @@ SessionFactory sessionFactory = metadataSources.buildMetadata()
     .buildSessionFactory();
 ```
 
-### A Hibernate 5 Implicit Naming Strategy
+### Hibernate 5 Implicit Naming Strategy
 
 It generates table and column names with underscores, like [ImprovedNamingStrategy](https://docs.jboss.org/hibernate/orm/4.3/javadocs/index.html?org/hibernate/cfg/ImprovedNamingStrategy.html) from Hibernate 4 and Hibernate 3, and constraint names 
 (unique, foreign key) as well. Apart those, it has a lot of configurable interesting features
-like: plural table names, the table and column prefixes, the embedded column prefixes via the custom `@FluentName` annotation, automatic name restriction (by removing the vowels) and others.
+like: plural table names, table and column prefixes, embedded column prefixes via the custom `@FluentName` annotation, automatic name restriction (by removing the vowels) and others.
 
 Just download the library using [Download](#download) section and use [Hibernate5NamingStrategy](https://github.com/v-ladynev/fluent-hibernate/blob/master/fluent-hibernate-core/src/main/java/com/github/fluent/hibernate/cfg/strategy/hibernate5/Hibernate5NamingStrategy.java):
 
@@ -102,7 +102,24 @@ _Using Spring_
   </property>
 </bean>
 ```
-### A Nested Transformer
+### Adapter to adapt Hibernate 4 naming strategies to Hibernate 5
+
+[Hibernate5NamingStrategyAdapter](https://github.com/v-ladynev/fluent-hibernate/blob/master/fluent-hibernate-core/src/main/java/com/github/fluent/hibernate/cfg/strategy/hibernate5/adapter/Hibernate5NamingStrategyAdapter.java) can be used to migrate from Hibernate 4 to Hibernate 5 using a naming startegy for Hibernate 4 (for an example [ImprovedNamingStrategy](https://docs.jboss.org/hibernate/orm/4.3/javadocs/index.html?org/hibernate/cfg/ImprovedNamingStrategy.html)).
+Just pass the adapter to the Hibernate 5 configuration. For an example to use `ImprovedNamingStrategy`:
+
+```Java
+Configuration configuration = new Configuration();
+configuration.setImplicitNamingStrategy(new Hibernate5NamingStrategyAdapter(
+        ImprovedNamingStrategy.INSTANCE, ImplicitNamingStrategyJpaCompliantImpl.INSTANCE));
+SessionFactory sessionFactory = configuration.configure().buildSessionFactory();
+```
+It can be used with JPA configuration as well. You can place `Hibernate5NamingStrategyAdapter` whenever `ImplicitNamingStrategy` can be placed.
+
+The adpater constructor has two arguments:
+```Java
+Hibernate5NamingStrategyAdapter(NamingStrategy delegate, ImplicitNamingStrategy implicitNamingStrategy)
+```
+### Nested Transformer
 
 It is a custom transformer like `Transformers.aliasToBean(SomeDto.class)`, but with the nested projections support.
 
@@ -151,7 +168,7 @@ List<User> users = criteria
         .list();
 ```
 Please, don't forget to specify projection aliases. 
-#### Using with the native SQL
+#### Using with native SQL
 
 It is impossible with Hibernate 5 to use `Transformers.aliasToBean(SomeDto.class)` the same way as
 it is used with Hibernate 3 — without the aliases with the quotes ([a more deep explanation](http://stackoverflow.com/a/37423885/3405171)), but  it is possible using `FluentHibernateResultTransformer`. This code works pretty well:
@@ -172,7 +189,7 @@ List<User> users = session.createSQLQuery(sql)
 
 ### Ignore alias duplicates
 
-Sometimes it is convenient with the complex search criteries add an alias multiple times. In such situations Hibernate generates the `org.hibernate.QueryException: duplicate alias` exception . There is a utility class to solve this problem: [Aliases](https://github.com/v-ladynev/fluent-hibernate/blob/master/fluent-hibernate-core/src/main/java/com/github/fluent/hibernate/request/aliases/Aliases.java). This code with alias duplicates working without errors:
+Sometimes it is convenient using complex search criteries to add an alias multiple times. In such situations Hibernate generates the `org.hibernate.QueryException: duplicate alias` exception . There is a utility class to solve this problem: [Aliases](https://github.com/v-ladynev/fluent-hibernate/blob/master/fluent-hibernate-core/src/main/java/com/github/fluent/hibernate/request/aliases/Aliases.java). This code with alias duplicates working without errors:
 ```Java
 Criteria criteria = session.createCriteria(User.class, "u");
 Aliases aliases = Aliases.create()
