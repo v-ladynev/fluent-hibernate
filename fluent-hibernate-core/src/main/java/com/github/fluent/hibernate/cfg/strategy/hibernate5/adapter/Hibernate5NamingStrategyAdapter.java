@@ -36,19 +36,19 @@ public class Hibernate5NamingStrategyAdapter implements ImplicitNamingStrategy {
 
     private static final String KEY_COLUMN_POSTFIX = "_KEY";
 
-    private NamingStrategy delegate;
+    private NamingStrategy hibernate4Strategy;
 
     private ImplicitNamingStrategy implicitNamingStrategy;
 
-    public Hibernate5NamingStrategyAdapter(NamingStrategy delegate,
+    public Hibernate5NamingStrategyAdapter(NamingStrategy hibernate4Strategy,
             ImplicitNamingStrategy implicitNamingStrategy) {
-        this.delegate = delegate;
+        this.hibernate4Strategy = hibernate4Strategy;
         this.implicitNamingStrategy = implicitNamingStrategy;
     }
 
     @Override
     public Identifier determinePrimaryTableName(ImplicitEntityNameSource source) {
-        String result = delegate.classToTableName(source.getEntityNaming().getEntityName());
+        String result = hibernate4Strategy.classToTableName(source.getEntityNaming().getEntityName());
         return toIdentifier(result, source.getBuildingContext());
     }
 
@@ -60,7 +60,7 @@ public class Hibernate5NamingStrategyAdapter implements ImplicitNamingStrategy {
         String associatedEntityTable = NamingStrategyUtils.unqualifyEntityName(associatedEntity);
         String propertyName = getPropertyName(source.getAssociationOwningAttributePath());
 
-        String result = delegate.collectionTableName(ownerEntity, ownerEntityTable,
+        String result = hibernate4Strategy.collectionTableName(ownerEntity, ownerEntityTable,
                 associatedEntity, associatedEntityTable, propertyName);
         return toIdentifier(result, source.getBuildingContext());
     }
@@ -73,7 +73,7 @@ public class Hibernate5NamingStrategyAdapter implements ImplicitNamingStrategy {
         String associatedEntityTable = null;
         String propertyName = getPropertyName(source.getOwningAttributePath());
 
-        String result = delegate.collectionTableName(ownerEntity, ownerEntityTable,
+        String result = hibernate4Strategy.collectionTableName(ownerEntity, ownerEntityTable,
                 associatedEntity, associatedEntityTable, propertyName);
         return toIdentifier(result, source.getBuildingContext());
     }
@@ -82,7 +82,7 @@ public class Hibernate5NamingStrategyAdapter implements ImplicitNamingStrategy {
     public Identifier determineBasicColumnName(ImplicitBasicColumnNameSource source) {
         AttributePath attributePath = source.getAttributePath();
         String propertyName = getPropertyName(attributePath);
-        String result = delegate.propertyToColumnName(propertyName);
+        String result = hibernate4Strategy.propertyToColumnName(propertyName);
         return toIdentifier(result, source.getBuildingContext());
     }
 
@@ -93,7 +93,7 @@ public class Hibernate5NamingStrategyAdapter implements ImplicitNamingStrategy {
         String propertyTableName = NamingStrategyUtils.unqualifyEntityName(propertyEntityName);
         String referencedColumnName = source.getReferencedColumnName().getText();
 
-        String result = delegate.foreignKeyColumnName(propertyName, propertyEntityName,
+        String result = hibernate4Strategy.foreignKeyColumnName(propertyName, propertyEntityName,
                 propertyTableName, referencedColumnName);
         return toIdentifier(result, source.getBuildingContext());
     }
@@ -107,7 +107,7 @@ public class Hibernate5NamingStrategyAdapter implements ImplicitNamingStrategy {
     public Identifier determineDiscriminatorColumnName(
             ImplicitDiscriminatorColumnNameSource source) {
         String discriminatorColumnName = Ejb3DiscriminatorColumn.DEFAULT_DISCRIMINATOR_COLUMN_NAME;
-        String result = delegate.columnName(discriminatorColumnName);
+        String result = hibernate4Strategy.columnName(discriminatorColumnName);
         return toIdentifier(result, source.getBuildingContext());
     }
 
@@ -120,7 +120,7 @@ public class Hibernate5NamingStrategyAdapter implements ImplicitNamingStrategy {
     public Identifier determineListIndexColumnName(ImplicitIndexColumnNameSource source) {
         String propertyName = getPropertyName(source.getPluralAttributePath());
         String orderColumnName = propertyName + ORDER_COLUMN_POSTFIX;
-        String result = delegate.columnName(orderColumnName);
+        String result = hibernate4Strategy.columnName(orderColumnName);
         return toIdentifier(result, source.getBuildingContext());
     }
 
@@ -133,7 +133,7 @@ public class Hibernate5NamingStrategyAdapter implements ImplicitNamingStrategy {
     public Identifier determineMapKeyColumnName(ImplicitMapKeyColumnNameSource source) {
         String propertyName = getPropertyName(source.getPluralAttributePath());
         String orderColumnName = propertyName + KEY_COLUMN_POSTFIX;
-        String result = delegate.columnName(orderColumnName);
+        String result = hibernate4Strategy.columnName(orderColumnName);
         return toIdentifier(result, source.getBuildingContext());
     }
 
