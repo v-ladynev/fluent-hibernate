@@ -113,12 +113,15 @@ configuration.setImplicitNamingStrategy(new Hibernate5NamingStrategyAdapter(
         ImprovedNamingStrategy.INSTANCE, ImplicitNamingStrategyJpaCompliantImpl.INSTANCE));
 SessionFactory sessionFactory = configuration.configure().buildSessionFactory();
 ```
-It can be used with JPA configuration as well. You can place `Hibernate5NamingStrategyAdapter` whenever `ImplicitNamingStrategy` can be placed.
+It can be used with JPA configuration as well. You can place `Hibernate5NamingStrategyAdapter` where `ImplicitNamingStrategy` can be placed.
 
 The adpater constructor has two arguments:
 ```Java
-Hibernate5NamingStrategyAdapter(NamingStrategy delegate, ImplicitNamingStrategy implicitNamingStrategy)
+Hibernate5NamingStrategyAdapter(NamingStrategy hibernate4Strategy, ImplicitNamingStrategy implicitNamingStrategy)
 ```
+`hibernate4Strategy` - a Hibernate 4 naming strategy
+`implicitNamingStrategy` - this implicit naming strategy is used only for artifact naming wich can't be named with `hibernate4Strategy`.  `ImplicitNamingStrategyJpaCompliantImpl.INSTANCE` can be used for these purposes. 
+
 ### Nested Transformer
 
 It is a custom transformer like `Transformers.aliasToBean(SomeDto.class)`, but with the nested projections support.
