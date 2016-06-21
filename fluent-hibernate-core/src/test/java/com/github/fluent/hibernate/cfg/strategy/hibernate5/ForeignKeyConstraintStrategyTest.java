@@ -49,16 +49,16 @@ public class ForeignKeyConstraintStrategyTest {
     @Test
     public void testWithoutPrefixes() {
         Table table = getUserPhonesTable(StrategyOptions.builder().withoutPrefixes().build());
-        assertThat(StrategyTestUtils.getForeignKeyConstraintNames(table)).containsOnly("users_phones_phones",
-                "users_phones_user");
+        assertThat(StrategyTestUtils.getForeignKeyConstraintNames(table))
+                .containsOnly("users_phones_phones", "users_phones_user");
     }
 
     @Test
     public void testRestrictLength() {
         Table table = getUserPhonesTable(
                 StrategyOptions.builder().restrictLength(19).restrictJoinTableNames(false).build());
-        assertThat(StrategyTestUtils.getForeignKeyConstraintNames(table)).containsOnly("F_usrs_phns_fk_phns",
-                "F_users_phns_fk_usr");
+        assertThat(StrategyTestUtils.getForeignKeyConstraintNames(table))
+                .containsOnly("F_usrs_phns_fk_phns", "F_users_phns_fk_usr");
     }
 
     private static Table getUserPhonesTable(StrategyOptions options) {

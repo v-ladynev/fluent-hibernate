@@ -50,12 +50,8 @@ public class Hibernate5NamingStrategyAdapter implements ImplicitNamingStrategy {
 
     private NamingStrategy hibernate4Strategy;
 
-    private ImplicitNamingStrategy implicitNamingStrategy;
-
-    public Hibernate5NamingStrategyAdapter(NamingStrategy hibernate4Strategy,
-            ImplicitNamingStrategy implicitNamingStrategy) {
+    public Hibernate5NamingStrategyAdapter(NamingStrategy hibernate4Strategy) {
         this.hibernate4Strategy = hibernate4Strategy;
-        this.implicitNamingStrategy = implicitNamingStrategy;
     }
 
     @Override
@@ -112,6 +108,36 @@ public class Hibernate5NamingStrategyAdapter implements ImplicitNamingStrategy {
     }
 
     /**
+     * Generates a name for a foreign key constraint.
+     */
+    @Override
+    public Identifier determineForeignKeyName(ImplicitForeignKeyNameSource source) {
+        String result = generateHashedConstraintName(FOREIGN_KEY_CONSTRAINT_PREFIX,
+                source.getTableName(), source.getColumnNames());
+        return toIdentifier(result, source.getBuildingContext());
+    }
+
+    /**
+     * Generates a name for a unique constraint.
+     */
+    @Override
+    public Identifier determineUniqueKeyName(ImplicitUniqueKeyNameSource source) {
+        String result = generateHashedConstraintName(UNIQUE_CONSTRAINT_PREFIX,
+                source.getTableName(), source.getColumnNames());
+        return toIdentifier(result, source.getBuildingContext());
+    }
+
+    /**
+     * Generates a name for an index.
+     */
+    @Override
+    public Identifier determineIndexName(ImplicitIndexNameSource source) {
+        String result = generateHashedConstraintName(INDEX_PREFIX, source.getTableName(),
+                source.getColumnNames());
+        return toIdentifier(result, source.getBuildingContext());
+    }
+
+    /**
      * Generates a name for @DiscriminatorColumn. Hibernate doesn't use this method because of an
      * issue. Hiibernate generates "DTYPE" name for the descriminator column. Hibernate 4 uses
      * ImprovedNamingStrategy#columnName() to convert "DTYPE" to "dtype".
@@ -150,63 +176,36 @@ public class Hibernate5NamingStrategyAdapter implements ImplicitNamingStrategy {
         return toIdentifier(result, source.getBuildingContext());
     }
 
-    // not used
+    // can't test, looks like not used
     @Override
     public Identifier determineTenantIdColumnName(ImplicitTenantIdColumnNameSource source) {
         throw new UnsupportedOperationException();
     }
 
-    // not used
+    // can't test, looks like not used
     @Override
     public Identifier determineIdentifierColumnName(ImplicitIdentifierColumnNameSource source) {
         throw new UnsupportedOperationException();
     }
 
+    // can't test, looks like not used
     @Override
     public Identifier determinePrimaryKeyJoinColumnName(
             ImplicitPrimaryKeyJoinColumnNameSource source) {
-        return implicitNamingStrategy.determinePrimaryKeyJoinColumnName(source);
+        throw new UnsupportedOperationException();
     }
 
+    // not implemented yet
     @Override
     public Identifier determineAnyDiscriminatorColumnName(
             ImplicitAnyDiscriminatorColumnNameSource source) {
-        return implicitNamingStrategy.determineAnyDiscriminatorColumnName(source);
+        throw new UnsupportedOperationException();
     }
 
+    // not implemented yet
     @Override
     public Identifier determineAnyKeyColumnName(ImplicitAnyKeyColumnNameSource source) {
-        return implicitNamingStrategy.determineAnyKeyColumnName(source);
-    }
-
-    /**
-     * Generates a name for a foreign key constraint.
-     */
-    @Override
-    public Identifier determineForeignKeyName(ImplicitForeignKeyNameSource source) {
-        String result = generateHashedConstraintName(FOREIGN_KEY_CONSTRAINT_PREFIX,
-                source.getTableName(), source.getColumnNames());
-        return toIdentifier(result, source.getBuildingContext());
-    }
-
-    /**
-     * Generates a name for a unique constraint.
-     */
-    @Override
-    public Identifier determineUniqueKeyName(ImplicitUniqueKeyNameSource source) {
-        String result = generateHashedConstraintName(UNIQUE_CONSTRAINT_PREFIX,
-                source.getTableName(), source.getColumnNames());
-        return toIdentifier(result, source.getBuildingContext());
-    }
-
-    /**
-     * Generates a name for an index.
-     */
-    @Override
-    public Identifier determineIndexName(ImplicitIndexNameSource source) {
-        String result = generateHashedConstraintName(INDEX_PREFIX, source.getTableName(),
-                source.getColumnNames());
-        return toIdentifier(result, source.getBuildingContext());
+        throw new UnsupportedOperationException();
     }
 
     /**

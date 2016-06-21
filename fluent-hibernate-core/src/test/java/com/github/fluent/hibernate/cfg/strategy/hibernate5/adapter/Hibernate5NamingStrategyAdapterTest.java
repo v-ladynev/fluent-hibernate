@@ -17,7 +17,6 @@ import org.hibernate.boot.model.naming.Identifier;
 import org.hibernate.boot.model.naming.ImplicitDiscriminatorColumnNameSource;
 import org.hibernate.boot.model.naming.ImplicitIndexColumnNameSource;
 import org.hibernate.boot.model.naming.ImplicitMapKeyColumnNameSource;
-import org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl;
 import org.hibernate.boot.model.source.spi.AttributePath;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.boot.spi.MetadataBuildingContext;
@@ -50,8 +49,7 @@ public class Hibernate5NamingStrategyAdapterTest {
     }
 
     private static Hibernate5NamingStrategyAdapter createAdapter() {
-        return new Hibernate5NamingStrategyAdapter(ImprovedNamingStrategy.INSTANCE,
-                ImplicitNamingStrategyJpaCompliantImpl.INSTANCE);
+        return new Hibernate5NamingStrategyAdapter(ImprovedNamingStrategy.INSTANCE);
     }
 
     @AfterClass

@@ -76,7 +76,6 @@ public class Hibernate5NamingStrategy extends ImplicitNamingStrategyJpaCompliant
         Ejb3Column column = getEjb3Column(source);
 
         // generate a name for an embedded column
-        // TODO check embeddable logic at ImplicitNamingStrategyComponentPathImpl
         if (isEmbedded(column)) {
             String fluentNamePrefix = getFluentNamePrefix(column, parentPropertyName);
 
