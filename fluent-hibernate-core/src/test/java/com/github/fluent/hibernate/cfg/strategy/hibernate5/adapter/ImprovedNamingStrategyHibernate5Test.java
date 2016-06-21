@@ -20,7 +20,6 @@ import org.hibernate.boot.model.naming.ImplicitMapKeyColumnNameSource;
 import org.hibernate.boot.model.source.spi.AttributePath;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.boot.spi.MetadataBuildingContext;
-import org.hibernate.cfg.ImprovedNamingStrategy;
 import org.hibernate.mapping.Table;
 import org.hibernate.service.ServiceRegistry;
 import org.junit.AfterClass;
@@ -32,7 +31,7 @@ import com.github.fluent.hibernate.cfg.strategy.hibernate5.adapter.persistent.Bo
 import com.github.fluent.hibernate.cfg.strategy.hibernate5.adapter.persistent.Customer;
 import com.github.fluent.hibernate.cfg.strategy.hibernate5.adapter.persistent.ValuedCustomer;
 
-public class Hibernate5NamingStrategyAdapterTest {
+public class ImprovedNamingStrategyHibernate5Test {
 
     private static final Class<?>[] ENTITIES = new Class<?>[] { AuthorTable.class, Book.class,
             Customer.class, ValuedCustomer.class };
@@ -48,8 +47,8 @@ public class Hibernate5NamingStrategyAdapterTest {
         logSchemaUpdate(metadata);
     }
 
-    private static Hibernate5NamingStrategyAdapter createAdapter() {
-        return new Hibernate5NamingStrategyAdapter(ImprovedNamingStrategy.INSTANCE);
+    private static ImprovedNamingStrategyHibernate5 createAdapter() {
+        return new ImprovedNamingStrategyHibernate5();
     }
 
     @AfterClass

@@ -36,7 +36,7 @@ import com.github.fluent.hibernate.internal.util.InternalUtils.CollectionUtils;
  *
  * @author V.Ladynev
  */
-public class Hibernate5NamingStrategyAdapter implements ImplicitNamingStrategy {
+public class Hibernate4To5NamingStrategyAdapter implements ImplicitNamingStrategy {
 
     private static final String ORDER_COLUMN_POSTFIX = "_ORDER";
 
@@ -50,7 +50,7 @@ public class Hibernate5NamingStrategyAdapter implements ImplicitNamingStrategy {
 
     private NamingStrategy hibernate4Strategy;
 
-    public Hibernate5NamingStrategyAdapter(NamingStrategy hibernate4Strategy) {
+    public Hibernate4To5NamingStrategyAdapter(NamingStrategy hibernate4Strategy) {
         this.hibernate4Strategy = hibernate4Strategy;
     }
 
