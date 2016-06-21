@@ -1,5 +1,9 @@
 package com.github.fluent.hibernate.cfg.strategy.hibernate5.adapter;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.hibernate.boot.model.naming.Identifier;
 import org.hibernate.boot.model.naming.ImplicitAnyDiscriminatorColumnNameSource;
 import org.hibernate.boot.model.naming.ImplicitAnyKeyColumnNameSource;
@@ -18,12 +22,14 @@ import org.hibernate.boot.model.naming.ImplicitNamingStrategy;
 import org.hibernate.boot.model.naming.ImplicitPrimaryKeyJoinColumnNameSource;
 import org.hibernate.boot.model.naming.ImplicitTenantIdColumnNameSource;
 import org.hibernate.boot.model.naming.ImplicitUniqueKeyNameSource;
+import org.hibernate.boot.model.naming.NamingHelper;
 import org.hibernate.boot.model.source.spi.AttributePath;
 import org.hibernate.boot.spi.MetadataBuildingContext;
 import org.hibernate.cfg.Ejb3DiscriminatorColumn;
 import org.hibernate.cfg.NamingStrategy;
 
 import com.github.fluent.hibernate.cfg.strategy.NamingStrategyUtils;
+import com.github.fluent.hibernate.internal.util.InternalUtils.CollectionUtils;
 
 /**
  * Adapter to adapt Hibernate 4 naming strategies to Hibernate 5.
@@ -35,6 +41,12 @@ public class Hibernate5NamingStrategyAdapter implements ImplicitNamingStrategy {
     private static final String ORDER_COLUMN_POSTFIX = "_ORDER";
 
     private static final String KEY_COLUMN_POSTFIX = "_KEY";
+
+    private static final String FOREIGN_KEY_CONSTRAINT_PREFIX = "FK_";
+
+    private static final String UNIQUE_CONSTRAINT_PREFIX = "UK_";
+
+    private static final String INDEX_PREFIX = "UK_";
 
     private NamingStrategy hibernate4Strategy;
 
@@ -48,7 +60,8 @@ public class Hibernate5NamingStrategyAdapter implements ImplicitNamingStrategy {
 
     @Override
     public Identifier determinePrimaryTableName(ImplicitEntityNameSource source) {
-        String result = hibernate4Strategy.classToTableName(source.getEntityNaming().getEntityName());
+        String result = hibernate4Strategy
+                .classToTableName(source.getEntityNaming().getEntityName());
         return toIdentifier(result, source.getBuildingContext());
     }
 
@@ -137,14 +150,16 @@ public class Hibernate5NamingStrategyAdapter implements ImplicitNamingStrategy {
         return toIdentifier(result, source.getBuildingContext());
     }
 
+    // not used
     @Override
     public Identifier determineTenantIdColumnName(ImplicitTenantIdColumnNameSource source) {
-        return implicitNamingStrategy.determineTenantIdColumnName(source);
+        throw new UnsupportedOperationException();
     }
 
+    // not used
     @Override
     public Identifier determineIdentifierColumnName(ImplicitIdentifierColumnNameSource source) {
-        return implicitNamingStrategy.determineIdentifierColumnName(source);
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -169,7 +184,9 @@ public class Hibernate5NamingStrategyAdapter implements ImplicitNamingStrategy {
      */
     @Override
     public Identifier determineForeignKeyName(ImplicitForeignKeyNameSource source) {
-        return implicitNamingStrategy.determineForeignKeyName(source);
+        String result = generateHashedConstraintName(FOREIGN_KEY_CONSTRAINT_PREFIX,
+                source.getTableName(), source.getColumnNames());
+        return toIdentifier(result, source.getBuildingContext());
     }
 
     /**
@@ -177,12 +194,46 @@ public class Hibernate5NamingStrategyAdapter implements ImplicitNamingStrategy {
      */
     @Override
     public Identifier determineUniqueKeyName(ImplicitUniqueKeyNameSource source) {
-        return implicitNamingStrategy.determineUniqueKeyName(source);
+        String result = generateHashedConstraintName(UNIQUE_CONSTRAINT_PREFIX,
+                source.getTableName(), source.getColumnNames());
+        return toIdentifier(result, source.getBuildingContext());
     }
 
+    /**
+     * Generates a name for an index.
+     */
     @Override
     public Identifier determineIndexName(ImplicitIndexNameSource source) {
-        return implicitNamingStrategy.determineIndexName(source);
+        String result = generateHashedConstraintName(INDEX_PREFIX, source.getTableName(),
+                source.getColumnNames());
+        return toIdentifier(result, source.getBuildingContext());
+    }
+
+    /**
+     * Generates a constraint name. This code is from Hibernate 4. It is slightly different from
+     * Hibernate 5 NamingHelper code.
+     */
+    public static String generateHashedConstraintName(String prefix, Identifier tableName,
+            List<Identifier> columnNames) {
+        StringBuilder sb = new StringBuilder("table`" + tableName.getText() + "`");
+
+        List<String> alphabeticalColumnNames = toString(columnNames);
+        Collections.sort(alphabeticalColumnNames);
+        for (String columnName : alphabeticalColumnNames) {
+            sb.append("column`" + columnName + "`");
+        }
+
+        return prefix + NamingHelper.INSTANCE.hashedName(sb.toString());
+    }
+
+    private static List<String> toString(List<Identifier> columnNames) {
+        ArrayList<String> result = CollectionUtils
+                .newArrayListWithCapacity(CollectionUtils.size(columnNames));
+        for (Identifier columnName : columnNames) {
+            result.add(columnName.getText());
+        }
+
+        return result;
     }
 
     private static String getPropertyName(AttributePath attributePath) {

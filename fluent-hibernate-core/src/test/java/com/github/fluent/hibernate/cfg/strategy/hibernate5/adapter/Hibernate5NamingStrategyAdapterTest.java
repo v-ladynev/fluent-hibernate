@@ -4,30 +4,12 @@ import static com.github.fluent.hibernate.cfg.strategy.hibernate5.StrategyTestUt
 import static com.github.fluent.hibernate.cfg.strategy.hibernate5.StrategyTestUtils.getCollectionTable;
 import static com.github.fluent.hibernate.cfg.strategy.hibernate5.StrategyTestUtils.getColumNames;
 import static com.github.fluent.hibernate.cfg.strategy.hibernate5.StrategyTestUtils.getColumnName;
+import static com.github.fluent.hibernate.cfg.strategy.hibernate5.StrategyTestUtils.getForeignKeyConstraintNames;
+import static com.github.fluent.hibernate.cfg.strategy.hibernate5.StrategyTestUtils.getIndexNames;
 import static com.github.fluent.hibernate.cfg.strategy.hibernate5.StrategyTestUtils.getTable;
+import static com.github.fluent.hibernate.cfg.strategy.hibernate5.StrategyTestUtils.getUniqueConstraintNames;
 import static com.github.fluent.hibernate.cfg.strategy.hibernate5.StrategyTestUtils.logSchemaUpdate;
 import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.ElementCollection;
-import javax.persistence.Embeddable;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderColumn;
-import javax.persistence.Version;
 
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.model.naming.EntityNaming;
@@ -45,6 +27,11 @@ import org.hibernate.service.ServiceRegistry;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.github.fluent.hibernate.cfg.strategy.hibernate5.adapter.persistent.AuthorTable;
+import com.github.fluent.hibernate.cfg.strategy.hibernate5.adapter.persistent.Book;
+import com.github.fluent.hibernate.cfg.strategy.hibernate5.adapter.persistent.Customer;
+import com.github.fluent.hibernate.cfg.strategy.hibernate5.adapter.persistent.ValuedCustomer;
 
 public class Hibernate5NamingStrategyAdapterTest {
 
@@ -75,18 +62,17 @@ public class Hibernate5NamingStrategyAdapterTest {
     @Test
     public void classToTableName() {
         Table authorTable = getTable(metadata, AuthorTable.class);
-        assertThat(authorTable.getName())
-                .isEqualTo("hibernate5naming_strategy_adapter_test$author_table");
+        assertThat(authorTable.getName()).isEqualTo("author_table");
 
         Table bookTable = getTable(metadata, Book.class);
-        assertThat(bookTable.getName()).isEqualTo("hibernate5naming_strategy_adapter_test$book");
+        assertThat(bookTable.getName()).isEqualTo("book");
     }
 
     @Test
     public void propertyToColumnName() {
         Table authorTable = getTable(metadata, AuthorTable.class);
         assertThat(getColumNames(authorTable)).containsOnly("author_pid", "author_info",
-                "best_book", "author_type", "author_version");
+                "unique_field", "best_book", "author_type", "author_version");
 
         String bookPid = getColumnName(metadata, Book.class, "pid");
         assertThat(bookPid).isEqualTo("pid");
@@ -95,23 +81,19 @@ public class Hibernate5NamingStrategyAdapterTest {
     @Test
     public void collectionTableName() {
         Table booksOne = getCollectionTable(metadata, AuthorTable.class, "booksOne");
-        assertThat(booksOne.getName())
-                .isEqualTo("hibernate5naming_strategy_adapter_test$author_table_books_one");
+        assertThat(booksOne.getName()).isEqualTo("author_table_books_one");
 
         Table booksTwo = getCollectionTable(metadata, AuthorTable.class, "booksTwo");
-        assertThat(booksTwo.getName())
-                .isEqualTo("hibernate5naming_strategy_adapter_test$author_table_books_two");
+        assertThat(booksTwo.getName()).isEqualTo("author_table_books_two");
     }
 
     @Test
     public void joinTableColumnNames() {
         Table booksOne = getCollectionTable(metadata, AuthorTable.class, "booksOne");
-        assertThat(getColumNames(booksOne))
-                .containsOnly("hibernate5naming_strategy_adapter_test$author_table", "books_one");
+        assertThat(getColumNames(booksOne)).containsOnly("author_table", "books_one");
 
         Table booksTwo = getCollectionTable(metadata, AuthorTable.class, "booksTwo");
-        assertThat(getColumNames(booksTwo))
-                .containsOnly("hibernate5naming_strategy_adapter_test$author_table", "books_two");
+        assertThat(getColumNames(booksTwo)).containsOnly("author_table", "books_two");
     }
 
     @Test
@@ -130,11 +112,9 @@ public class Hibernate5NamingStrategyAdapterTest {
     public void elementCollection() {
         Table bookTitles = getCollectionTable(metadata, AuthorTable.class, "bookTitles");
 
-        assertThat(bookTitles.getName())
-                .isEqualTo("hibernate5naming_strategy_adapter_test$author_table_book_titles");
+        assertThat(bookTitles.getName()).isEqualTo("author_table_book_titles");
 
-        assertThat(getColumNames(bookTitles))
-                .containsOnly("hibernate5naming_strategy_adapter_test$author_table", "book_titles");
+        assertThat(getColumNames(bookTitles)).containsOnly("author_table", "book_titles");
     }
 
     @Test
@@ -142,11 +122,11 @@ public class Hibernate5NamingStrategyAdapterTest {
         Table elementCollectionAuthorInfo = getCollectionTable(metadata, AuthorTable.class,
                 "elementCollectionAuthorInfo");
 
-        assertThat(elementCollectionAuthorInfo.getName()).isEqualTo(
-                "hibernate5naming_strategy_adapter_test$author_table_element_collection_author_info");
+        assertThat(elementCollectionAuthorInfo.getName())
+                .isEqualTo("author_table_element_collection_author_info");
 
-        assertThat(getColumNames(elementCollectionAuthorInfo)).containsOnly(
-                "hibernate5naming_strategy_adapter_test$author_table", "best_book", "author_info");
+        assertThat(getColumNames(elementCollectionAuthorInfo)).containsOnly("author_table",
+                "best_book", "author_info");
     }
 
     // TODO wait while Hibernate issue will be fixed
@@ -208,84 +188,24 @@ public class Hibernate5NamingStrategyAdapterTest {
         assertThat(identifier.getText()).isEqualTo("books_map_key");
     }
 
-    @Entity
-    public static class AuthorTable {
-
-        @Id
-        private Long authorPid;
-
-        @Embedded
-        private AuthorInfo authorInfo;
-
-        @ManyToMany
-        private List<Book> booksOne;
-
-        @ManyToMany
-        private List<Book> booksTwo;
-
-        @OneToMany
-        @JoinColumn
-        private List<Book> booksThree;
-
-        @OneToMany
-        @OrderColumn
-        private List<Book> booksOrdered;
-
-        @ElementCollection
-        @MapKeyColumn
-        private Map<String, String> booksMap;
-
-        @ElementCollection
-        private List<String> bookTitles;
-
-        @Enumerated
-        private AuthorType authorType;
-
-        @Version
-        private Integer authorVersion;
-
-        @ElementCollection
-        @Embedded
-        private List<AuthorInfo> elementCollectionAuthorInfo;
-
+    @Test
+    public void foreignKey() {
+        Table bookTable = getTable(metadata, Book.class);
+        assertThat(getForeignKeyConstraintNames(bookTable))
+                .containsOnly("FK_rtsneql14vg7ay4erx1r32ddx");
     }
 
-    @Entity
-    public static class Book {
-
-        @Id
-        private Long pid;
-
+    @Test
+    public void uniqueConstrain() {
+        Table bookTable = getTable(metadata, AuthorTable.class);
+        assertThat(getUniqueConstraintNames(bookTable))
+                .containsOnly("UK_6hlrw9c61t7i0x23bij5cd6jc");
     }
 
-    @Embeddable
-    public static class AuthorInfo {
-
-        @Column
-        private String authorInfo;
-
-        @OneToOne
-        private Book bestBook;
-
-    }
-
-    public enum AuthorType {
-        FAMOUS, NOT_FAMOUS
-    }
-
-    @Entity
-    @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-    @DiscriminatorColumn
-    public static class Customer {
-
-        @Id
-        private Long pid;
-
-    }
-
-    @Entity
-    public static class ValuedCustomer extends Customer {
-
+    @Test
+    public void index() {
+        Table authorTable = getTable(metadata, AuthorTable.class);
+        assertThat(getIndexNames(authorTable)).containsOnly("UK_adyveyc8inhw5t0pkq279r0w4");
     }
 
 }

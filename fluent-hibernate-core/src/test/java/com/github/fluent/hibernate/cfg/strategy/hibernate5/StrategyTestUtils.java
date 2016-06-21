@@ -15,6 +15,7 @@ import org.hibernate.mapping.Collection;
 import org.hibernate.mapping.Column;
 import org.hibernate.mapping.Component;
 import org.hibernate.mapping.ForeignKey;
+import org.hibernate.mapping.Index;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
 import org.hibernate.mapping.Table;
@@ -103,10 +104,21 @@ public final class StrategyTestUtils {
         ArrayList<String> result = InternalUtils.CollectionUtils.newArrayList();
 
         Iterator<UniqueKey> iterator = table.getUniqueKeyIterator();
-
         while (iterator.hasNext()) {
             UniqueKey uniqueKey = iterator.next();
             result.add(uniqueKey.getName());
+        }
+
+        return result;
+    }
+
+    public static List<String> getIndexNames(Table table) {
+        ArrayList<String> result = InternalUtils.CollectionUtils.newArrayList();
+
+        Iterator<Index> indexIterator = table.getIndexIterator();
+        while (indexIterator.hasNext()) {
+            Index index = indexIterator.next();
+            result.add(index.getName());
         }
 
         return result;
