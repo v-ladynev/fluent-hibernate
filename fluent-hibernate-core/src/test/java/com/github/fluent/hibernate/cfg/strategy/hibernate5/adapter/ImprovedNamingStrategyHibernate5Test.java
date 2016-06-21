@@ -43,12 +43,9 @@ public class ImprovedNamingStrategyHibernate5Test {
     @BeforeClass
     public static void setUp() {
         serviceRegistry = new StandardServiceRegistryBuilder().build();
-        metadata = createMetadata(serviceRegistry, createAdapter(), ENTITIES);
+        metadata = createMetadata(serviceRegistry, ImprovedNamingStrategyHibernate5.INSTANCE,
+                ENTITIES);
         logSchemaUpdate(metadata);
-    }
-
-    private static ImprovedNamingStrategyHibernate5 createAdapter() {
-        return new ImprovedNamingStrategyHibernate5();
     }
 
     @AfterClass
@@ -129,7 +126,7 @@ public class ImprovedNamingStrategyHibernate5Test {
     // TODO wait while Hibernate issue will be fixed
     @Test
     public void discriminatorColumn() {
-        Identifier identifier = createAdapter()
+        Identifier identifier = createStrategy()
                 .determineDiscriminatorColumnName(new ImplicitDiscriminatorColumnNameSource() {
                     @Override
                     public MetadataBuildingContext getBuildingContext() {
@@ -148,7 +145,7 @@ public class ImprovedNamingStrategyHibernate5Test {
     // TODO wait while Hibernate issue will be fixed
     @Test
     public void orderColumn() {
-        Identifier identifier = createAdapter()
+        Identifier identifier = createStrategy()
                 .determineListIndexColumnName(new ImplicitIndexColumnNameSource() {
 
                     @Override
@@ -168,7 +165,7 @@ public class ImprovedNamingStrategyHibernate5Test {
     // TODO wait while Hibernate issue will be fixed
     @Test
     public void mapKeyColumn() {
-        Identifier identifier = createAdapter()
+        Identifier identifier = createStrategy()
                 .determineMapKeyColumnName(new ImplicitMapKeyColumnNameSource() {
 
                     @Override
@@ -183,6 +180,10 @@ public class ImprovedNamingStrategyHibernate5Test {
                 });
 
         assertThat(identifier.getText()).isEqualTo("books_map_key");
+    }
+
+    private static ImprovedNamingStrategyHibernate5 createStrategy() {
+        return new ImprovedNamingStrategyHibernate5();
     }
 
     @Test
