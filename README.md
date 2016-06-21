@@ -102,25 +102,21 @@ _Using Spring_
   </property>
 </bean>
 ```
-### Adapter to adapt Hibernate 4 naming strategies to Hibernate 5
+### ImprovedNamingStrategy for Hibernate 5
 
-[Hibernate5NamingStrategyAdapter](https://github.com/v-ladynev/fluent-hibernate/blob/master/fluent-hibernate-core/src/main/java/com/github/fluent/hibernate/cfg/strategy/hibernate5/adapter/Hibernate5NamingStrategyAdapter.java) can be used to migrate from Hibernate 4 to Hibernate 5 using a naming startegy for Hibernate 4 (for an example [ImprovedNamingStrategy](https://docs.jboss.org/hibernate/orm/4.3/javadocs/index.html?org/hibernate/cfg/ImprovedNamingStrategy.html)).
-Just pass the adapter to the Hibernate 5 configuration. For an example to use `ImprovedNamingStrategy`:
+It is imposible to use with Hibernate 5 naming strategies from Hibernate 4. [org.hibernate.cfg.ImprovedNamingStrategy](https://docs.jboss.org/hibernate/orm/4.3/javadocs/index.html?org/hibernate/cfg/ImprovedNamingStrategy.html) can't be used too. To continue using `ImprovedNamingStrategy` functionality with Hibernate 5 
+[ImprovedNamingStrategyHibernate5](https://github.com/v-ladynev/fluent-hibernate/blob/master/fluent-hibernate-core/src/main/java/com/github/fluent/hibernate/cfg/strategy/hibernate5/adapter/ImprovedNamingStrategyHibernate5.java) can be used.
+
+Just pass `ImprovedNamingStrategyHibernate5` to the Hibernate 5 configuration.  You can place `ImprovedNamingStrategyHibernate5` where `ImplicitNamingStrategy` can be placed.
+
+For an example, using `Configuration`:
 
 ```Java
 Configuration configuration = new Configuration();
-configuration.setImplicitNamingStrategy(new Hibernate5NamingStrategyAdapter(
-        ImprovedNamingStrategy.INSTANCE, ImplicitNamingStrategyJpaCompliantImpl.INSTANCE));
+configuration.setImplicitNamingStrategy(ImprovedNamingStrategyHibernate5.INSTANCE);
 SessionFactory sessionFactory = configuration.configure().buildSessionFactory();
 ```
-It can be used with JPA configuration as well. You can place `Hibernate5NamingStrategyAdapter` where `ImplicitNamingStrategy` can be placed.
-
-The adpater constructor has two arguments:
-```Java
-Hibernate5NamingStrategyAdapter(NamingStrategy hibernate4Strategy, ImplicitNamingStrategy implicitNamingStrategy)
-```
-`hibernate4Strategy` - a Hibernate 4 naming strategy
-`implicitNamingStrategy` - this implicit naming strategy is used only for artifact naming wich can't be named with `hibernate4Strategy`.  `ImplicitNamingStrategyJpaCompliantImpl.INSTANCE` can be used for these purposes. 
+`ImprovedNamingStrategyHibernate5` can be used with JPA configuration as well.
 
 ### Nested Transformer
 
