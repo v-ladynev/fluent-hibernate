@@ -138,8 +138,35 @@ public class Hibernate4To5NamingStrategyAdapter implements ImplicitNamingStrateg
     }
 
     /**
+     * Generates a constraint name. This code is from Hibernate 4. It is slightly different from
+     * Hibernate 5 NamingHelper code.
+     */
+    public static String generateHashedConstraintName(String prefix, Identifier tableName,
+            List<Identifier> columnNames) {
+        StringBuilder sb = new StringBuilder("table`" + tableName.getText() + "`");
+
+        List<String> alphabeticalColumnNames = toString(columnNames);
+        Collections.sort(alphabeticalColumnNames);
+        for (String columnName : alphabeticalColumnNames) {
+            sb.append("column`" + columnName + "`");
+        }
+
+        return prefix + NamingHelper.INSTANCE.hashedName(sb.toString());
+    }
+
+    private static List<String> toString(List<Identifier> columnNames) {
+        ArrayList<String> result = CollectionUtils
+                .newArrayListWithCapacity(CollectionUtils.size(columnNames));
+        for (Identifier columnName : columnNames) {
+            result.add(columnName.getText());
+        }
+
+        return result;
+    }
+
+    /**
      * Generates a name for @DiscriminatorColumn. Hibernate doesn't use this method because of an
-     * issue. Hiibernate generates "DTYPE" name for the descriminator column. Hibernate 4 uses
+     * issue. Hiibernate generates "DTYPE" name for the discriminator column. Hibernate 4 uses
      * ImprovedNamingStrategy#columnName() to convert "DTYPE" to "dtype".
      */
     @Override
@@ -195,44 +222,17 @@ public class Hibernate4To5NamingStrategyAdapter implements ImplicitNamingStrateg
         throw new UnsupportedOperationException();
     }
 
-    // not implemented yet
+    // can't test
     @Override
     public Identifier determineAnyDiscriminatorColumnName(
             ImplicitAnyDiscriminatorColumnNameSource source) {
         throw new UnsupportedOperationException();
     }
 
-    // not implemented yet
+    // can't test
     @Override
     public Identifier determineAnyKeyColumnName(ImplicitAnyKeyColumnNameSource source) {
         throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Generates a constraint name. This code is from Hibernate 4. It is slightly different from
-     * Hibernate 5 NamingHelper code.
-     */
-    public static String generateHashedConstraintName(String prefix, Identifier tableName,
-            List<Identifier> columnNames) {
-        StringBuilder sb = new StringBuilder("table`" + tableName.getText() + "`");
-
-        List<String> alphabeticalColumnNames = toString(columnNames);
-        Collections.sort(alphabeticalColumnNames);
-        for (String columnName : alphabeticalColumnNames) {
-            sb.append("column`" + columnName + "`");
-        }
-
-        return prefix + NamingHelper.INSTANCE.hashedName(sb.toString());
-    }
-
-    private static List<String> toString(List<Identifier> columnNames) {
-        ArrayList<String> result = CollectionUtils
-                .newArrayListWithCapacity(CollectionUtils.size(columnNames));
-        for (Identifier columnName : columnNames) {
-            result.add(columnName.getText());
-        }
-
-        return result;
     }
 
     private static String getPropertyName(AttributePath attributePath) {
