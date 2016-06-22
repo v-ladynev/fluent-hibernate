@@ -132,7 +132,7 @@ I implement a Hibernate 4 behaviour in `ImprovedNamingStrategyHibernate5`, but H
 
 #### @DiscriminatorColumn Name Generation
 
-Hibernate 5 doesn't use a naming strategy to generate such names, because of an issue. Hiibernate 5 generates "DTYPE" name for the discriminator column. Hibernate 4 uses `ImprovedNamingStrategy#columnName()` to convert "DTYPE" to "dtype". You need to provide explicit names in such situation.
+Hibernate 5 doesn't use a naming strategy to generate such names, because of an issue. Hiibernate 5 generates `DTYPE` name for the discriminator column. Hibernate 4 uses `ImprovedNamingStrategy#columnName()` to convert `DTYPE` to `dtype`. You need to provide explicit names in such situation.
 
 #### @OrderColumn Name Generation
 
