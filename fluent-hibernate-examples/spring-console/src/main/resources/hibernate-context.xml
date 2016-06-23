@@ -12,10 +12,7 @@
 
 
   <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
-    <property name="packagesToScan">
-      <list>
-        <value>com.github.fluent.hibernate.example.spring.console.persistent</value>
-      </list>
+    <property name="packagesToScan" value="com.github.fluent.hibernate.example.spring.console.persistent">
     </property>
 
     <property name="implicitNamingStrategy">
@@ -38,8 +35,9 @@
         <prop key="hibernate.dialect">com.github.fluent.hibernate.example.spring.console.CustomOracle10gDialect</prop>
       </props>
     </property>
-  </bean>
    -->
+  </bean>
+
 
     <!--
     <property name="physicalNamingStrategy">
