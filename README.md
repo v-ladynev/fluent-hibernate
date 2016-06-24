@@ -1,5 +1,5 @@
 # fluent-hibernate
-A library to work with Hibernate by fluent API. This library hasn't dependencies, except Hibernate libraries. It requires Java 1.6 and above. It can be used with Hibernate 5 and Hibernate 4.
+A library to work with Hibernate by fluent API. This library hasn't dependencies, except Hibernate libraries. It requires Java 1.6 and above. It can be used with Hibernate 5 and Hibernate 4. The major Hibernate version with which the library can be used is Hibernate 5.1. It can't be used with Hibernate 5.2, because Hibernate 5.2 requires Java 1.8.
 
 [![Build Status](https://travis-ci.org/v-ladynev/fluent-hibernate.svg?branch=master)](https://travis-ci.org/v-ladynev/fluent-hibernate)
 
