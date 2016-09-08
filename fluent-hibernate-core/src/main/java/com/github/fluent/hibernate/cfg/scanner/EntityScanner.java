@@ -52,14 +52,32 @@ public final class EntityScanner {
      */
     public static EntityScanner scanPackages(String... packages) {
         Asserts.isTrue(!CollectionUtils.isEmptyEllipsis(packages),
-                "You should to specify almost one package to scan.");
+                "You should to specify at least one package to scan.");
         return scanPackages(packages, null, Entity.class);
+    }
+
+    /**
+     * Scan packages for the @Entity annotation.
+     *
+     * @param loaders
+     *            one or more class loaders to find classes in
+     * @param packages
+     *            one or more Java package names
+     *
+     * @return EntityScanner for fluent calls
+     */
+    public static EntityScanner scanPackages(List<ClassLoader> loaders, String... packages) {
+        Asserts.isTrue(!CollectionUtils.isEmptyEllipsis(packages),
+                "You should to specify at least one package to scan.");
+        Asserts.isTrue(!CollectionUtils.isEmpty(loaders),
+                "You should to specify at least one class loader.");
+        return scanPackages(packages, loaders, Entity.class);
     }
 
     private static EntityScanner scanPackages(String[] packages, List<ClassLoader> loaders,
             Class<? extends Annotation> annotation) {
         try {
-            return scanPackagesInternal(packages, null, Entity.class);
+            return scanPackagesInternal(packages, loaders, annotation);
         } catch (Exception ex) {
             throw InternalUtils.toRuntimeException(ex);
         }
