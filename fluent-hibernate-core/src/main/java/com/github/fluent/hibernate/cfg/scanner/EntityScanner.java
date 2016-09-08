@@ -1,21 +1,18 @@
 package com.github.fluent.hibernate.cfg.scanner;
 
+import com.github.fluent.hibernate.internal.util.InternalUtils;
+import com.github.fluent.hibernate.internal.util.InternalUtils.Asserts;
+import com.github.fluent.hibernate.internal.util.InternalUtils.ClassUtils;
+import com.github.fluent.hibernate.internal.util.InternalUtils.CollectionUtils;
+import org.hibernate.cfg.Configuration;
+
+import javax.persistence.Entity;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.persistence.Entity;
-
-import org.hibernate.cfg.Configuration;
-
-import com.github.fluent.hibernate.internal.util.InternalUtils;
-import com.github.fluent.hibernate.internal.util.InternalUtils.Asserts;
-import com.github.fluent.hibernate.internal.util.InternalUtils.ClassUtils;
-import com.github.fluent.hibernate.internal.util.InternalUtils.CollectionUtils;
-
 /**
- *
  * @author V.Ladynev
  */
 public final class EntityScanner {
@@ -45,8 +42,7 @@ public final class EntityScanner {
     /**
      * Scan packages for the @Entity annotation.
      *
-     * @param packages
-     *            one or more Java package names
+     * @param packages one or more Java package names
      *
      * @return EntityScanner for fluent calls
      */
@@ -59,10 +55,8 @@ public final class EntityScanner {
     /**
      * Scan packages for the @Entity annotation.
      *
-     * @param loaders
-     *            one or more class loaders to find classes in
-     * @param packages
-     *            one or more Java package names
+     * @param loaders  one or more class loaders to find classes in
+     * @param packages one or more Java package names
      *
      * @return EntityScanner for fluent calls
      */
@@ -74,8 +68,8 @@ public final class EntityScanner {
         return scanPackages(packages, loaders, Entity.class);
     }
 
-    private static EntityScanner scanPackages(String[] packages, List<ClassLoader> loaders,
-            Class<? extends Annotation> annotation) {
+    static EntityScanner scanPackages(String[] packages, List<ClassLoader> loaders,
+                                      Class<? extends Annotation> annotation) {
         try {
             return scanPackagesInternal(packages, loaders, annotation);
         } catch (Exception ex) {
@@ -83,8 +77,8 @@ public final class EntityScanner {
         }
     }
 
-    static EntityScanner scanPackagesInternal(String[] packages, List<ClassLoader> loaders,
-            Class<? extends Annotation> annotation) throws Exception {
+    private static EntityScanner scanPackagesInternal(String[] packages, List<ClassLoader> loaders,
+                                                      Class<? extends Annotation> annotation) throws Exception {
         EntityScanner scanner = new EntityScanner(packages);
         scanner.loaders = loaders;
         scanner.scan(annotation);
@@ -130,8 +124,7 @@ public final class EntityScanner {
     /**
      * Adds scanned persistents to the Hibernate configuration.
      *
-     * @param configuration
-     *            a Hibernate configuration
+     * @param configuration a Hibernate configuration
      *
      * @return EntityScanner for fluent calls
      */

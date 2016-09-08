@@ -1,18 +1,5 @@
 package com.github.fluent.hibernate.cfg.scanner;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.lang.annotation.Annotation;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.persistence.Entity;
-
-import org.junit.Test;
-
 import com.github.fluent.hibernate.cfg.scanner.jar.persistent.FirstRootEntityJar;
 import com.github.fluent.hibernate.cfg.scanner.jar.persistent.NotEntityJar;
 import com.github.fluent.hibernate.cfg.scanner.jar.persistent.SecondRootEntityJar;
@@ -22,9 +9,19 @@ import com.github.fluent.hibernate.cfg.scanner.persistent.FirstRootEntity;
 import com.github.fluent.hibernate.cfg.scanner.persistent.NotEntity;
 import com.github.fluent.hibernate.cfg.scanner.persistent.SecondRootEntity;
 import com.github.fluent.hibernate.cfg.scanner.persistent.subpackage.FirstSubpackageEntity;
+import org.junit.Test;
+
+import javax.persistence.Entity;
+import java.lang.annotation.Annotation;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- *
  * @author V.Ladynev
  */
 public class EntityScannerTest {
@@ -37,16 +34,16 @@ public class EntityScannerTest {
 
     private static final String JAR_PACKAGE = "com.github.fluent.hibernate.cfg.scanner.jar.persistent";
 
-    private static final Class<?>[] ENTITY_CLASSES = new Class<?>[] { FirstRootEntity.class,
+    private static final Class<?>[] ENTITY_CLASSES = new Class<?>[]{FirstRootEntity.class,
             FirstRootEntity.NestedEntity.class, SecondRootEntity.class,
-            FirstSubpackageEntity.class };
+            FirstSubpackageEntity.class};
 
-    private static final Class<?>[] OTHER_ENTITY_CLASSES = new Class<?>[] { OtherRootEntity.class,
-            OtherRootEntity.OtherNestedEntity.class };
+    private static final Class<?>[] OTHER_ENTITY_CLASSES = new Class<?>[]{OtherRootEntity.class,
+            OtherRootEntity.OtherNestedEntity.class};
 
-    private static final Class<?>[] JAR_ENTITY_CLASSES = new Class<?>[] { FirstRootEntityJar.class,
+    private static final Class<?>[] JAR_ENTITY_CLASSES = new Class<?>[]{FirstRootEntityJar.class,
             FirstRootEntityJar.NestedEntityJar.class, SecondRootEntityJar.class,
-            FirstSubpackageEntityJar.class };
+            FirstSubpackageEntityJar.class};
 
     @Test(expected = IllegalArgumentException.class)
     public void withoutPackages() {
@@ -83,8 +80,8 @@ public class EntityScannerTest {
                 .loadClass(Entity.class.getName());
         assertThat(entityAnnotation).isNotNull();
 
-        List<Class<?>> classes = EntityScanner.scanPackagesInternal(new String[] { JAR_PACKAGE },
-                Arrays.<ClassLoader> asList(loader), entityAnnotation).result();
+        List<Class<?>> classes = EntityScanner.scanPackages(new String[]{JAR_PACKAGE},
+                Arrays.<ClassLoader>asList(loader), entityAnnotation).result();
 
         assertThat(classes).contains(reload(loader, JAR_ENTITY_CLASSES))
                 .doesNotContain(NotEntityJar.class);
