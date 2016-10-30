@@ -5,21 +5,21 @@ A library to work with Hibernate by fluent API. This library hasn't dependencies
 
 ## Download
 ##### Direct link
-[![Release 0.3.0](https://img.shields.io/badge/release-0.3.0-blue.svg)](https://github.com/v-ladynev/fluent-hibernate/releases/download/0.3.0/fluent-hibernate-core-0.3.0.jar)
+[![Release 0.3.1](https://img.shields.io/badge/release-0.3.1-blue.svg)](https://github.com/v-ladynev/fluent-hibernate/releases/download/0.3.1/fluent-hibernate-core-0.3.1.jar)
 
 ##### Maven (`pom.xml`)
 ```XML
 <dependency>
   <groupId>com.github.v-ladynev</groupId>
   <artifactId>fluent-hibernate-core</artifactId>
-  <version>0.3.0</version>
+  <version>0.3.1</version>
 </dependency>
 ```
 All versions in the Maven repository: [fluent-hibernate-core](http://repo1.maven.org/maven2/com/github/v-ladynev/fluent-hibernate-core/)
 
 ##### Gradle (`build.gradle`)
 ```Gradle
-compile 'com.github.v-ladynev:fluent-hibernate-core:0.3.0'
+compile 'com.github.v-ladynev:fluent-hibernate-core:0.3.1'
 ```
 
 ## Hibernate 4 Notes
@@ -27,7 +27,7 @@ compile 'com.github.v-ladynev:fluent-hibernate-core:0.3.0'
 If you want to use the library with Hibernate 4, you can consider to exclude a transitive dependency to Hibernate 5.
 For an example using Gradle:
 ```Gradle
-    compile('com.github.v-ladynev:fluent-hibernate-core:0.3.0') {
+    compile('com.github.v-ladynev:fluent-hibernate-core:0.3.1') {
         exclude group: 'org.hibernate'
     }
 ```
@@ -279,6 +279,7 @@ List<User> users = H.<User> request(User.class).proj("login").proj("id")
 - [samsonych](https://github.com/samsonych)
 - [Lucas Levvy](https://github.com/Levvy055)
 - [Aleksey Pchelnikov](https://github.com/aleksey-pchelnikov)
+- [Literallie(xxyy)](https://github.com/xxyy)
 
 ## Dependency Status
 [![Dependency Status](https://www.versioneye.com/user/projects/560424a1f5f2eb0019000933/badge.svg?style=flat)](https://www.versioneye.com/user/projects/560424a1f5f2eb0019000933)
