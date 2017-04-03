@@ -25,7 +25,7 @@ compile 'com.github.v-ladynev:fluent-hibernate-core:0.3.1'
 ## Hibernate 4 Notes
 
 If you want to use the library with Hibernate 4, you can consider to exclude a transitive dependency to Hibernate 5.
-For an example using Gradle:
+For example, using Gradle:
 ```Gradle
     compile('com.github.v-ladynev:fluent-hibernate-core:0.3.1') {
         exclude group: 'org.hibernate'
